@@ -1,0 +1,259 @@
+{
+  "metadados": {
+    "versao": "1.1",
+    "descricao": "Lista de Colunistas Brasileiros - Modo Todos contra Todos",
+    "instrucao_ia": "Não existem times fixos. Sorteie dois colunistas aleatórios. Utilize o campo 'viés_politico' para definir as posturas no debate."
+  },
+  "colunistas": [
+    {
+      "id": 1,
+      "codinome": "Brasília",
+      "nome_real": "Reinaldo Azevedo",
+      "viés_politico": "Centro-esquerda",
+      "categoria": "Política",
+      "tags": ["estrategista", "contraditório", "debate"],
+      "descricao": "estrategista do contraditório",
+      "imagem": "img_colunistas/brasília.png"
+    },
+    {
+      "id": 2,
+      "codinome": "Senado",
+      "nome_real": "Eliane Cantanhêde",
+      "viés_politico": "Centro",
+      "categoria": "Política",
+      "tags": ["bastidores", "decifradora", "congresso"],
+      "descricao": "decifradora dos bastidores",
+      "imagem": "img_colunistas/senado.png"
+    },
+    {
+      "id": 3,
+      "codinome": "Copom",
+      "nome_real": "Míriam Leitão",
+      "viés_politico": "Centro-Esquerda",
+      "categoria": "Economia",
+      "tags": ["oráculo", "indicadores", "mercado"],
+      "descricao": "oráculo da economia",
+      "imagem": "img_colunistas/copom.png"
+    },
+    {
+      "id": 4,
+      "codinome": "Planalto",
+      "nome_real": "Vera Magalhães",
+      "viés_politico": "Centro-Esquerda / Liberal Social",
+      "categoria": "Política",
+      "tags": ["trincheira", "jornalismo", "poder"],
+      "descricao": "repórter de trincheira",
+      "imagem": "img_colunistas/planalto.png"
+    },
+    {
+      "id": 5,
+      "codinome": "Varsóvia",
+      "nome_real": "Demétrio Magnoli",
+      "viés_politico": "Direita / Realista",
+      "categoria": "Geopolítica",
+      "tags": ["geopolítica", "relações internacionais", "guerra"],
+      "descricao": "geopolítica sem piedade",
+      "imagem": "img_colunistas/varsóvia.png"
+    },
+    {
+      "id": 6,
+      "codinome": "SUS",
+      "nome_real": "Leonardo Sakamoto",
+      "viés_politico": "Esquerda",
+      "categoria": "Direitos Humanos",
+      "tags": ["direitos humanos", "invisíveis", "social"],
+      "descricao": "voz dos invisíveis",
+      "imagem": "img_colunistas/sus.png"
+    },
+    {
+      "id": 7,
+      "codinome": "Faria Lima",
+      "nome_real": "Rodrigo Constantino",
+      "viés_politico": "Direita Libertária",
+      "categoria": "Economia",
+      "tags": ["liberal", "mercado", "combate"],
+      "descricao": "liberal de combate",
+      "imagem": "img_colunistas/faria-lima.png"
+    },
+    {
+      "id": 8,
+      "codinome": "Genebra",
+      "nome_real": "Jamil Chade",
+      "viés_politico": "Centro / Progressista",
+      "categoria": "Diplomacia",
+      "tags": ["onu", "diplomacia", "denúncias"],
+      "descricao": "diplomata das denúncias",
+      "imagem": "img_colunistas/genebra.png"
+    },
+    {
+      "id": 9,
+      "codinome": "OTAN",
+      "nome_real": "William Waack",
+      "viés_politico": "Centro / Institucional",
+      "categoria": "Segurança",
+      "tags": ["defesa", "realismo", "inteligência"],
+      "descricao": "realismo frio",
+      "imagem": "img_colunistas/otan.png"
+    },
+    {
+      "id": 10,
+      "codinome": "Pampa",
+      "nome_real": "Augusto Nunes",
+      "viés_politico": "Direita / Conservador",
+      "categoria": "Política",
+      "tags": ["sarcasmo", "crítica", "opinião"],
+      "descricao": "sarcasmo direto",
+      "imagem": "img_colunistas/pampa.png"
+    },
+    {
+      "id": 11,
+      "codinome": "VAR",
+      "nome_real": "Josias de Souza",
+      "viés_politico": "Centro",
+      "categoria": "Jornalismo Político",
+      "tags": ["fatos", "conferência", "análise"],
+      "descricao": "conferência dos fatos",
+      "imagem": "img_colunistas/var.png"
+    },
+    {
+      "id": 12,
+      "codinome": "Lapa",
+      "nome_real": "Bernardo Mello Franco",
+      "viés_politico": "Centro-Esquerda",
+      "categoria": "Cultura/Política",
+      "tags": ["crônica", "poder", "estilo"],
+      "descricao": "cronista do poder",
+      "imagem": "img_colunistas/lapa.png"
+    },
+    {
+      "id": 13,
+      "codinome": "Eixo",
+      "nome_real": "Kennedy Alencar",
+      "viés_politico": "Centro-Esquerda",
+      "categoria": "Política",
+      "tags": ["articulação", "governo", "informação"],
+      "descricao": "articulador",
+      "imagem": "img_colunistas/eixo.png"
+    },
+    {
+      "id": 14,
+      "codinome": "Urna",
+      "nome_real": "Dora Kramer",
+      "viés_politico": "Centro",
+      "categoria": "Política",
+      "tags": ["eleições", "história", "memória"],
+      "descricao": "memória política",
+      "imagem": "img_colunistas/urna.png"
+    },
+    {
+      "id": 15,
+      "codinome": "Bastidor",
+      "nome_real": "Tales Faria",
+      "viés_politico": "Direita",
+      "categoria": "Jornalismo",
+      "tags": ["fontes", "informação privilegiada"],
+      "descricao": "fonte permanente",
+      "imagem": "img_colunistas/bastidor.png"
+    },
+    {
+      "id": 16,
+      "codinome": "Kiev",
+      "nome_real": "Igor Gielow",
+      "viés_politico": "Centro",
+      "categoria": "Internacional",
+      "tags": ["guerra", "análise de crise", "leste europeu"],
+      "descricao": "analista de crises",
+      "imagem": "img_colunistas/kiev.png"
+    },
+    {
+      "id": 17,
+      "codinome": "Cofre",
+      "nome_real": "Malu Gaspar",
+      "viés_politico": "Centro",
+      "categoria": "Investigação",
+      "tags": ["dinheiro", "poder", "investigação"],
+      "descricao": "investigação fina",
+      "imagem": "img_colunistas/cofre.png"
+    },
+    {
+      "id": 18,
+      "codinome": "Projac",
+      "nome_real": "Thomas Traumann",
+      "viés_politico": "Centro",
+      "categoria": "Mídia/Comunicação",
+      "tags": ["comunicação", "governo", "mídia"],
+      "descricao": "mídia e política",
+      "imagem": "img_colunistas/projac.png"
+    },
+    {
+      "id": 19,
+      "codinome": "Veneza",
+      "nome_real": "Mario Sabino",
+      "viés_politico": "Direita / Cultural",
+      "categoria": "Cultura/Política",
+      "tags": ["ironia", "literatura", "crítica"],
+      "descricao": "ironia culta",
+      "imagem": "img_colunistas/veneza.png"
+    },
+    {
+      "id": 20,
+      "codinome": "FLA",
+      "nome_real": "Felipe Moura Brasil",
+      "viés_politico": "Direita Liberal",
+      "categoria": "Opinião",
+      "tags": ["liberalismo", "argumentação", "cultura pop"],
+      "descricao": "torcida argumentativa",
+      "imagem": "img_colunistas/fla.png"
+    },
+    {
+      "id": 21,
+      "codinome": "Real",
+      "nome_real": "Gustavo Franco",
+      "viés_politico": "Direita Liberal Econômica",
+      "categoria": "Economia",
+      "tags": ["moeda", "planalto", "história econômica"],
+      "descricao": "pai da moeda",
+      "imagem": "img_colunistas/real.png"
+    },
+    {
+      "id": 22,
+      "codinome": "PIB",
+      "nome_real": "Samuel Pessôa",
+      "viés_politico": "Centro / Liberal Econômico",
+      "categoria": "Economia",
+      "tags": ["dados", "macroeconomia", "técnico"],
+      "descricao": "planilhas com alma",
+      "imagem": "img_colunistas/pib.png"
+    },
+    {
+      "id": 23,
+      "codinome": "FMI",
+      "nome_real": "Pedro Malan",
+      "viés_politico": "Centro / Social-Democrata",
+      "categoria": "Economia",
+      "tags": ["austeridade", "prudência", "mercados"],
+      "descricao": "prudência clássica",
+      "imagem": "img_colunistas/fmi.png"
+    },
+    {
+      "id": 24,
+      "codinome": "Bolsa",
+      "nome_real": "Elena Landau",
+      "viés_politico": "Centro / Privatista",
+      "categoria": "Economia",
+      "tags": ["mercado", "privatizações", "cidadania"],
+      "descricao": "mercado cidadão",
+      "imagem": "img_colunistas/bolsa.png"
+    },
+    {
+      "id": 25,
+      "codinome": "PIX",
+      "nome_real": "Zeina Latif",
+      "viés_politico": "Direita Liberal",
+      "categoria": "Economia",
+      "tags": ["educação financeira", "mercado"],
+      "descricao": "didática econômica",
+      "imagem": "img_colunistas/pix.png"
+    }
+  ]
+}
