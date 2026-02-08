@@ -219,7 +219,8 @@ border: 1px solid #ddd;
     <div class="cards-area" id="containerFilosofos">
         <div class="card-container">
             <div class="card">
-                <img id="fotocolunista1" src="imagens_app/colunista1.png">
+                <!-- ID CORRIGIDO: de fotocolunista1 para fotoLunar -->
+                <img id="fotoLunar" src="imagens_app/colunista1.png">
                 <div class="label-card">Colunitas</div>
             </div>
             <div id="nomeLunar" class="nome-filosofo">Prontos para duelar...</div>
@@ -227,7 +228,8 @@ border: 1px solid #ddd;
         <img src="imagens_app/verusX.png" class="img-versus-central">
         <div class="card-container">
             <div class="card">
-                <img id="fotocolunista2" src="imagens_app/colunista2.png">
+                <!-- ID CORRIGIDO: de fotocolunista2 para fotoSolar -->
+                <img id="fotoSolar" src="imagens_app/colunista2.png">
                 <div class="label-card">Colunistas</div>
             </div>
             <div id="nomeSolar" class="nome-filosofo">Prontos para duelar...</div>
@@ -268,6 +270,64 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
+// ---------------- TEMAS (INTEGRADOS) ----------------
+const temas = [
+    "Vigilância em massa",
+    "Maldade humana",
+    "Complexo industrial da censura",
+    "Imprensa cooptada pelo discurso da extrema direita",
+    "Jornalistas silenciados por altos salários",
+    "Política atual: nós contra eles",
+    "Geopolítica internacional: novos corsários",
+    "Estado de exceção permanente",
+    "Democracias versus autocratas",
+    "Militarização da polícia",
+    "Criminalização da pobreza",
+    "Lawfare e justiça seletiva",
+    "Nacionalismo versus cosmopolitismo",
+    "Pós-verdade e fake news",
+    "Redes sociais: guerra de narrativas",
+    "Cultura do cancelamento",
+    "Algoritmos decidindo o que é real",
+    "Imprensa como ator político",
+    "Censura privada das plataformas",
+    "Liberdade de expressão absoluta?",
+    "Propaganda como entretenimento",
+    "IA substituindo trabalho humano",
+    "IA, direito autoral e invasão de privacidade",
+    "Dados pessoais como mercadoria",
+    "Neurotecnologia e controle mental",
+    "Transhumanismo",
+    "Gamificação da vida: cidadão como elemento de jogo político",
+    "Tecnologia como nova religião",
+    "Financeirização da vida",
+    "Renda básica universal",
+    "Trabalho precarizado por apps",
+    "Consumo como identidade",
+    "Crise climática e capitalismo verde",
+    "Colonialismo digital",
+    "Identitarismo versus universalismo",
+    "Cultura do ressentimento",
+    "Polarização afetiva: homens versus mulheres",
+    "Ódio como capital político",
+    "Religião como arma ideológica",
+    "Tradição versus ruptura cultural",
+    "Niilismo contemporâneo: pessimismo versus esperancismo",
+    "Saúde mental como questão política",
+    "Burnout coletivo: supremacismo versus cultura woke",
+    "Solidão na era hiperconectada",
+    "Medo como forma de governo",
+    "Esperança como manipulação"
+];
+
+// Popula o datalist com os temas acima
+const datalist = document.getElementById("temasFilosoficos");
+datalist.innerHTML = "";
+temas.forEach(tema => {
+    const option = document.createElement("option");
+    option.value = tema;
+    datalist.appendChild(option);
+});
 
 // ---------------- DADOS E INICIALIZAÇÃO (MODO TODOS CONTRA TODOS) ----------------
 
@@ -293,19 +353,6 @@ async function carregarColunistas() {
 }
 
 carregarColunistas();
-
-// (Carregamento de temas mantido igual ao original)
-fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/colunistas-brasil.json")
-.then(res => res.json())
-.then(data => {
-  const datalist = document.getElementById("temasFilosoficos");
-  datalist.innerHTML = "";
-  data.temas.forEach(tema => {
-      const option = document.createElement("option");
-      option.value = tema;
-      datalist.appendChild(option);
-  });
-}).catch(err => console.log("Erro ao carregar temas:", err));
 
 function iniciarDuelo() {
   const temaInput = document.getElementById('seletorTema').value;
@@ -358,7 +405,7 @@ function sortear() {
       const temp1 = listaTodosColunistas[idx1]; // Vai para a esquerda (Visual Lunar)
       const temp2 = listaTodosColunistas[idx2]; // Vai para a direita (Visual Solar)
       
-      // Atualiza a tela
+      // Atualiza a tela (IDs agora corrigidos no HTML: fotoLunar e fotoSolar)
       document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
       document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunistas2.png";
       document.getElementById('nomeLunar').innerText = temp1.codinome;
