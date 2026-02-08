@@ -57,7 +57,7 @@ align-items: center;
 }
 
 .menu-caixa {
-background: rgba(69, 89, 222, 0.9);
+background: rgba(27, 138, 160, 0.9);
 backdrop-filter: blur(6px);
 color: #333;
 padding: 20px 15px;
@@ -76,9 +76,9 @@ margin-bottom: 10px;
 
 .img-logo {
 display: block;
-margin: -40px auto 10px; 
-width: 100%;
-max-width: 260px;
+margin: -10px auto 10px; 
+width: 60%;
+max-width: 200px;
 aspect-ratio: 1 / 1;
 object-fit: contain;
 }
@@ -105,10 +105,10 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
 
 .btn-aurora:active { transform: scale(0.97); }
 
-.roxo { background: #98df4c; color: #1a1a1a; } 
-.rosa { background: #f49bb9; color: #1a1a1a; }
+.roxo { background: #FA8072; color: #1a1a1a; } 
+.rosa { background: #16efbd; color: #1a1a1a; }
 .azul-info { background: #4caedf; cursor: default; color: white; } 
-.verde { background: #5ae9e9; color: #1a1a1a; } 
+.verde { background: #74e95a; color: #1a1a1a; } 
 
 #jogoArea {
 display: none;
@@ -211,7 +211,7 @@ border: 1px solid #ddd;
     <div id="erroTema">⚠️ Por favor, escolha um tema antes de iniciar!</div>
     <input list="temasFilosoficos" id="seletorTema" class="seletor-tema" placeholder="Escreva seu próprio tema...">
     <datalist id="temasFilosoficos"></datalist>
-    <button onclick="iniciarDuelo()" class="btn-aurora roxo">⚔️ Bora (re)Agendar</button>
+    <button onclick="iniciarDuelo()" class="btn-aurora roxo">⚔️ Bora (re)Pautar a Mídia</button>
   </div>
 
   <!-- ÁREA DE JOGO -->
@@ -512,5 +512,4 @@ if ('serviceWorker' in navigator) {
 
 </script>
 </body>
-
 </html>
