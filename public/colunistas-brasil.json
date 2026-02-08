@@ -13,7 +13,7 @@
       "categoria": "Política",
       "tags": ["estrategista", "contraditório", "debate"],
       "descricao": "estrategista do contraditório",
-      "imagem": "img_colunistas/brasília.png"
+      "imagem": "img_colunistas_png/brasília.png"
     },
     {
       "id": 2,
@@ -23,7 +23,7 @@
       "categoria": "Política",
       "tags": ["bastidores", "decifradora", "congresso"],
       "descricao": "decifradora dos bastidores",
-      "imagem": "img_colunistas/senado.png"
+      "imagem": "img_colunistas_png/senado.png"
     },
     {
       "id": 3,
@@ -33,7 +33,7 @@
       "categoria": "Economia",
       "tags": ["oráculo", "indicadores", "mercado"],
       "descricao": "oráculo da economia",
-      "imagem": "img_colunistas/copom.png"
+      "imagem": "img_colunistas_png/copom.png"
     },
     {
       "id": 4,
@@ -43,7 +43,7 @@
       "categoria": "Política",
       "tags": ["trincheira", "jornalismo", "poder"],
       "descricao": "repórter de trincheira",
-      "imagem": "img_colunistas/planalto.png"
+      "imagem": "img_colunistas_png/planalto.png"
     },
     {
       "id": 5,
@@ -53,7 +53,7 @@
       "categoria": "Geopolítica",
       "tags": ["geopolítica", "relações internacionais", "guerra"],
       "descricao": "geopolítica sem piedade",
-      "imagem": "img_colunistas/varsóvia.png"
+      "imagem": "img_colunistas_png/varsóvia.png"
     },
     {
       "id": 6,
@@ -63,7 +63,7 @@
       "categoria": "Direitos Humanos",
       "tags": ["direitos humanos", "invisíveis", "social"],
       "descricao": "voz dos invisíveis",
-      "imagem": "img_colunistas/sus.png"
+      "imagem": "img_colunistas_png/sus.png"
     },
     {
       "id": 7,
@@ -73,7 +73,7 @@
       "categoria": "Economia",
       "tags": ["liberal", "mercado", "combate"],
       "descricao": "liberal de combate",
-      "imagem": "img_colunistas/faria-lima.png"
+      "imagem": "img_colunistas_png/faria-lima.png"
     },
     {
       "id": 8,
@@ -83,7 +83,7 @@
       "categoria": "Diplomacia",
       "tags": ["onu", "diplomacia", "denúncias"],
       "descricao": "diplomata das denúncias",
-      "imagem": "img_colunistas/genebra.png"
+      "imagem": "img_colunistas_png/genebra.png"
     },
     {
       "id": 9,
@@ -93,7 +93,7 @@
       "categoria": "Segurança",
       "tags": ["defesa", "realismo", "inteligência"],
       "descricao": "realismo frio",
-      "imagem": "img_colunistas/otan.png"
+      "imagem": "img_colunistas_png/otan.png"
     },
     {
       "id": 10,
@@ -103,7 +103,7 @@
       "categoria": "Política",
       "tags": ["sarcasmo", "crítica", "opinião"],
       "descricao": "sarcasmo direto",
-      "imagem": "img_colunistas/pampa.png"
+      "imagem": "img_colunistas_png/pampa.png"
     },
     {
       "id": 11,
@@ -113,7 +113,7 @@
       "categoria": "Jornalismo Político",
       "tags": ["fatos", "conferência", "análise"],
       "descricao": "conferência dos fatos",
-      "imagem": "img_colunistas/var.png"
+      "imagem": "img_colunistas_png/var.png"
     },
     {
       "id": 12,
@@ -123,7 +123,7 @@
       "categoria": "Cultura/Política",
       "tags": ["crônica", "poder", "estilo"],
       "descricao": "cronista do poder",
-      "imagem": "img_colunistas/lapa.png"
+      "imagem": "img_colunistas_png/lapa.png"
     },
     {
       "id": 13,
@@ -133,7 +133,7 @@
       "categoria": "Política",
       "tags": ["articulação", "governo", "informação"],
       "descricao": "articulador",
-      "imagem": "img_colunistas/eixo.png"
+      "imagem": "img_colunistas_png/eixo.png"
     },
     {
       "id": 14,
@@ -143,7 +143,7 @@
       "categoria": "Política",
       "tags": ["eleições", "história", "memória"],
       "descricao": "memória política",
-      "imagem": "img_colunistas/urna.png"
+      "imagem": "img_colunistas_png/urna.png"
     },
     {
       "id": 15,
@@ -153,7 +153,7 @@
       "categoria": "Jornalismo",
       "tags": ["fontes", "informação privilegiada"],
       "descricao": "fonte permanente",
-      "imagem": "img_colunistas/bastidor.png"
+      "imagem": "img_colunistas_png/bastidor.png"
     },
     {
       "id": 16,
@@ -163,7 +163,7 @@
       "categoria": "Internacional",
       "tags": ["guerra", "análise de crise", "leste europeu"],
       "descricao": "analista de crises",
-      "imagem": "img_colunistas/kiev.png"
+      "imagem": "img_colunistas_png/kiev.png"
     },
     {
       "id": 17,
@@ -173,7 +173,7 @@
       "categoria": "Investigação",
       "tags": ["dinheiro", "poder", "investigação"],
       "descricao": "investigação fina",
-      "imagem": "img_colunistas/cofre.png"
+      "imagem": "img_colunistas_png/cofre.png"
     },
     {
       "id": 18,
@@ -183,7 +183,7 @@
       "categoria": "Mídia/Comunicação",
       "tags": ["comunicação", "governo", "mídia"],
       "descricao": "mídia e política",
-      "imagem": "img_colunistas/projac.png"
+      "imagem": "img_colunistas_png/projac.png"
     },
     {
       "id": 19,
@@ -193,7 +193,7 @@
       "categoria": "Cultura/Política",
       "tags": ["ironia", "literatura", "crítica"],
       "descricao": "ironia culta",
-      "imagem": "img_colunistas/veneza.png"
+      "imagem": "img_colunistas_png/veneza.png"
     },
     {
       "id": 20,
@@ -203,7 +203,7 @@
       "categoria": "Opinião",
       "tags": ["liberalismo", "argumentação", "cultura pop"],
       "descricao": "torcida argumentativa",
-      "imagem": "img_colunistas/fla.png"
+      "imagem": "img_colunistas_png/fla.png"
     },
     {
       "id": 21,
@@ -213,7 +213,7 @@
       "categoria": "Economia",
       "tags": ["moeda", "planalto", "história econômica"],
       "descricao": "pai da moeda",
-      "imagem": "img_colunistas/real.png"
+      "imagem": "img_colunistas_png/real.png"
     },
     {
       "id": 22,
@@ -223,7 +223,7 @@
       "categoria": "Economia",
       "tags": ["dados", "macroeconomia", "técnico"],
       "descricao": "planilhas com alma",
-      "imagem": "img_colunistas/pib.png"
+      "imagem": "img_colunistas_png/pib.png"
     },
     {
       "id": 23,
@@ -233,7 +233,7 @@
       "categoria": "Economia",
       "tags": ["austeridade", "prudência", "mercados"],
       "descricao": "prudência clássica",
-      "imagem": "img_colunistas/fmi.png"
+      "imagem": "img_colunistas_png/fmi.png"
     },
     {
       "id": 24,
@@ -243,7 +243,7 @@
       "categoria": "Economia",
       "tags": ["mercado", "privatizações", "cidadania"],
       "descricao": "mercado cidadão",
-      "imagem": "img_colunistas/bolsa.png"
+      "imagem": "img_colunistas_png/bolsa.png"
     },
     {
       "id": 25,
@@ -253,7 +253,7 @@
       "categoria": "Economia",
       "tags": ["educação financeira", "mercado"],
       "descricao": "didática econômica",
-      "imagem": "img_colunistas/pix.png"
+      "imagem": "img_colunistas_png/pix.png"
     }
   ]
 }
