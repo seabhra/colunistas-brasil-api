@@ -1,11 +1,12 @@
 {
   "name": "Agenda 300 - Duelo de Ideias entre Colunistas e Influencers",
-  "short_name": "Allora",
+  "short_name": "Agenda dos 300",
   "icons": [
     {
-      "src": "public/icons/icon-192x192.png",
+      "src": "public/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     }
   ]
+
 }
