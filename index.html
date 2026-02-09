@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
+crossorigin="anonymous"></script>
+
+<!-- Favicon -->
+<link rel="icon" href="./favicon.ico" type="image/x-icon">
+
+<!-- Ícones PWA -->
+<link rel="apple-touch-icon" sizes="192x192" href="./public/icons/icon-192.png">
+
+<!-- Manifest json -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#6b46c1">
+<title>Agenda dos 300 - Duelo de Colunistas, Influencerse Ativistas</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+margin: 0;
+padding: 10px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #fdfcfd;
+color: white;
+text-align: center;
+overflow-x: hidden;
+display: flex;
+justify-content: center; 
+align-items: center; 
+min-height: 100vh;
+}
+
+#pageLoader {
+position: fixed; inset: 0; background: #fdfcfd; 
+z-index: 9999; display: flex; align-items: center; justify-content: center;
+}
+
+.loader-circle {
+width: 60px; height: 60px; border: 6px solid #e0e0e0;
+border-top: 6px solid #d847cf; border-radius: 50%; animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.app-container {
+width: 100%;
+max-width: 360px; 
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.menu-caixa {
+background: rgba(27, 138, 160, 0.9);
+backdrop-filter: blur(6px);
+color: #333;
+padding: 20px 15px;
+border-radius: 20px;
+width: 100%;
+box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+#erroTema {
+color: #ffeb3b; 
+font-size: 12px;
+font-weight: bold;
+display: none;
+margin-bottom: 10px;
+}
+
+.img-logo {
+display: block;
+margin: -10px auto 10px; 
+width: 60%;
+max-width: 200px;
+aspect-ratio: 1 / 1;
+object-fit: contain;
+}
+
+.img-versus-central {
+width: 40px;
+height: 40px;
+align-self: center;
+object-fit: contain;
+margin: -10px 5px; 
+}
+
+.seletor-tema {
+width: 100%; padding: 12px; margin: 10px 0;
+border-radius: 12px; border: 2px solid #9d5fe9;
+background: white; font-weight: bold; color: #4a148c;
+}
+
+.btn-aurora {
+width: 100%; padding: 12px; margin: 6px 0; border: none;
+border-radius: 16px; font-weight: bold; cursor: pointer;
+color: white; font-size: 16px; transition: transform 0.2s ease;
+}
+
+.btn-aurora:active { transform: scale(0.97); }
+
+.roxo { background: #FA8072; color: #1a1a1a; } 
+.rosa { background: #16efbd; color: #1a1a1a; }
+.azul-info { background: #4caedf; cursor: default; color: white; } 
+.verde { background: #74e95a; color: #1a1a1a; } 
+
+#jogoArea {
+display: none;
+width: 100%;
+flex-direction: column;
+align-items: center;
+}
+
+.cards-area {
+display: none; justify-content: center; gap: 5px;
+margin: 10px auto 20px; padding: 10px; background: rgba(255,255,255,0.2);
+border-radius: 20px; flex-wrap: nowrap;
+align-items: center;
+width: 100%;
+}
+
+.card-container { width: 48%; height: 220px; display: flex; flex-direction: column; align-items: center;}
+
+.card {
+width: 100%; height: 190px; background: #1a1a1a;
+border-radius: 12px; border: 3px solid #fff; overflow: hidden;
+box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative;
+margin-bottom: 5px;
+}
+
+.card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+.label-card {
+position: absolute; top: 0; width: 100%; background: rgba(0,0,0,0.7);
+color: #fff; font-size: 10px; padding: 2px; font-weight: bold;
+white-space: nowrap;
+}
+
+.nome-colunista {
+background: #638da3; color: white;
+font-size: 11px; padding: 4px; border-radius: 8px;
+width: 100%;
+min-height: 30px; display: flex; align-items: center; justify-content: center;
+line-height: 1.1; font-weight: bold;
+}
+
+#status {
+margin: 15px auto;
+font-size: 13px;
+color: #555; 
+background: rgba(255,255,255,0.8);
+padding: 10px;
+width: 100%;
+border-radius: 10px;
+display: block;
+text-align: justify;
+}
+
+#aiBox {
+display: none;
+background: white;
+color: #333;
+padding: 15px;
+border-radius: 15px;
+text-align: left;
+margin: 15px 0;
+width: 100%;
+font-size: 14px;
+line-height: 1.5;
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+position: relative;
+border: 1px solid #eee;
+}
+
+.btn-zap-redondo { 
+position: absolute; top: -15px; right: -10px; 
+width: 45px; height: 45px; 
+cursor: pointer; z-index: 10; 
+transition: transform 0.2s;
+}
+.btn-zap-redondo:hover { transform: scale(1.1); }
+
+#ad-container {
+margin-top: 20px;
+min-height: 100px;
+background-color: #f9f9f9;
+border-radius: 8px;
+padding: 5px;
+border: 1px solid #ddd;
+}
+</style>
+</head>
+
+<body onload="document.getElementById('pageLoader').style.display='none';">
+<div id="pageLoader"><div class="loader-circle"></div></div>
+
+<div class="app-container">
+  
+  <!-- MENU INICIAL -->
+  <div id="menuInicial" class="menu-caixa">
+    <div class="banner-abertura">
+        <img src="imagens_app/logo_agenda.png" class="img-logo" alt="Agenda">
+    </div>
+    <p style="color:#ede4e4; font-weight: bold; margin: 5px 0;">Digite ou selecione um tema:</p>
+    <div id="erroTema">⚠️ Por favor, escolha um tema antes de iniciar!</div>
+    <input list="temasFilosoficos" id="seletorTema" class="seletor-tema" placeholder="Escreva seu próprio tema...">
+    <datalist id="temasFilosoficos"></datalist>
+    <button onclick="iniciarDuelo()" class="btn-aurora roxo">⚔️ Bora (re)Pautar a Mídia</button>
+  </div>
+
+  <!-- ÁREA DE JOGO -->
+  <div id="jogoArea">
+    <div class="cards-area" id="containerFilosofos">
+        <div class="card-container">
+            <div class="card">
+                <img id="fotocolunista1" src="imagens_app/colunista1.png">
+                <div class="label-card">Colunitas</div>
+            </div>
+            <div id="nomeLunar" class="nome-filosofo">Prontos para duelar...</div>
+        </div>
+        <img src="imagens_app/verusX.png" class="img-versus-central">
+        <div class="card-container">
+            <div class="card">
+                <img id="fotocolunista2" src="imagens_app/colunista2.png">
+                <div class="label-card">Colunistas</div>
+            </div>
+            <div id="nomeSolar" class="nome-filosofo">Prontos para duelar...</div>
+        </div>
+    </div>
+
+    <div id="areaBotaoAcao">
+        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting</button>
+    </div>
+
+    <div id="status">Está preparado? Nesta redação virtual, os maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em modo oculto, 300 avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias e das redes em busca da metaverdade. Fora dos muros da newsroom, o texto vira arma e a razão, escudo da sociedade inocente. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+
+    <!-- CAIXA DE RESULTADO E ANÚNCIO -->
+    <div id="aiBox">
+        <div id="ad-container">
+            <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3940256099942544"
+                 data-ad-slot="6300978111"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+
+  </div>
+</div> <!-- Fim app-container -->
+
+<script>
+// ---------------- ÁUDIO ----------------
+const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
+shuffleAudio.preload = 'auto';
+
+const memoriesAudio = new Audio('audio_app/darren_curtis.mp3');     
+memoriesAudio.loop = true;
+memoriesAudio.preload = 'auto';
+
+memoriesAudio.volume = 0.5;
+shuffleAudio.volume = 0.5;
+
+
+// ---------------- DADOS E INICIALIZAÇÃO (MODO TODOS CONTRA TODOS) ----------------
+
+let listaTodosColunistas = []; // Lista única com todos os colunistas
+let colunista1 = {};
+let colunista2 = {};
+
+async function carregarColunistas() {
+    try {
+        const resposta = await fetch('colunistas-brasil.json');
+        if (!resposta.ok) throw new Error("Arquivo colunistas-brasil.json não encontrado");
+        const dados = await resposta.json();
+        
+        // Carrega todos para uma única lista
+        listaTodosColunistas = dados.colunistas || [];
+        
+        console.log(`Carregados ${listaTodosColunistas.length} colunistas para o modo Todos contra Todos.`);
+        
+    } catch (erro) {
+        console.error("Erro ao carregar colunistas-brasil.json:", erro);
+        alert("Erro ao carregar a lista de colunistas.");
+    }
+}
+
+carregarColunistas();
+
+// (Carregamento de temas mantido igual ao original)
+fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/colunistas-brasil.json")
+.then(res => res.json())
+.then(data => {
+  const datalist = document.getElementById("temasFilosoficos");
+  datalist.innerHTML = "";
+  data.temas.forEach(tema => {
+      const option = document.createElement("option");
+      option.value = tema;
+      datalist.appendChild(option);
+  });
+}).catch(err => console.log("Erro ao carregar temas:", err));
+
+function iniciarDuelo() {
+  const temaInput = document.getElementById('seletorTema').value;
+  const erroEl = document.getElementById('erroTema');
+  if (temaInput.trim() === "") {
+      erroEl.style.display = 'block';
+      return;
+  }
+  erroEl.style.display = 'none';
+  
+  document.getElementById('menuInicial').style.display = 'none';
+  document.getElementById('jogoArea').style.display = 'flex';
+  document.getElementById('containerFilosofos').style.display = 'flex';
+}
+
+function sortear() {
+  if (listaTodosColunistas.length < 2) {
+      alert("Lista de colunistas insuficiente para um duelo.");
+      return;
+  }
+
+  // Áudio
+  memoriesAudio.pause();
+  memoriesAudio.currentTime = 0;
+  shuffleAudio.currentTime = 0;
+  shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
+
+  document.getElementById('status').innerText = "No duelo contra narrativas institucionalizadas, os colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso. Na arena da imprensa séria, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada.";
+
+  
+  const areaBotao = document.getElementById('areaBotaoAcao');
+  areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
+
+  const aiBox = document.getElementById('aiBox');
+  if(aiBox.style.display === 'block') {
+      aiBox.style.display = 'none';
+  }
+
+  let ciclos = 0;
+  const intervalo = setInterval(() => {
+      // Sorteia dois índices aleatórios diferentes
+      let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
+      let idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
+      
+      // Garante que não seja o mesmo colunista
+      while(idx1 === idx2) {
+          idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
+      }
+
+      const temp1 = listaTodosColunistas[idx1]; // Vai para a esquerda (Visual Lunar)
+      const temp2 = listaTodosColunistas[idx2]; // Vai para a direita (Visual Solar)
+      
+      // Atualiza a tela
+      document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
+      document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunistas2.png";
+      document.getElementById('nomeLunar').innerText = temp1.codinome;
+      document.getElementById('nomeSolar').innerText = temp2.codinome;
+      
+      // Atualiza os labels visuais para mostrar o viés deles dinamicamente
+      document.querySelector('.card:first-child .label-card').innerText = `${temp1.codinome}: ${temp1.viés_politico}`;
+      document.querySelector('.card:last-child .label-card').innerText = `${temp2.codinome}: ${temp2.viés_politico}`;
+
+      if (ciclos++ > 100) {
+          clearInterval(intervalo);
+          shuffleAudio.pause();
+          
+          // Define os sorteados final
+          colunista1 = temp1;
+          colunista2 = temp2;
+          
+          gerarConfrontoIA();
+      }
+  }, 90);
+}
+// ---------------- API IA (ATUALIZADA PARA TODO X TODO) ----------------
+
+async function gerarConfrontoIA() {
+  const statusEl = document.getElementById('status');
+  const tema = document.getElementById('seletorTema').value || "Atualidade";
+
+  statusEl.innerText = `Aguarde um instante... ${colunista1.codinome} (${colunista1.viés_politico}) e ${colunista2.codinome} (${colunista2.viés_politico}) estão analisando o tema: ${tema}.`;
+
+  try {
+
+const promptTexto = `Atue como um mediador de debate público fora dos interesses comerciais das newsroons. Promova um duelo de ideias racional e profundo entre o colunista/codinome ${colunista1.codinome} ${colunista1.viés_politico} e o colunista/codinome ${colunista2.codinome} (${colunista2.viés_politico}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado, evitando qualquer viés passional comum das mídias tradicionais e das redes sociais.`;
+
+      const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              messages: [{ role: 'user', content: promptTexto }],
+              model: 'llama-3.3-70b-versatile'
+          })
+      });
+
+      if (!res.ok) throw new Error("Erro na API");
+      const data = await res.json();
+      const respostaTexto = data.choices[0].message.content;
+      const aiBox = document.getElementById('aiBox');
+
+      aiBox.innerHTML = `
+        <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
+          <img src="public/imagens_app/logo_agenda.png" class="ai-logo" style="width:25px; vertical-align:middle; margin-right:8px;">
+          Agenda dos 300 Assistente de IA
+        </h2>
+        
+        <div id="conteudoIA" style="margin-bottom: 15px;">
+          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
+              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}) vs ${colunista2.codinome} (${colunista2.viés_politico})
+          </h3>
+          <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
+              <strong>Pauta em disputa:</strong> ${tema}
+          </p>
+          <hr style="border:0; border-top:1px solid #eee;">
+          <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
+        </div>
+
+        <img src="public/imagens_app/zap.png"
+             class="btn-zap-redondo"
+             onclick="shareOnWhatsApp()"
+             alt="Compartilhar">
+
+        <div id="ad-container">
+          <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-3940256099942544"
+               data-ad-slot="6300978111"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      `;
+
+      aiBox.style.display = 'block';
+      statusEl.innerText = "A redação fora da newsroom finalizou o duelo de narrativas.";
+      statusEl.style.textAlign = "center";
+      statusEl.style.color = "#00cc66";
+      statusEl.style.fontWeight = "500";
+
+      try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+          console.error("Erro ao carregar anúncio:", e);
+      }
+
+      document.getElementById('areaBotaoAcao').innerHTML = `
+        <button onclick="location.reload()" class="btn-aurora verde">
+          ♻️ Nova Pauta
+        </button>
+      `;
+
+  } catch (e) {
+      console.error(e);
+      statusEl.innerText = "Erro ao acessar a IA: " + e.message;
+      statusEl.style.color = "red";
+      document.getElementById('areaBotaoAcao').innerHTML = `
+          <button onclick="location.reload()" class="btn-aurora verde">
+          ♻️ Nova Pauta 
+          </button>
+      `;
+  }
+}
+
+// ---------------- WHATSAPP ----------------
+function shareOnWhatsApp() {
+  const box = document.getElementById('conteudoIA');
+  
+  if (!box) {
+      alert("Conteúdo não encontrado para compartilhar.");
+      return;
+  }
+
+  let texto = box.innerText;
+
+  if (!texto) {
+      alert("Ainda não há duelo para compartilhar.");
+      return;
+  }
+
+  if (texto.length > 2000) {
+      texto = texto.substring(0, 2000) + "...";
+  }
+
+  const title = "Agenda dos 300 - Duelo de Colunistas, Influencers e Ativistas";
+  const WHATSAPP_FOOTER = "\n\n📰 Agenda dos 300 — O Duelo de Narrativas\n⚡ Powered by Geraldo A. Seabra";
+  const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
+
+  if (window.AppInventor) {
+      window.AppInventor.setWebViewString(message);
+  } else {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+  }
+}
+
+// ---------------- SERVICE WORKER ----------------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('ServiceWorker registration successful'))
+      .catch(err => console.log('ServiceWorker registration failed: ', err));
+  });
+}
+
+
+</script>
+</body>
+</html>
