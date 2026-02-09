@@ -1,6 +1,6 @@
 {
-  "name": "Agenda 300 - Duelo de Ideias entre Colunistas e Influencers",
-  "short_name": "Agenda dos 300",
+  "name": "Agenda dos 300 - Duelo de Ideias entre Colunistas e Influencers",
+  "short_name": "Agenda 300",
   "icons": [
     {
       "src": "public/icons/icon-192.png",
@@ -10,3 +10,4 @@
   ]
 
 }
+
