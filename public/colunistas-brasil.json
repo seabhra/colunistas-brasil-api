@@ -13,7 +13,7 @@
       "categoria": "Política",
       "tags": ["estrategista", "contraditório", "debate"],
       "descricao": "estrategista do contraditório",
-      "imagem": "img_colunistas_png/brasil.png" 
+      "imagem": "img_colunistas_png/brasilia.png" 
     },
     {
       "id": 2,
@@ -257,3 +257,4 @@
     }
   ]
 }
+
