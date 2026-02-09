@@ -288,7 +288,7 @@ border: 1px solid #ddd;
         </div>
 
     <div id="areaBotaoAcao">
-        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting</button>
+        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting Real</button>
     </div>
 
     <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade. Fora dos muros das newsroons, o texto vira arma e a razão, escudo da sociedade despreparada. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
@@ -442,7 +442,10 @@ function sortear() {
       aiBox.style.display = 'none';
   }
 
+  // CORREÇÃO 1: Mover declaração para fora do setInterval para acessar depois
+  let temp1, temp2; 
   let ciclos = 0;
+  
   const intervalo = setInterval(() => {
       // Sorteia dois índices aleatórios diferentes
       let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
@@ -453,8 +456,9 @@ function sortear() {
           idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
       }
 
-      const temp1 = listaTodosColunistas[idx1]; // Vai para a esquerda (Visual Lunar)
-      const temp2 = listaTodosColunistas[idx2]; // Vai para a direita (Visual Solar)
+      // CORREÇÃO 1 (cont.): Atribuir às variáveis externas (removido 'const')
+      temp1 = listaTodosColunistas[idx1]; 
+      temp2 = listaTodosColunistas[idx2]; 
       
       // Atualiza a tela (IDs agora corrigidos no HTML: fotoLunar e fotoSolar)
       document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
@@ -462,9 +466,8 @@ function sortear() {
       document.getElementById('nomeLunar').innerText = temp1.codinome;
       document.getElementById('nomeSolar').innerText = temp2.codinome;
       
-      // Atualiza os labels visuais para mostrar o viés deles dinamicamente
-      document.querySelector('.card:first-child .label-card').innerText = `${temp1.codinome}: ${temp1.viés_politico}`;
-      document.querySelector('.card:last-child .label-card').innerText = `${temp2.codinome}: ${temp2.viés_politico}`;
+      // CORREÇÃO 2: REMOVIDAS AS LINHAS QUE ALTERAVAM O LABEL-CARD
+      // O label agora permanece fixo como "Colunistas" conforme definido no HTML.
 
       if (ciclos++ > 100) {
           clearInterval(intervalo);
@@ -611,5 +614,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
-
