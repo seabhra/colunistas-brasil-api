@@ -11,7 +11,7 @@ const urlsToCache = [
   '/imagens_app/colunistas2.png',
   '/imagens_app/versusX.png',
   '/imagens_app/zap.png',
-  '/icons/icon-192.png',
+  'public/icons/icon-192.png',
   // Adicione aqui outros arquivos estáticos que você quer cachear
 ];
 
@@ -82,5 +82,6 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
 
 
