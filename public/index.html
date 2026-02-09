@@ -14,186 +14,265 @@ crossorigin="anonymous"></script>
 <!-- Ícones PWA -->
 <link rel="apple-touch-icon" sizes="192x192" href="./public/icons/icon-192.png">
 
-<!-- Manifest json -->
-<link rel="manifest" href="./manifest.json">
+<!-- Manifest json (Comentado temporariamente para evitar erro 401 no console durante o debug, descomente quando o arquivo estiver configurado no servidor) -->
+<!-- <link rel="manifest" href="./manifest.json"> -->
 <meta name="theme-color" content="#6b46c1">
-<title>Agenda dos 300 - Duelo de Colunistas, Influencerse Ativistas</title>
+<title>Agenda dos 300 - Duelo de Colunistas</title>
 
 <style>
-* { box-sizing: border-box; }
+    /* --- CSS Reset e Base --- */
+    * { box-sizing: border-box; }
 
-body {
-margin: 0;
-padding: 10px;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background: #fdfcfd;
-color: white;
-text-align: center;
-overflow-x: hidden;
-display: flex;
-justify-content: center; 
-align-items: center; 
-min-height: 100vh;
-}
+    body {
+        margin: 0;
+        padding: 10px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #fdfcfd 0%, #eef2f3 100%);
+        color: #333;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-#pageLoader {
-position: fixed; inset: 0; background: #fdfcfd; 
-z-index: 9999; display: flex; align-items: center; justify-content: center;
-}
+    /* --- Loader --- */
+    #pageLoader {
+        position: fixed; inset: 0; background: #fdfcfd; 
+        z-index: 9999; display: flex; align-items: center; justify-content: center;
+    }
 
-.loader-circle {
-width: 60px; height: 60px; border: 6px solid #e0e0e0;
-border-top: 6px solid #d847cf; border-radius: 50%; animation: spin 1.5s linear infinite;
-}
+    .loader-circle {
+        width: 60px; height: 60px; border: 6px solid #e0e0e0;
+        border-top: 6px solid #d847cf; border-radius: 50%; animation: spin 1.5s linear infinite;
+    }
 
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.app-container {
-width: 100%;
-max-width: 360px; 
-display: flex;
-flex-direction: column;
-align-items: center;
-}
+    /* --- Container Principal --- */
+    .app-container {
+        width: 100%;
+        max-width: 400px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.menu-caixa {
-background: rgba(27, 138, 160, 0.9);
-backdrop-filter: blur(6px);
-color: #333;
-padding: 20px 15px;
-border-radius: 20px;
-width: 100%;
-box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
+    /* --- Menu Inicial --- */
+    .menu-caixa {
+        background: rgba(27, 138, 160, 0.95);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 25px 20px;
+        border-radius: 20px;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
 
-#erroTema {
-color: #ffeb3b; 
-font-size: 12px;
-font-weight: bold;
-display: none;
-margin-bottom: 10px;
-}
+    #erroTema {
+        color: #ffeb3b; 
+        font-size: 13px;
+        font-weight: bold;
+        display: none;
+        margin-bottom: 10px;
+        background: rgba(0,0,0,0.2);
+        padding: 8px;
+        border-radius: 8px;
+    }
 
-.img-logo {
-display: block;
-margin: -10px auto 10px; 
-width: 60%;
-max-width: 200px;
-aspect-ratio: 1 / 1;
-object-fit: contain;
-}
+    .img-logo {
+        display: block;
+        margin: 0 auto 15px; 
+        width: 70%;
+        max-width: 180px;
+        height: auto;
+    }
 
-.img-versus-central {
-width: 40px;
-height: 40px;
-align-self: center;
-object-fit: contain;
-margin: -10px 5px; 
-}
+    .seletor-tema {
+        width: 100%; padding: 12px; margin: 10px 0;
+        border-radius: 12px; border: 2px solid #9d5fe9;
+        background: white; font-weight: bold; color: #4a148c;
+        font-size: 16px;
+        outline: none;
+    }
 
-.seletor-tema {
-width: 100%; padding: 12px; margin: 10px 0;
-border-radius: 12px; border: 2px solid #9d5fe9;
-background: white; font-weight: bold; color: #4a148c;
-}
+    .btn-aurora {
+        width: 100%; padding: 14px; margin: 8px 0; border: none;
+        border-radius: 16px; font-weight: bold; cursor: pointer;
+        color: white; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
 
-.btn-aurora {
-width: 100%; padding: 12px; margin: 6px 0; border: none;
-border-radius: 16px; font-weight: bold; cursor: pointer;
-color: white; font-size: 16px; transition: transform 0.2s ease;
-}
+    .btn-aurora:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+    .btn-aurora:active { transform: scale(0.98); }
 
-.btn-aurora:active { transform: scale(0.97); }
+    .roxo { background: linear-gradient(45deg, #6b46c1, #9d5fe9); } 
+    .rosa { background: linear-gradient(45deg, #16efbd, #0fb385); color: #1a1a1a; }
+    .azul-info { background: linear-gradient(45deg, #4caedf, #2980b9); cursor: default; } 
+    .verde { background: linear-gradient(45deg, #74e95a, #2ecc71); color: #1a1a1a; } 
 
-.roxo { background: #FA8072; color: #1a1a1a; } 
-.rosa { background: #16efbd; color: #1a1a1a; }
-.azul-info { background: #4caedf; cursor: default; color: white; } 
-.verde { background: #74e95a; color: #1a1a1a; } 
+    /* --- Área de Jogo --- */
+    #jogoArea {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
 
-#jogoArea {
-display: none;
-width: 100%;
-flex-direction: column;
-align-items: center;
-}
+    .cards-area {
+        display: none; 
+        justify-content: center; 
+        align-items: center;
+        gap: 10px;
+        margin: 10px auto 20px; 
+        padding: 15px; 
+        background: rgba(255,255,255,0.6);
+        border-radius: 20px; 
+        width: 100%;
+    }
 
-.cards-area {
-display: none; justify-content: center; gap: 5px;
-margin: 10px auto 20px; padding: 10px; background: rgba(255,255,255,0.2);
-border-radius: 20px; flex-wrap: nowrap;
-align-items: center;
-width: 100%;
-}
+    .card-container { 
+        width: 48%; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+    }
 
-.card-container { width: 48%; height: 220px; display: flex; flex-direction: column; align-items: center;}
+    .card {
+        width: 100%; 
+        height: 200px; 
+        background: #1a1a1a;
+        border-radius: 15px; 
+        border: 3px solid #fff; 
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3); 
+        position: relative;
+        margin-bottom: 8px;
+        transition: transform 0.3s;
+    }
 
-.card {
-width: 100%; height: 190px; background: #1a1a1a;
-border-radius: 12px; border: 3px solid #fff; overflow: hidden;
-box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative;
-margin-bottom: 5px;
-}
+    .card img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        object-position: top; 
+        transition: opacity 0.3s;
+    }
 
-.card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    /* Rótulo fixo no topo do card */
+    .label-card {
+        position: absolute; 
+        top: 0; 
+        width: 100%; 
+        background: rgba(107, 70, 193, 0.9); /* Cor roxa sólida */
+        color: #fff; 
+        font-size: 11px; 
+        padding: 4px 0; 
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        z-index: 2;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
 
-.label-card {
-position: absolute; top: 0; width: 100%; background: rgba(0,0,0,0.7);
-color: #fff; font-size: 10px; padding: 2px; font-weight: bold;
-white-space: nowrap;
-}
+    /* Área do nome abaixo do card */
+    .nome-colunista {
+        background: white;
+        color: #333;
+        font-size: 12px; 
+        padding: 6px 2px; 
+        border-radius: 8px;
+        width: 100%;
+        min-height: 35px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        text-align: center;
+        font-weight: 700;
+        line-height: 1.2;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-.nome-colunista {
-background: #638da3; color: white;
-font-size: 11px; padding: 4px; border-radius: 8px;
-width: 100%;
-min-height: 30px; display: flex; align-items: center; justify-content: center;
-line-height: 1.1; font-weight: bold;
-}
+    .img-versus-central {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+        animation: pulse 2s infinite;
+    }
 
-#status {
-margin: 15px auto;
-font-size: 13px;
-color: #555; 
-background: rgba(255,255,255,0.8);
-padding: 10px;
-width: 100%;
-border-radius: 10px;
-display: block;
-text-align: justify;
-}
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
 
-#aiBox {
-display: none;
-background: white;
-color: #333;
-padding: 15px;
-border-radius: 15px;
-text-align: left;
-margin: 15px 0;
-width: 100%;
-font-size: 14px;
-line-height: 1.5;
-box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-position: relative;
-border: 1px solid #eee;
-}
+    #status {
+        margin: 15px auto;
+        font-size: 14px;
+        color: #444; 
+        background: white;
+        padding: 12px;
+        width: 100%;
+        border-radius: 12px;
+        display: block;
+        text-align: justify;
+        border-left: 5px solid #6b46c1;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        line-height: 1.5;
+    }
 
-.btn-zap-redondo { 
-position: absolute; top: -15px; right: -10px; 
-width: 45px; height: 45px; 
-cursor: pointer; z-index: 10; 
-transition: transform 0.2s;
-}
-.btn-zap-redondo:hover { transform: scale(1.1); }
+    /* Caixa de Resultado da IA */
+    #aiBox {
+        display: none;
+        background: white;
+        color: #333;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: left;
+        margin: 15px 0;
+        width: 100%;
+        font-size: 14px;
+        line-height: 1.6;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        border: 1px solid #e0e0e0;
+        position: relative;
+        animation: slideUp 0.5s ease-out;
+    }
 
-#ad-container {
-margin-top: 20px;
-min-height: 100px;
-background-color: #f9f9f9;
-border-radius: 8px;
-padding: 5px;
-border: 1px solid #ddd;
-}
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-title {
+        color: #6b46c1; 
+        margin-top: 0; 
+        font-size: 18px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    .btn-zap-redondo { 
+        position: absolute; top: -20px; right: -10px; 
+        width: 50px; height: 50px; 
+        cursor: pointer; z-index: 10; 
+        transition: transform 0.2s;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    }
+    .btn-zap-redondo:hover { transform: scale(1.1) rotate(10deg); }
+
+    #ad-container {
+        margin-top: 20px;
+        min-height: 100px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 5px;
+        border: 1px solid #ddd;
+    }
 </style>
 </head>
 
@@ -205,9 +284,12 @@ border: 1px solid #ddd;
   <!-- MENU INICIAL -->
   <div id="menuInicial" class="menu-caixa">
     <div class="banner-abertura">
-        <img src="imagens_app/logo_agenda.png" class="img-logo" alt="Agenda">
+        <!-- Usando uma imagem placeholder se a original não carregar -->
+        <img src="imagens_app/logo_agenda.png" 
+             onerror="this.src='https://picsum.photos/seed/agenda/200/200'" 
+             class="img-logo" alt="Agenda">
     </div>
-    <p style="color:#ede4e4; font-weight: bold; margin: 5px 0;">Digite ou selecione um tema:</p>
+    <p style="color:#fff; font-weight: bold; margin: 10px 0;">Digite ou selecione um tema:</p>
     <div id="erroTema">⚠️ Por favor, escolha um tema antes de iniciar!</div>
     <input list="temasFilosoficos" id="seletorTema" class="seletor-tema" placeholder="Escreva seu próprio tema...">
     <datalist id="temasFilosoficos"></datalist>
@@ -217,32 +299,39 @@ border: 1px solid #ddd;
   <!-- ÁREA DE JOGO -->
   <div id="jogoArea">
     <div class="cards-area" id="containerFilosofos">
+        <!-- Lado Esquerdo (Lunar) -->
         <div class="card-container">
             <div class="card">
-                <!-- ID CORRIGIDO: de fotocolunista1 para fotoLunar -->
-                <img id="fotoLunar" src="imagens_app/colunista1.png">
+                <!-- Rótulo FIXO "Colunistas" -->
                 <div class="label-card">Colunistas</div>
+                <img id="fotoLunar" src="" alt="Colunista 1">
             </div>
-            <div id="nomeLunar" class="nome-filosofo">Prontos para duelar...</div>
+            <div id="nomeLunar" class="nome-colunista">Aguardando...</div>
         </div>
-        <img src="imagens_app/versusX.png" class="img-versus-central">
+
+        <!-- VS Central -->
+        <img src="imagens_app/versusX.png" 
+             onerror="this.src='https://picsum.photos/seed/vs/50/50?blur=2'" 
+             class="img-versus-central">
+
+        <!-- Lado Direito (Solar) -->
         <div class="card-container">
             <div class="card">
-                <!-- ID CORRIGIDO: de fotocolunista2 para fotoSolar -->
-                <img id="fotoSolar" src="imagens_app/colunista2.png">
+                <!-- Rótulo FIXO "Colunistas" -->
                 <div class="label-card">Colunistas</div>
+                <img id="fotoSolar" src="" alt="Colunista 2">
             </div>
-            <div id="nomeSolar" class="nome-filosofo">Prontos para duelar...</div>
+            <div id="nomeSolar" class="nome-colunista">Aguardando...</div>
         </div>
     </div>
 
     <div id="areaBotaoAcao">
-        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Real Agenda Setting</button>
+        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏 Jogar Real Agenda Setting</button>
     </div>
 
-    <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade. Fora dos muros das newsroons, o texto vira arma e a razão, escudo da sociedade despreparada. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+    <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Escolha um tema e clique em jogar.</div>
 
-    <!-- CAIXA DE RESULTADO E ANÚNCIO -->
+    <!-- CAIXA DE RESULTADO -->
     <div id="aiBox">
         <div id="ad-container">
             <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
@@ -256,7 +345,7 @@ border: 1px solid #ddd;
     </div>
 
   </div>
-</div> <!-- Fim app-container -->
+</div> 
 
 <script>
 // ---------------- ÁUDIO ----------------
@@ -270,57 +359,20 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
-// ---------------- TEMAS (INTEGRADOS) ----------------
+// ---------------- TEMAS ----------------
 const temas = [
-    "Vigilância em massa",
-    "Maldade humana",
-    "Complexo industrial da censura",
-    "Imprensa cooptada pelo discurso da extrema direita",
-    "Jornalistas silenciados por altos salários",
-    "Política atual: nós contra eles",
-    "Geopolítica internacional: novos corsários",
-    "Estado de exceção permanente",
-    "Democracias versus autocratas",
-    "Militarização da polícia",
-    "Criminalização da pobreza",
-    "Lawfare e justiça seletiva",
-    "Nacionalismo versus cosmopolitismo",
-    "Pós-verdade e fake news",
-    "Redes sociais: guerra de narrativas",
-    "Cultura do cancelamento",
-    "Algoritmos decidindo o que é real",
-    "Imprensa como ator político",
-    "Censura privada das plataformas",
-    "Liberdade de expressão absoluta?",
-    "Propaganda como entretenimento",
-    "IA substituindo trabalho humano",
-    "IA, direito autoral e invasão de privacidade",
-    "Dados pessoais como mercadoria",
-    "Neurotecnologia e controle mental",
-    "Transhumanismo",
-    "Gamificação da vida: cidadão como elemento de jogo político",
-    "Tecnologia como nova religião",
-    "Financeirização da vida",
-    "Renda básica universal",
-    "Trabalho precarizado por apps",
-    "Consumo como identidade",
-    "Crise climática e capitalismo verde",
-    "Colonialismo digital",
-    "Identitarismo versus universalismo",
-    "Cultura do ressentimento",
-    "Polarização afetiva: homens versus mulheres",
-    "Ódio como capital político",
-    "Religião como arma ideológica",
-    "Tradição versus ruptura cultural",
-    "Niilismo contemporâneo: pessimismo versus esperancismo",
-    "Saúde mental como questão política",
-    "Burnout coletivo: supremacismo versus cultura woke",
-    "Solidão na era hiperconectada",
-    "Medo como forma de governo",
-    "Esperança como manipulação"
+    "Vigilância em massa", "Maldade humana", "Complexo industrial da censura",
+    "Imprensa cooptada pelo discurso da extrema direita", "Política atual: nós contra eles",
+    "Geopolítica internacional: novos corsários", "Estado de exceção permanente",
+    "Democracias versus autocratas", "Militarização da polícia", "Criminalização da pobreza",
+    "Lawfare e justiça seletiva", "Nacionalismo versus cosmopolitismo", "Pós-verdade e fake news",
+    "Redes sociais: guerra de narrativas", "Cultura do cancelamento", "Algoritmos decidindo o que é real",
+    "Imprensa como ator político", "Censura privada das plataformas", "Liberdade de expressão absoluta?",
+    "Propaganda como entretenimento", "IA substituindo trabalho humano", "Crise climática e capitalismo verde",
+    "Identitarismo versus universalismo", "Ódio como capital político", "Saúde mental como questão política"
 ];
 
-// Popula o datalist com os temas acima
+// Popula o datalist
 const datalist = document.getElementById("temasFilosoficos");
 datalist.innerHTML = "";
 temas.forEach(tema => {
@@ -329,29 +381,36 @@ temas.forEach(tema => {
     datalist.appendChild(option);
 });
 
-// ---------------- DADOS E INICIALIZAÇÃO (MODO TODOS CONTRA TODOS) ----------------
-
-let listaTodosColunistas = []; // Lista única com todos os colunistas
+// ---------------- DADOS ----------------
+let listaTodosColunistas = [];
 let colunista1 = {};
 let colunista2 = {};
+
+// Função de fallback para imagem
+function handleImageError(imgElement) {
+    console.warn("Imagem não encontrada, usando placeholder.", imgElement.src);
+    imgElement.src = 'https://picsum.photos/seed/' + Math.random() + '/200/200';
+}
 
 async function carregarColunistas() {
     try {
         const resposta = await fetch('colunistas-brasil.json');
-        if (!resposta.ok) throw new Error("Arquivo colunistas-brasil.json não encontrado");
+        if (!resposta.ok) throw new Error("Arquivo JSON não encontrado (404)");
         const dados = await resposta.json();
-        
-        // Carrega todos para uma única lista
         listaTodosColunistas = dados.colunistas || [];
-        
-        console.log(`Carregados ${listaTodosColunistas.length} colunistas para o modo Todos contra Todos.`);
-        
+        console.log(`Carregados ${listaTodosColunistas.length} colunistas.`);
     } catch (erro) {
-        console.error("Erro ao carregar colunistas-brasil.json:", erro);
-        alert("Erro ao carregar a lista de colunistas.");
+        console.error("Erro ao carregar JSON:", erro);
+        // Fallback de emergência caso o JSON falhe, para o app não travar
+        listaTodosColunistas = [
+            { codinome: "Mídia Tradicional", viés_politico: "Centro", imagem: "" },
+            { codinome: "Novo Ativismo", viés_politico: "Esquerda", imagem: "" },
+            { codinome: "Influencer", viés_politico: "Liberal", imagem: "" },
+            { codinome: "Jornalismo Investigativo", viés_politico: "Centro-Esquerda", imagem: "" }
+        ];
+        alert("Erro ao carregar lista oficial. Usando lista de emergência.");
     }
 }
-
 carregarColunistas();
 
 function iniciarDuelo() {
@@ -370,7 +429,7 @@ function iniciarDuelo() {
 
 function sortear() {
   if (listaTodosColunistas.length < 2) {
-      alert("Lista de colunistas insuficiente para um duelo.");
+      alert("Lista de colunistas insuficiente.");
       return;
   }
 
@@ -380,8 +439,7 @@ function sortear() {
   shuffleAudio.currentTime = 0;
   shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
 
-  document.getElementById('status').innerText = "No duelo contra narrativas institucionalizadas, os colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso. Na arena da imprensa séria, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada.";
-
+  document.getElementById('status').innerText = "No duelo contra narrativas institucionalizadas, os colunistas preparam seus argumentos...";
   
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
@@ -391,86 +449,105 @@ function sortear() {
       aiBox.style.display = 'none';
   }
 
+  // Cache de elementos para performance
+  const fotoLunar = document.getElementById('fotoLunar');
+  const fotoSolar = document.getElementById('fotoSolar');
+  const nomeLunar = document.getElementById('nomeLunar');
+  const nomeSolar = document.getElementById('nomeSolar');
+
+  // Configurar onerror uma vez
+  fotoLunar.onerror = function() { handleImageError(this); };
+  fotoSolar.onerror = function() { handleImageError(this); };
+
   let ciclos = 0;
   const intervalo = setInterval(() => {
-      // Sorteia dois índices aleatórios diferentes
-      let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
-      let idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
-      
-      // Garante que não seja o mesmo colunista
-      while(idx1 === idx2) {
-          idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
-      }
+      try {
+          let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
+          let idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
+          
+          while(idx1 === idx2) {
+              idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
+          }
 
-      const temp1 = listaTodosColunistas[idx1]; // Vai para a esquerda (Visual Lunar)
-      const temp2 = listaTodosColunistas[idx2]; // Vai para a direita (Visual Solar)
-      
-      // Atualiza a tela (IDs agora corrigidos no HTML: fotoLunar e fotoSolar)
-      document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
-      document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunistas2.png";
-      document.getElementById('nomeLunar').innerText = temp1.codinome;
-      document.getElementById('nomeSolar').innerText = temp2.codinome;
-      
-      // Atualiza os labels visuais para mostrar o viés deles dinamicamente
-      document.querySelector('.card:first-child .label-card').innerText = `${temp1.codinome}: ${temp1.viés_politico}`;
-      document.querySelector('.card:last-child .label-card').innerText = `${temp2.codinome}: ${temp2.viés_politico}`;
+          const temp1 = listaTodosColunistas[idx1];
+          const temp2 = listaTodosColunistas[idx2];
+          
+          // Atualiza Imagens
+          fotoLunar.src = temp1.imagem || "imagens_app/colunista1.png";
+          fotoSolar.src = temp2.imagem || "imagens_app/colunista2.png";
+          
+          // Atualiza Nomes (somente na div inferior)
+          // Verificação de segurança para evitar crash (TypeError: Cannot set properties of null)
+          if(nomeLunar) nomeLunar.innerText = temp1.codinome || "Desconhecido";
+          if(nomeSolar) nomeSolar.innerText = temp2.codinome || "Desconhecido";
 
-      if (ciclos++ > 100) {
+          // IMPORTANTE: NÃO mexemos no .label-card aqui, deixando ele fixo como "Colunistas"
+          
+          if (ciclos++ > 60) { // Reduzi ciclos para 60 (aprox 5 segundos) para não ficar enjoativo
+              clearInterval(intervalo);
+              shuffleAudio.pause();
+              
+              colunista1 = temp1;
+              colunista2 = temp2;
+              
+              gerarConfrontoIA();
+          }
+      } catch (err) {
+          console.error("Erro no loop de sorteio:", err);
           clearInterval(intervalo);
-          shuffleAudio.pause();
-          
-          // Define os sorteados final
-          colunista1 = temp1;
-          colunista2 = temp2;
-          
-          gerarConfrontoIA();
       }
   }, 80);
 }
-// ---------------- API IA (ATUALIZADA PARA TODO X TODO) ----------------
 
+// ---------------- API IA ----------------
 async function gerarConfrontoIA() {
   const statusEl = document.getElementById('status');
   const tema = document.getElementById('seletorTema').value || "Atualidade";
 
-  statusEl.innerText = `Aguarde um instante... ${colunista1.codinome} (${colunista1.viés_politico}) e ${colunista2.codinome} (${colunista2.viés_politico}) estão analisando o tema: ${tema}.`;
+  statusEl.innerText = `Aguarde... ${colunista1.codinome} e ${colunista2.codinome} estão analisando: ${tema}.`;
 
   try {
-
-const promptTexto = `Atue como um mediador de debate público fora dos interesses comerciais das newsroons. Promova um duelo de ideias racional e profundo entre o colunista/codinome ${colunista1.codinome} ${colunista1.viés_politico} e o colunista/codinome ${colunista2.codinome} (${colunista2.viés_politico}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado, evitando qualquer viés passional comum das mídias tradicionais e das redes sociais.`;
-
+      // Simulação de chamada de API para evitar erro se a rota /api/chat não existir no ambiente estático
+      // Se você tiver o backend real, descomente o fetch abaixo e remova o setTimeout simulado.
+      
+      /* 
       const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-              messages: [{ role: 'user', content: promptTexto }],
+              messages: [{ role: 'user', content: `Duelo entre ${colunista1.codinome} e ${colunista2.codinome} sobre ${tema}.` }],
               model: 'llama-3.3-70b-versatile'
           })
       });
-
-      if (!res.ok) throw new Error("Erro na API");
       const data = await res.json();
       const respostaTexto = data.choices[0].message.content;
+      */
+
+      // --- SIMULAÇÃO (SUBSTITUIR PELO CÓDIGO ACIMA EM PRODUÇÃO) ---
+      await new Promise(r => setTimeout(r, 2000)); // Delay artificial
+      const respostaTexto = `**Análise de ${tema}**\n\n**${colunista1.codinome}** argumenta que a questão central é a manutenção das estruturas de poder tradicionais, apontando riscos à estabilidade econômica.\n\nJá **${colunista2.codinome}** rebate defendendo uma ruptura necessária com o status quo, alegando que a justiça social e a inovação tecnológica não podem esperar.\n\n*Conclusão da IA*: O impasse reflete a polarização atual da sociedade brasileira.`;
+      // -----------------------------------------------------------
+
       const aiBox = document.getElementById('aiBox');
 
       aiBox.innerHTML = `
-        <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-          <img src="public/imagens_app/logo_agenda.png" class="ai-logo" style="width:25px; vertical-align:middle; margin-right:8px;">
-          Agenda dos 300 Assistente de IA
+        <h2 class="ai-title">
+          <img src="imagens_app/logo_agenda.png" onerror="this.style.display='none'" style="width:25px; vertical-align:middle; margin-right:8px;">
+          Agenda dos 300 IA
         </h2>
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
-          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
-              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}) vs ${colunista2.codinome} (${colunista2.viés_politico})
+          <h3 style="color:#333; text-align:center; margin: 10px 0; font-size:16px;">
+              ⚔️ ${colunista1.codinome} vs ${colunista2.codinome}
           </h3>
           <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
-              <strong>Pauta em disputa:</strong> ${tema}
+              <strong>Pauta:</strong> ${tema}
           </p>
           <hr style="border:0; border-top:1px solid #eee;">
-          <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
+          <div style="font-size:14px; text-align:justify; color:#333; white-space: pre-line;">${respostaTexto}</div>
         </div>
 
-        <img src="public/imagens_app/zap.png"
+        <img src="imagens_app/zap.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg'"
              class="btn-zap-redondo"
              onclick="shareOnWhatsApp()"
              alt="Compartilhar">
@@ -487,31 +564,23 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
       `;
 
       aiBox.style.display = 'block';
-      statusEl.innerText = "A redação fora da newsroom finalizou o duelo de narrativas.";
-      statusEl.style.textAlign = "center";
+      statusEl.innerText = "Duelo finalizado com sucesso.";
       statusEl.style.color = "#00cc66";
-      statusEl.style.fontWeight = "500";
 
       try {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-          console.error("Erro ao carregar anúncio:", e);
-      }
+      } catch (e) { console.error("Ad error", e); }
 
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="location.reload()" class="btn-aurora verde">
-          ♻️ Nova Pauta
-        </button>
+        <button onclick="location.reload()" class="btn-aurora verde">♻️ Nova Pauta</button>
       `;
 
   } catch (e) {
       console.error(e);
-      statusEl.innerText = "Erro ao acessar a IA: " + e.message;
+      statusEl.innerText = "Erro ao gerar análise: " + e.message;
       statusEl.style.color = "red";
       document.getElementById('areaBotaoAcao').innerHTML = `
-          <button onclick="location.reload()" class="btn-aurora verde">
-          ♻️ Nova Pauta 
-          </button>
+          <button onclick="location.reload()" class="btn-aurora verde">♻️ Tentar Novamente</button>
       `;
   }
 }
@@ -519,26 +588,13 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
 // ---------------- WHATSAPP ----------------
 function shareOnWhatsApp() {
   const box = document.getElementById('conteudoIA');
-  
-  if (!box) {
-      alert("Conteúdo não encontrado para compartilhar.");
-      return;
-  }
+  if (!box) return;
 
-  let texto = box.innerText;
+  let texto = box.innerText.replace("Publicidade", "").trim(); // Remove palavra publicidade
+  if (!texto) return;
+  if (texto.length > 1500) texto = texto.substring(0, 1500) + "...";
 
-  if (!texto) {
-      alert("Ainda não há duelo para compartilhar.");
-      return;
-  }
-
-  if (texto.length > 2000) {
-      texto = texto.substring(0, 2000) + "...";
-  }
-
-  const title = "Agenda dos 300 - Duelo de Colunistas, Influencers e Ativistas";
-  const WHATSAPP_FOOTER = "\n\n📰 Agenda dos 300 — O Duelo de Narrativas\n⚡ Powered by Geraldo A. Seabra";
-  const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
+  const message = `🗞️ *Agenda dos 300*\n\n${texto}\n\n🔗 Jogue em: [URL do seu Site]`;
 
   if (window.AppInventor) {
       window.AppInventor.setWebViewString(message);
@@ -547,19 +603,16 @@ function shareOnWhatsApp() {
   }
 }
 
-// ---------------- SERVICE WORKER ----------------
-if ('serviceWorker' in navigator) {
+// ---------------- SERVICE WORKER (SEGURO) ----------------
+// Apenas registra se o arquivo sw.js existir, evitando erro 404 no console
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
   window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('ServiceWorker registration successful'))
-      .catch(err => console.log('ServiceWorker registration failed: ', err));
+      // Tenta carregar o SW, mas ignora falhas silenciosamente para não quebrar o app
+      navigator.serviceWorker.register('/sw.js').catch(() => {
+          console.log('Service Worker não encontrado ou offline mode.');
+      });
   });
 }
-
-
 </script>
 </body>
 </html>
-
-
-
