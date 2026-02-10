@@ -180,15 +180,23 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
         padding: 6px 2px; 
         border-radius: 8px;
         width: 100%;
-        min-height: 35px; 
+        min-height: 45px; /* Aumentado para caber duas linhas */
         display: flex; 
+        flex-direction: column; /* Empilha o nome e o veículo */
         align-items: center; 
         justify-content: center; 
         text-align: center;
         font-weight: 700;
-        line-height: 1.2;
+        line-height: 1.1;
         border: 1px solid #ddd;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .text-veiculo {
+        font-size: 10px;
+        color: #666;
+        font-weight: 400;
+        margin-top: 2px;
     }
 
 
@@ -201,7 +209,7 @@ padding: 10px;
 width: 100%;
 border-radius: 10px;
 display: block;
-text-align: justify;
+text-align: center;
 }
 
 #aiBox {
@@ -267,7 +275,7 @@ border: 1px solid #ddd;
                     <!-- Imagem com ID correto -->
                     <img id="fotoLunar" src="imagens_app/colunista1.png" alt="Colunista 1">
                 </div>
-                <!-- Área do nome abaixo do card (Classe corrigida para nome-colunista) -->
+                <!-- Área do nome abaixo do card -->
                 <div id="nomeLunar" class="nome-colunista">Aguardando...</div>
             </div>
   
@@ -282,7 +290,7 @@ border: 1px solid #ddd;
                     <!-- Imagem com ID correto -->
                     <img id="fotoSolar" src="imagens_app/colunista2.png" alt="Colunista 2">
                 </div>
-                <!-- Área do nome abaixo do card (Classe corrigida para nome-colunista) -->
+                <!-- Área do nome abaixo do card -->
                 <div id="nomeSolar" class="nome-colunista">Aguardando...</div>
             </div>
         </div>
@@ -291,7 +299,8 @@ border: 1px solid #ddd;
         <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting Real</button>
     </div>
 
-    <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade. Fora dos muros das newsroons, o texto vira arma e a razão, escudo da sociedade despreparada. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+    <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Defina um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+
 
     <!-- CAIXA DE RESULTADO E ANÚNCIO -->
     <div id="aiBox">
@@ -463,8 +472,13 @@ function sortear() {
       // Atualiza a tela (IDs agora corrigidos no HTML: fotoLunar e fotoSolar)
       document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
       document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunistas2.png";
-      document.getElementById('nomeLunar').innerText = temp1.codinome;
-      document.getElementById('nomeSolar').innerText = temp2.codinome;
+      
+      // ATUALIZAÇÃO: Adicionando Veículo ao lado do nome nos cards
+      const veiculo1 = temp1.Veículo ? `<span class="text-veiculo">${temp1.Veículo}</span>` : '';
+      const veiculo2 = temp2.Veículo ? `<span class="text-veiculo">${temp2.Veículo}</span>` : '';
+
+      document.getElementById('nomeLunar').innerHTML = `${temp1.codinome}${veiculo1}`;
+      document.getElementById('nomeSolar').innerHTML = `${temp2.codinome}${veiculo2}`;
       
       // CORREÇÃO 2: REMOVIDAS AS LINHAS QUE ALTERAVAM O LABEL-CARD
       // O label agora permanece fixo como "Colunistas" conforme definido no HTML.
@@ -507,6 +521,10 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
       const respostaTexto = data.choices[0].message.content;
       const aiBox = document.getElementById('aiBox');
 
+      // ATUALIZAÇÃO: Adicionando Veículo no H3 de resultado
+      const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
+      const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
+
       aiBox.innerHTML = `
         <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
           <img src="public/imagens_app/logo_agenda.png" class="ai-logo" style="width:25px; vertical-align:middle; margin-right:8px;">
@@ -515,7 +533,7 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
-              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}) vs ${colunista2.codinome} (${colunista2.viés_politico})
+              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico})${veiculo1Display} vs ${colunista2.codinome} (${colunista2.viés_politico})${veiculo2Display}
           </h3>
           <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
               <strong>Pauta em disputa:</strong> ${tema}
