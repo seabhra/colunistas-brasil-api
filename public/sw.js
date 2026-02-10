@@ -1,4 +1,4 @@
-const CACHE_NAME = 'allora-cache-v10';
+const CACHE_NAME = 'allora-cache-v11'; // Atualizado para v11 para forçar atualização
 
 // Lista de URLs para cache
 const urlsToCache = [
@@ -11,8 +11,8 @@ const urlsToCache = [
   '/imagens_app/colunistas2.png',
   '/imagens_app/versusX.png',
   '/imagens_app/zap.png',
-  'public/icons/icon-192.png',
-  // Adicione aqui outros arquivos estáticos que você quer cachear
+  '/icons/icon-192.png', // CORRIGIDO: Removido 'public/' do caminho
+  '/icons/icon-512.png', // Adicionado para garantir ícones em telas maiores
 ];
 
 // Instalação do Service Worker e cache dos arquivos
@@ -60,8 +60,10 @@ self.addEventListener('fetch', (event) => {
         }
         return fetch(event.request)
           .then((networkResponse) => {
-            // Atualiza o cache com a resposta da rede, se for um GET e não falhar
-            if (event.request.method === 'GET' && networkResponse.ok) {
+            // Atualiza o cache com a resposta da rede
+            // CONDICAO DE SEGURANÇA: Apenas métodos GET, sucesso (ok) e SEM respostas parciais (206)
+            // Respostas parciais (206) geralmente são de áudio/vídeo e quebram o cache.
+            if (event.request.method === 'GET' && networkResponse.ok && networkResponse.status !== 206) {
               const responseClone = networkResponse.clone();
               caches.open(CACHE_NAME)
                 .then((cache) => {
@@ -82,6 +84,3 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
-
-
-
