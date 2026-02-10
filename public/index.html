@@ -17,7 +17,7 @@ crossorigin="anonymous"></script>
 <!-- Manifest json -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#6b46c1">
-<title>Agenda dos 300 - Duelo de Colunistas, Influencerse Ativistas</title>
+<title>Agenda dos 300 - Duelo de Colunistas</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -110,8 +110,6 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
 .azul-info { background: #4caedf; cursor: default; color: white; } 
 .verde { background: #74e95a; color: #1a1a1a; } 
 
-
-
     /* --- Área de Jogo --- */
     #jogoArea {
         display: none;
@@ -153,14 +151,12 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
     }
 
 .card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-   
 
-    /* Rótulo fixo no topo do card */
     .label-card {
         position: absolute; 
         top: 0; 
         width: 100%; 
-        background: rgba(107, 70, 193, 0.9); /* Cor roxa sólida */
+        background: rgba(107, 70, 193, 0.9);
         color: #fff; 
         font-size: 11px; 
         padding: 4px 0; 
@@ -172,7 +168,6 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
         border-bottom: 1px solid rgba(255,255,255,0.3);
     }
 
-    /* Área do nome abaixo do card */
     .nome-colunista {
         background: white;
         color: #333;
@@ -180,9 +175,9 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
         padding: 6px 2px; 
         border-radius: 8px;
         width: 100%;
-        min-height: 45px; /* Aumentado para caber duas linhas */
+        min-height: 45px; 
         display: flex; 
-        flex-direction: column; /* Empilha o nome e o veículo */
+        flex-direction: column; 
         align-items: center; 
         justify-content: center; 
         text-align: center;
@@ -198,7 +193,6 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
         font-weight: 400;
         margin-top: 2px;
     }
-
 
 #status {
 margin: 15px auto;
@@ -267,30 +261,21 @@ border: 1px solid #ddd;
      <!-- ÁREA DE JOGO -->
      <div id="jogoArea">
         <div class="cards-area" id="containerFilosofos">
-            <!-- Card Esquerdo (Lunar) -->
             <div class="card-container">
                 <div class="card">
-                    <!-- Rótulo fixo no topo da imagem -->
                     <div class="label-card">Colunistas</div>
-                    <!-- Imagem com ID correto -->
                     <img id="fotoLunar" src="imagens_app/colunista1.png" alt="Colunista 1">
                 </div>
-                <!-- Área do nome abaixo do card -->
                 <div id="nomeLunar" class="nome-colunista">Aguardando...</div>
             </div>
   
-            <!-- Imagem Central VS -->
             <img src="imagens_app/versusX.png" class="img-versus-central">
   
-            <!-- Card Direito (Solar) -->
             <div class="card-container">
                 <div class="card">
-                    <!-- Rótulo fixo no topo da imagem -->
                     <div class="label-card">Colunistas</div>
-                    <!-- Imagem com ID correto -->
-                    <img id="fotoSolar" src="imagens_app/colunista2.png" alt="Colunista 2">
+                    <img id="fotoSolar" src="imagens_app/colunistas2.png" alt="Colunista 2">
                 </div>
-                <!-- Área do nome abaixo do card -->
                 <div id="nomeSolar" class="nome-colunista">Aguardando...</div>
             </div>
         </div>
@@ -299,10 +284,8 @@ border: 1px solid #ddd;
         <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting Real</button>
     </div>
 
-    <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Defina um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+    <div id="status">Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional.</div>
 
-
-    <!-- CAIXA DE RESULTADO E ANÚNCIO -->
     <div id="aiBox">
         <div id="ad-container">
             <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
@@ -316,7 +299,7 @@ border: 1px solid #ddd;
     </div>
 
   </div>
-</div> <!-- Fim app-container -->
+</div> 
 
 <script>
 // ---------------- ÁUDIO ----------------
@@ -330,57 +313,19 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
-// ---------------- TEMAS (INTEGRADOS) ----------------
+// ---------------- TEMAS ----------------
 const temas = [
-    "Vigilância em massa",
-    "Maldade humana",
-    "Complexo industrial da censura",
-    "Imprensa cooptada pelo discurso da extrema direita",
-    "Jornalistas silenciados por altos salários",
-    "Política atual: nós contra eles",
-    "Geopolítica internacional: novos corsários",
-    "Estado de exceção permanente",
-    "Democracias versus autocratas",
-    "Militarização da polícia",
-    "Criminalização da pobreza",
-    "Lawfare e justiça seletiva",
-    "Nacionalismo versus cosmopolitismo",
-    "Pós-verdade e fake news",
-    "Redes sociais: guerra de narrativas",
-    "Cultura do cancelamento",
-    "Algoritmos decidindo o que é real",
-    "Imprensa como ator político",
-    "Censura privada das plataformas",
-    "Liberdade de expressão absoluta?",
-    "Propaganda como entretenimento",
-    "IA substituindo trabalho humano",
-    "IA, direito autoral e invasão de privacidade",
-    "Dados pessoais como mercadoria",
-    "Neurotecnologia e controle mental",
-    "Transhumanismo",
-    "Gamificação da vida: cidadão como elemento de jogo político",
-    "Tecnologia como nova religião",
-    "Financeirização da vida",
-    "Renda básica universal",
-    "Trabalho precarizado por apps",
-    "Consumo como identidade",
-    "Crise climática e capitalismo verde",
-    "Colonialismo digital",
-    "Identitarismo versus universalismo",
-    "Cultura do ressentimento",
-    "Polarização afetiva: homens versus mulheres",
-    "Ódio como capital político",
-    "Religião como arma ideológica",
-    "Tradição versus ruptura cultural",
-    "Niilismo contemporâneo: pessimismo versus esperancismo",
-    "Saúde mental como questão política",
-    "Burnout coletivo: supremacismo versus cultura woke",
-    "Solidão na era hiperconectada",
-    "Medo como forma de governo",
-    "Esperança como manipulação"
+    "Vigilância em massa", "Maldade humana", "Complexo industrial da censura",
+    "Imprensa cooptada pelo discurso da extrema direita", "Jornalistas silenciados por altos salários",
+    "Política atual: nós contra eles", "Geopolítica internacional: novos corsários",
+    "Estado de exceção permanente", "Democracias versus autocratas",
+    "Pós-verdade e fake news", "Redes sociais: guerra de narrativas",
+    "Cultura do cancelamento", "Algoritmos decidindo o que é real",
+    "Liberdade de expressão absoluta?", "Propaganda como entretenimento",
+    "IA substituindo trabalho humano", "Dados pessoais como mercadoria",
+    "Financeirização da vida", "Renda básica universal", "Trabalho precarizado por apps"
 ];
 
-// Popula o datalist com os temas acima
 const datalist = document.getElementById("temasFilosoficos");
 datalist.innerHTML = "";
 temas.forEach(tema => {
@@ -389,9 +334,8 @@ temas.forEach(tema => {
     datalist.appendChild(option);
 });
 
-// ---------------- DADOS E INICIALIZAÇÃO (MODO TODOS CONTRA TODOS) ----------------
-
-let listaTodosColunistas = []; // Lista única com todos os colunistas
+// ---------------- DADOS ----------------
+let listaTodosColunistas = []; 
 let colunista1 = {};
 let colunista2 = {};
 
@@ -400,15 +344,10 @@ async function carregarColunistas() {
         const resposta = await fetch('colunistas-brasil.json');
         if (!resposta.ok) throw new Error("Arquivo colunistas-brasil.json não encontrado");
         const dados = await resposta.json();
-        
-        // Carrega todos para uma única lista
         listaTodosColunistas = dados.colunistas || [];
-        
-        console.log(`Carregados ${listaTodosColunistas.length} colunistas para o modo Todos contra Todos.`);
-        
+        console.log(`Carregados ${listaTodosColunistas.length} colunistas.`);
     } catch (erro) {
         console.error("Erro ao carregar colunistas-brasil.json:", erro);
-        alert("Erro ao carregar a lista de colunistas.");
     }
 }
 
@@ -434,15 +373,13 @@ function sortear() {
       return;
   }
 
-  // Áudio
   memoriesAudio.pause();
   memoriesAudio.currentTime = 0;
   shuffleAudio.currentTime = 0;
   shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
 
-  document.getElementById('status').innerText = "No duelo contra narrativas institucionalizadas, os colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso. Na arena da imprensa séria, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada.";
+  document.getElementById('status').innerText = "No duelo contra narrativas institucionalizadas, os colunistas preparam seus argumentos...";
 
-  
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
 
@@ -451,62 +388,50 @@ function sortear() {
       aiBox.style.display = 'none';
   }
 
-  // CORREÇÃO 1: Mover declaração para fora do setInterval para acessar depois
   let temp1, temp2; 
   let ciclos = 0;
   
   const intervalo = setInterval(() => {
-      // Sorteia dois índices aleatórios diferentes
       let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
       let idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
       
-      // Garante que não seja o mesmo colunista
       while(idx1 === idx2) {
           idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
       }
 
-      // CORREÇÃO 1 (cont.): Atribuir às variáveis externas (removido 'const')
       temp1 = listaTodosColunistas[idx1]; 
       temp2 = listaTodosColunistas[idx2]; 
       
-      // Atualiza a tela (IDs agora corrigidos no HTML: fotoLunar e fotoSolar)
       document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
       document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunistas2.png";
       
-      // ATUALIZAÇÃO: Adicionando Veículo ao lado do nome nos cards
       const veiculo1 = temp1.Veículo ? `<span class="text-veiculo">${temp1.Veículo}</span>` : '';
       const veiculo2 = temp2.Veículo ? `<span class="text-veiculo">${temp2.Veículo}</span>` : '';
 
       document.getElementById('nomeLunar').innerHTML = `${temp1.codinome}${veiculo1}`;
       document.getElementById('nomeSolar').innerHTML = `${temp2.codinome}${veiculo2}`;
-      
-      // CORREÇÃO 2: REMOVIDAS AS LINHAS QUE ALTERAVAM O LABEL-CARD
-      // O label agora permanece fixo como "Colunistas" conforme definido no HTML.
 
       if (ciclos++ > 100) {
           clearInterval(intervalo);
           shuffleAudio.pause();
-          
-          // Define os sorteados final
           colunista1 = temp1;
           colunista2 = temp2;
-          
           gerarConfrontoIA();
       }
   }, 80);
 }
-// ---------------- API IA (ATUALIZADA PARA TODO X TODO) ----------------
 
+// ---------------- API CHAT (VERCEL) ----------------
 async function gerarConfrontoIA() {
   const statusEl = document.getElementById('status');
   const tema = document.getElementById('seletorTema').value || "Atualidade";
 
-  statusEl.innerText = `Aguarde um instante... ${colunista1.codinome} (${colunista1.viés_politico}) e ${colunista2.codinome} (${colunista2.viés_politico}) estão analisando o tema: ${tema}.`;
+  statusEl.innerText = `Conectando ao servidor... ${colunista1.codinome} vs ${colunista2.codinome}`;
+
+  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado.`;
 
   try {
-
-const promptTexto = `Atue como um mediador de debate público fora dos interesses comerciais das newsroons. Promova um duelo de ideias racional e profundo entre o colunista/codinome ${colunista1.codinome} ${colunista1.viés_politico} e o colunista/codinome ${colunista2.codinome} (${colunista2.viés_politico}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado, evitando qualquer viés passional comum das mídias tradicionais e das redes sociais.`;
-
+      // Chama a rota api/chat na sua Vercel
       const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -516,19 +441,21 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
           })
       });
 
-      if (!res.ok) throw new Error("Erro na API");
+      if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Erro do servidor (${res.status}): ${errorText}`);
+      }
+      
       const data = await res.json();
       const respostaTexto = data.choices[0].message.content;
       const aiBox = document.getElementById('aiBox');
 
-      // ATUALIZAÇÃO: Adicionando Veículo no H3 de resultado
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
       aiBox.innerHTML = `
         <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-          <img src="public/imagens_app/logo_agenda.png" class="ai-logo" style="width:25px; vertical-align:middle; margin-right:8px;">
-          Agenda dos 300 Assistente de IA
+          Agenda dos 300
         </h2>
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
@@ -536,7 +463,7 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico})${veiculo1Display} vs ${colunista2.codinome} (${colunista2.viés_politico})${veiculo2Display}
           </h3>
           <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
-              <strong>Pauta em disputa:</strong> ${tema}
+              <strong>Pauta:</strong> ${tema}
           </p>
           <hr style="border:0; border-top:1px solid #eee;">
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
@@ -560,56 +487,30 @@ const promptTexto = `Atue como um mediador de debate público fora dos interesse
 
       aiBox.style.display = 'block';
       statusEl.innerText = "A redação fora da newsroom finalizou o duelo de narrativas.";
-      statusEl.style.textAlign = "center";
       statusEl.style.color = "#00cc66";
-      statusEl.style.fontWeight = "500";
 
-      try {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-          console.error("Erro ao carregar anúncio:", e);
-      }
+      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="location.reload()" class="btn-aurora verde">
-          ♻️ Nova Pauta
-        </button>
+        <button onclick="location.reload()" class="btn-aurora verde">♻️ Nova Pauta</button>
       `;
 
   } catch (e) {
       console.error(e);
-      statusEl.innerText = "Erro ao acessar a IA: " + e.message;
+      statusEl.innerText = "Erro: " + e.message;
       statusEl.style.color = "red";
-      document.getElementById('areaBotaoAcao').innerHTML = `
-          <button onclick="location.reload()" class="btn-aurora verde">
-          ♻️ Nova Pauta 
-          </button>
-      `;
   }
 }
 
 // ---------------- WHATSAPP ----------------
 function shareOnWhatsApp() {
   const box = document.getElementById('conteudoIA');
-  
-  if (!box) {
-      alert("Conteúdo não encontrado para compartilhar.");
-      return;
-  }
-
+  if (!box) return;
   let texto = box.innerText;
-
-  if (!texto) {
-      alert("Ainda não há duelo para compartilhar.");
-      return;
-  }
-
-  if (texto.length > 2000) {
-      texto = texto.substring(0, 2000) + "...";
-  }
-
-  const title = "Agenda dos 300 - Duelo de Colunistas, Influencers e Ativistas";
-  const WHATSAPP_FOOTER = "\n\n📰 Agenda dos 300 — O Duelo de Narrativas\n⚡ Powered by Geraldo A. Seabra";
+  if (texto.length > 2000) texto = texto.substring(0, 2000) + "...";
+  
+  const title = "Agenda dos 300 - Duelo de Colunistas";
+  const WHATSAPP_FOOTER = "\n\n📰 Agenda dos 300 — O Duelo de Narrativas";
   const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
 
   if (window.AppInventor) {
@@ -619,16 +520,13 @@ function shareOnWhatsApp() {
   }
 }
 
-// ---------------- SERVICE WORKER ----------------
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('ServiceWorker registration successful'))
-      .catch(err => console.log('ServiceWorker registration failed: ', err));
+      .then(() => console.log('SW OK'))
+      .catch(err => console.log('SW Fail', err));
   });
 }
-
-
 </script>
 </body>
 </html>
