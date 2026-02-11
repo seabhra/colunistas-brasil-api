@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -265,6 +264,7 @@ border: 1px solid #ddd;
             <div class="card-container">
                 <div class="card">
                     <div class="label-card">Colunistas</div>
+                    <!-- CORREÇÃO 1: Padronizado para colunista1.png -->
                     <img id="fotoLunar" src="imagens_app/colunista1.png" alt="Colunista 1">
                 </div>
                 <div id="nomeLunar" class="nome-colunista">Aguardando...</div>
@@ -275,7 +275,8 @@ border: 1px solid #ddd;
             <div class="card-container">
                 <div class="card">
                     <div class="label-card">Colunistas</div>
-                 <img id="fotoSolar" src="imagens_app/colunistas2.png" alt="Colunista 2">
+                    <!-- CORREÇÃO 2: Padronizado para colunista2.png (Removido o 's' extra) -->
+                    <img id="fotoSolar" src="imagens_app/colunista2.png" alt="Colunista 2">
                 </div>
                 <div id="nomeSolar" class="nome-colunista">Aguardando...</div>
             </div>
@@ -402,8 +403,9 @@ function sortear() {
       temp1 = listaTodosColunistas[idx1]; 
       temp2 = listaTodosColunistas[idx2]; 
       
-      document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunistas1.png";
-      document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunistas2.png";
+      // CORREÇÃO 3: Fallbacks padronizados para singular (colunista1.png e colunista2.png)
+      document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunista1.png";
+      document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunista2.png";
       
       const veiculo1 = temp1.Veículo ? `<span class="text-veiculo">${temp1.Veículo}</span>` : '';
       const veiculo2 = temp2.Veículo ? `<span class="text-veiculo">${temp2.Veículo}</span>` : '';
@@ -431,7 +433,6 @@ async function gerarConfrontoIA() {
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado.`;
 
   try {
-      // Chama a rota api/chat na sua Vercel
       const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -469,7 +470,8 @@ async function gerarConfrontoIA() {
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
 
-        <img src="public/imagens_app/zap.png"
+        <!-- CORREÇÃO 4: Removido 'public/' do caminho do zap.png -->
+        <img src="imagens_app/zap.png"
              class="btn-zap-redondo"
              onclick="shareOnWhatsApp()"
              alt="Compartilhar">
@@ -530,6 +532,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
-
-
