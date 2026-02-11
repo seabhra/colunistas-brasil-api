@@ -1,53 +1,60 @@
 
-// api/chat.js versão 1
+// api/chat.js versão 5
 
+// api/chat.js
 export default async function handler(req, res) {
-  // Aceita apenas método POST
+  // Configurações de CORS (permitir que o frontend chame a API)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Resposta rápida para requisições de "preflight" (OPTIONS)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // Apenas aceita POST
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Método não permitido' });
   }
 
   try {
-    // Pega a API Key das variáveis de ambiente (Settings > Env Vars no Vercel)
-    const groqApiKey = process.env.GROQ_API_KEY;
-
-    if (!groqApiKey) {
-      console.error("Faltando GROQ_API_KEY nas variáveis de ambiente");
-      return res.status(500).json({ error: "Configuração do servidor ausente (API Key)" });
-    }
-
-    // Recebe os dados enviados pelo Frontend
     const { messages, model } = req.body;
 
-    // Faz a chamada para o Groq
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    // Pega a chave da variável de ambiente da Vercel
+    const apiKey = process.env.GROQ_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ error: 'Chave da API (GROQ_API_KEY) não configurada no servidor.' });
+    }
+
+    // Chama a API da Groq
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${groqApiKey}`
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model: model || 'llama-3.3-70b-versatile',
         messages: messages,
-        temperature: 0.7,
+        temperature: 0.9,
         max_tokens: 1024
       })
     });
 
-    if (!groqResponse.ok) {
-      const errorData = await groqResponse.json();
-      console.error("Erro na resposta do Groq:", errorData);
-      return res.status(groqResponse.status).json({ error: errorData.error?.message || "Erro na IA" });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Erro da Groq:", data);
+      return res.status(response.status).json(data);
     }
 
-    const data = await groqResponse.json();
-
-    // Retorna o sucesso para o Frontend
+    // Retorna a resposta para o frontend
     return res.status(200).json(data);
 
   } catch (error) {
-    console.error("Erro interno no servidor:", error);
-    return res.status(500).json({ error: "Erro interno no servidor" });
+    console.error("Erro interno:", error);
+    return res.status(500).json({ error: 'Erro interno no servidor.' });
   }
 }
-
