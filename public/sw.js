@@ -10,7 +10,7 @@ const urlsToCache = [
   '/imagens_app/colunistas1.png',
   '/imagens_app/colunistas2.png',
   '/imagens_app/versusX.png',
-  '/imagens_app/zap.png',
+  'public/imagens_app/zap.png',
   '/icons/icon-192.png', // CORRIGIDO: Removido 'public/' do caminho
   '/icons/icon-512.png', // Adicionado para garantir ícones em telas maiores
 ];
@@ -84,3 +84,4 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
