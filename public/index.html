@@ -460,9 +460,9 @@ async function gerarConfrontoIA() {
         </h2>
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
-         <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
-    ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}) - ${veiculo1Display} vs ${colunista2.codinome} (${colunista2.viés_politico}) - ${veiculo2Display}
-</h3>
+          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
+              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
+          </h3>
           <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
               <strong>Em pauta:</strong> ${tema}
           </p>
@@ -533,4 +533,5 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
