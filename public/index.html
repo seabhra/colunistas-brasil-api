@@ -317,7 +317,7 @@ let listaTemas = [];
 
 async function carregarTemas() {
     try {
-        const resposta = await fetch('');
+        const resposta = await fetch('https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json');
         if (!resposta.ok) throw new Error("Arquivo temas_colunitas.json não encontrado");
         const dados = await resposta.json();
         
@@ -325,7 +325,7 @@ async function carregarTemas() {
         listaTemas = Array.isArray(dados) ? dados : (dados.temas || []);
         
         const datalist = document.getElementById("temasColunistas");
-        datalist.innerHTML = "public/temas_colunitas.json"; // Limpa o datalist
+        datalist.innerHTML = " "; // Limpa o datalist
         
         listaTemas.forEach(tema => {
             const option = document.createElement("option");
@@ -538,5 +538,6 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
