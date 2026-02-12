@@ -313,11 +313,12 @@ memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
 // ---------------- TEMAS ----------------
+
 let listaTemas = [];
 
 async function carregarTemas() {
     try {
-        const resposta = await fetch('https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json');
+        const resposta = await fetch('https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json');  // ✅ URL do arquivo
         if (!resposta.ok) throw new Error("Arquivo temas_colunitas.json não encontrado");
         const dados = await resposta.json();
         
@@ -325,7 +326,7 @@ async function carregarTemas() {
         listaTemas = Array.isArray(dados) ? dados : (dados.temas || []);
         
         const datalist = document.getElementById("temasColunistas");
-        datalist.innerHTML = " "; // Limpa o datalist
+        datalist.innerHTML = "";  // ✅ Limpa o datalist (string vazia)
         
         listaTemas.forEach(tema => {
             const option = document.createElement("option");
@@ -341,6 +342,7 @@ async function carregarTemas() {
 
 // Carrega os temas ao iniciar
 carregarTemas();
+
 
 // ---------------- DADOS ----------------
 let listaTodosColunistas = []; 
@@ -538,6 +540,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
