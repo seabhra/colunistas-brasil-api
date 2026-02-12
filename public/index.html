@@ -316,32 +316,24 @@ shuffleAudio.volume = 0.5;
 
 let listaTemas = [];
 
-async function carregarTemas() {
-    try {
-        const resposta = await fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json");  // ✅ URL do arquivo
-        if (!resposta.ok) throw new Error("Arquivo temas_colunitas.json não encontrado");
-        const dados = await resposta.json();
-        
-        // Suporta ambos formatos: array direto ou objeto com propriedade "temas"
-        listaTemas = Array.isArray(dados) ? dados : (dados.temas || []);
-        
-        const datalist = document.getElementById("temasColunistas");
-        datalist.innerHTML = "";  // ✅ Limpa o datalist (string vazia)
-        
-        listaTemas.forEach(tema => {
-            const option = document.createElement("option");
-            option.value = tema;
-            datalist.appendChild(option);
-        });
-        
-        console.log(`Carregados ${listaTemas.length} temas.`);
-    } catch (erro) {
-        console.error("Erro ao carregar temas_colunitas.json:", erro);
-    }
-}
-
-// Carrega os temas ao iniciar
-carregarTemas();
+// Carregar temas do JSON
+fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json")
+.then(res => res.json())
+.then(data => {
+  const datalist = document.getElementById("temasColunistas");
+  datalist.innerHTML = "";
+  
+  // Suporta array direto ou objeto com propriedade "temas"
+  const listaTemas = Array.isArray(data) ? data : (data.temas || []);
+  
+  listaTemas.forEach(tema => {
+      const option = document.createElement("option");
+      option.value = tema;
+      datalist.appendChild(option);
+  });
+  
+  console.log(`Carregados ${listaTemas.length} temas.`);
+}).catch(err => console.log("Erro ao carregar temas:", err));
 
 
 // ---------------- DADOS ----------------
@@ -540,6 +532,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
