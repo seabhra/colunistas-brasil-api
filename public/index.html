@@ -318,7 +318,7 @@ let listaTemas = [];
 
 async function carregarTemas() {
     try {
-        const resposta = await fetch('https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json');  // ✅ URL do arquivo
+        const resposta = await fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/main/public/temas_colunitas.json");  // ✅ URL do arquivo
         if (!resposta.ok) throw new Error("Arquivo temas_colunitas.json não encontrado");
         const dados = await resposta.json();
         
@@ -540,6 +540,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
