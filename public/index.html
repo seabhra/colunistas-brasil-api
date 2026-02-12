@@ -253,8 +253,8 @@ border: 1px solid #ddd;
     </div>
     <p style="color:#ede4e4; font-weight: bold; margin: 5px 0;">Digite ou selecione um tema:</p>
     <div id="erroTema">⚠️ Por favor, escolha um tema antes de iniciar!</div>
-    <input list="temasFilosoficos" id="seletorTema" class="seletor-tema" placeholder="Escreva seu próprio tema...">
-    <datalist id="temasFilosoficos"></datalist>
+    <input list="temasColunistas" id="seletorTema" class="seletor-tema" placeholder="Escreva seu próprio tema...">
+    <datalist id="temasColunistas"></datalist>
     <button onclick="iniciarDuelo()" class="btn-aurora roxo">⚔️ Bora (re)Pautar a Mídia</button>
   </div>
 
@@ -315,20 +315,10 @@ memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
 // ---------------- TEMAS ----------------
-const temas = [
-    "Vigilância em massa", "Maldade humana", "Complexo industrial da censura",
-    "Imprensa cooptada pelo discurso da extrema direita", "Jornalistas silenciados por altos salários",
-    "Política atual: nós contra eles", "Geopolítica internacional: novos corsários",
-    "Estado de exceção permanente", "Democracias versus autocratas",
-    "Pós-verdade e fake news", "Redes sociais: guerra de narrativas",
-    "Cultura do cancelamento", "Algoritmos decidindo o que é real",
-    "Liberdade de expressão absoluta?", "Propaganda como entretenimento",
-    "IA substituindo trabalho humano", "Dados pessoais como mercadoria",
-    "Financeirização da vida", "Renda básica universal", "Trabalho precarizado por apps"
-];
 
-const datalist = document.getElementById("temasFilosoficos");
-datalist.innerHTML = "";
+
+const datalist = document.getElementById("temasColunitas");
+datalist.innerHTML = "temas_colunitas.json";
 temas.forEach(tema => {
     const option = document.createElement("option");
     option.value = tema;
@@ -379,7 +369,7 @@ function sortear() {
   shuffleAudio.currentTime = 0;
   shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
 
-  document.getElementById('status').innerText = " No duelo contra conluio das narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada."; 
+  document.getElementById('status').innerText = "No duelo contra conluio das narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada."; 
 
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
@@ -430,7 +420,7 @@ async function gerarConfrontoIA() {
 
   statusEl.innerText = `Aguarde um instante... os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
-  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado.`;
+  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado usando apenas os codinomes, nunca nomes próprios.`;
 
   try {
       const res = await fetch('/api/chat', {
@@ -470,7 +460,7 @@ async function gerarConfrontoIA() {
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
 
-        <img src="public/imagens_app/zap.png"
+        <img src="imagens_app/zap.png"
              class="btn-zap-redondo"
              onclick="shareOnWhatsApp()"
              alt="Compartilhar">
@@ -487,13 +477,13 @@ async function gerarConfrontoIA() {
       `;
 
       aiBox.style.display = 'block';
-      statusEl.innerText = "A redação fora da newsroom finalizou o duelo de narrativas.";
+      statusEl.innerText = "Final do combate entre colunistas sob moderação de IA.";
       statusEl.style.color = "#00cc66";
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="location.reload()" class="btn-aurora verde">♻️ Nova Pauta</button>
+        <button onclick="location.reload()" class="btn-aurora verde">♻️ Pautar Nova Pauta</button>
       `;
 
   } catch (e) {
@@ -510,7 +500,7 @@ function shareOnWhatsApp() {
   let texto = box.innerText;
   if (texto.length > 2000) texto = texto.substring(0, 2000) + "...";
   
-  const title = "Agenda dos 300 - Duelo de Colunistas";
+  const title = "Agenda dos 300 - O Duelo de Colunistas";
   const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300 — O Duelo de Colunistas\n⚡ Powered by Geraldo A. Seabra";
       
       
@@ -533,5 +523,6 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
