@@ -316,7 +316,7 @@ shuffleAudio.volume = 0.5;
 
 let listaTemas = [];
 // Carregar temas do JSON
-fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/heads/main/public/temas_colunitas.json?token=GHSAT0AAAAAADVM3FXAMU6V2OYAF5NHLFS42MOHAYQ")
+fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/heads/main/public/temas_colunitas.json")
 .then(res => res.json())
 .then(data => {
   const datalist = document.getElementById("temasColunistas");
@@ -530,6 +530,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
