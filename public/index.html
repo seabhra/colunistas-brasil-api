@@ -56,12 +56,12 @@ flex-direction: column;
 align-items: center;
 }
 
-/* AJUSTE: Layout mais agrupado (reduzido padding/margin) */
+/* Layout agrupado */
 .menu-caixa {
 background: rgba(27, 138, 160, 0.9);
 backdrop-filter: blur(6px);
 color: #333;
-padding: 15px 10px; /* Reduzido de 20px 15px */
+padding: 15px 10px; 
 border-radius: 20px;
 width: 100%;
 box-shadow: 0 10px 25px rgba(0,0,0,0.4);
@@ -77,7 +77,7 @@ margin-bottom: 10px;
 
 .img-logo {
 display: block;
-margin: -10px auto 5px; /* Reduzido bottom de 10px para 5px */
+margin: -10px auto 5px; 
 width: 60%;
 max-width: 200px;
 aspect-ratio: 1 / 1;
@@ -93,13 +93,13 @@ margin: -10px 5px;
 }
 
 .seletor-tema {
-width: 100%; padding: 12px; margin: 8px 0; /* Reduzido de 10px */
+width: 100%; padding: 12px; margin: 8px 0; 
 border-radius: 12px; border: 2px solid #9d5fe9;
 background: white; font-weight: bold; color: #4a148c;
 }
 
 .btn-aurora {
-width: 100%; padding: 12px; margin: 4px 0; /* Reduzido de 6px */
+width: 100%; padding: 12px; margin: 4px 0; 
 border: none;
 border-radius: 16px; font-weight: bold; cursor: pointer;
 color: white; font-size: 16px; transition: transform 0.2s ease;
@@ -112,7 +112,7 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
 .azul-info { background: #4caedf; cursor: default; color: white; } 
 .verde { background: #74e95a; color: #1a1a1a; } 
 
-/* NOVA COR: Botão aguardar IA (Amarelo Âmbar) */
+/* Botão Amarelo Alerta */
 .amarelo-alerta { 
     background: #ffc107; 
     color: #333; 
@@ -124,6 +124,12 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
     0% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
     70% { opacity: 0.8; box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
     100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+
+/* Botão App Inventor */
+.btn-appinventor {
+    background: #9c27b0; 
+    margin-top: 10px;
 }
 
     /* --- Área de Jogo --- */
@@ -139,8 +145,8 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
         justify-content: center; 
         align-items: center;
         gap: 10px;
-        margin: 5px auto 15px; /* Reduzido de 10px auto 20px */
-        padding: 10px; /* Reduzido de 15px */
+        margin: 5px auto 15px; 
+        padding: 10px; 
         background: rgba(255,255,255,0.6);
         border-radius: 20px; 
         width: 100%;
@@ -211,7 +217,7 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
     }
 
 #status {
-margin: 10px auto; /* Reduzido de 15px */
+margin: 10px auto; 
 font-size: 13px;
 color: #555; 
 background: rgba(255,255,255,0.8);
@@ -229,7 +235,7 @@ color: #333;
 padding: 15px;
 border-radius: 15px;
 text-align: left;
-margin: 10px 0; /* Reduzido de 15px 0 */
+margin: 10px 0; 
 width: 100%;
 font-size: 14px;
 line-height: 1.5;
@@ -301,6 +307,9 @@ border: 1px solid #ddd;
     </div>
     <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
+    <!-- Botão opcional para App Inventor controlar o áudio manualmente -->
+    <button id="btnAppInventor" class="btn-aurora btn-appinventor" onclick="toggleMusicAppInventor()" style="display:none;">🔊 Parar Música</button>
+
     <div id="aiBox">
         <div id="ad-container">
             <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
@@ -338,7 +347,6 @@ fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/head
   const datalist = document.getElementById("temasColunistas");
   datalist.innerHTML = "";
   
-  // Suporta array direto ou objeto com propriedade "temas"
   const listaTemas = Array.isArray(data) ? data : (data.temas || []);
   
   listaTemas.forEach(tema => {
@@ -389,8 +397,10 @@ function sortear() {
       return;
   }
 
+  // Garante que a música de fundo está parada antes de começar o sorteio
   memoriesAudio.pause();
   memoriesAudio.currentTime = 0;
+
   shuffleAudio.currentTime = 0;
   shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
 
@@ -399,6 +409,9 @@ function sortear() {
   // ETAPA 1: Roleta Girando - Botão AZUL
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
+
+  // Esconde o botão do App Inventor durante o sorteio
+  document.getElementById('btnAppInventor').style.display = 'none';
 
   const aiBox = document.getElementById('aiBox');
   if(aiBox.style.display === 'block') {
@@ -434,7 +447,7 @@ function sortear() {
           colunista1 = temp1;
           colunista2 = temp2;
           
-          // ETAPA 2: Roleta Parou - Mudar para Botão AMARELO antes de chamar IA
+          // ETAPA 2: Roleta Parou - Botão AMARELO
           areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">Aguarde um instante...</button>`;
           
           gerarConfrontoIA();
@@ -449,7 +462,12 @@ async function gerarConfrontoIA() {
 
   statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
+  // --- INÍCIO DA MÚSICA DE FUNDO ---
+  // Tenta tocar a música quando a análise começa
+  memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
+
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado usando apenas os codinomes, nunca nomes próprios.`;
+  
   try {
       const res = await fetch('/api/chat', {
           method: 'POST',
@@ -510,19 +528,46 @@ async function gerarConfrontoIA() {
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
+      // Exibe o botão do App Inventor para controle manual da música
+      document.getElementById('btnAppInventor').style.display = 'block';
+
+      // Botão Verde: Chama função que PARA a música e recarrega
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="location.reload()" class="btn-aurora verde">♻️ Pautar Nova Pauta</button>
+        <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
       `;
 
   } catch (e) {
       console.error(e);
       statusEl.innerText = "Erro: " + e.message;
       statusEl.style.color = "red";
-      // Em caso de erro, também oferece o botão de reiniciar
+      
+      // Em caso de erro, também oferece botão para parar música e tentar de novo
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="location.reload()" class="btn-aurora verde">♻️ Tentar Novamente</button>
+        <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
       `;
   }
+}
+
+// ---------------- FUNÇÕES DE CONTROLE DE ÁUDIO ----------------
+
+// Função para parar a música e recarregar (usada pelo botão HTML)
+function pararMusicaERecarregar() {
+    memoriesAudio.pause();
+    memoriesAudio.currentTime = 0;
+    location.reload();
+}
+
+// Função específica para ser chamada pelo App Inventor
+// Pode ser chamada via WebViewString ou pelo botão na tela
+function toggleMusicAppInventor() {
+    if (memoriesAudio.paused) {
+        memoriesAudio.play();
+        document.getElementById('btnAppInventor').innerText = "🔊 Pausar Música";
+    } else {
+        memoriesAudio.pause();
+        // Opcional: resetar o tempo ou manter pausado
+        document.getElementById('btnAppInventor').innerText = "🔊 Retomar Música";
+    }
 }
 
 // ---------------- WHATSAPP ----------------
@@ -534,7 +579,6 @@ function shareOnWhatsApp() {
   
   const title = "Agenda dos 300 - O Duelo de Colunistas";
   const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
-      
       
   const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
 
