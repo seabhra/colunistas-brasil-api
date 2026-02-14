@@ -522,9 +522,11 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-      aiBox.style.display = 'block';
-      statusEl.innerText = "Fim de combate sob moderação de IA.";
-      statusEl.style.color = "#00cc66";
+     aiBox.style.display = 'block';
+     statusEl.innerText = "Fim de combate sob moderação de IA.";
+     statusEl.style.color = "#00cc66";
+     statusEl.style.fontWeight = "bold";
+     statusEl.style.fontSize = "20px"; // ajuste o valor como quiser
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
@@ -599,3 +601,4 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
