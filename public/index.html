@@ -337,6 +337,22 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
+
+    // ---------------- INTEGRAÇÃO APP INVENTOR ----------------
+// Este "ouvinte" detecta quando o App Inventor altera o WebViewString
+// Configure seu bloco no App Inventor: WebViewString -> "PARAR"
+document.addEventListener('DOMContentLoaded', function() {
+    // Verifica se o objeto AppInventor existe (rodando dentro do app)
+    if (window.AppInventor) {
+        window.AppInventor.setWebViewString = function(newString) {
+            console.log("Recebido do App Inventor: " + newString);
+            if (newString === "PARAR") {
+                pararAudios();
+            }
+        };
+    }
+});
+
 // ---------------- TEMAS ----------------
 
 let listaTemas = [];
@@ -601,5 +617,6 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
