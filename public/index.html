@@ -56,14 +56,16 @@ flex-direction: column;
 align-items: center;
 }
 
+/* AJUSTE: Padding e margem reduzidos para agrupar o layout */
 .menu-caixa {
 background: rgba(27, 138, 160, 0.9);
 backdrop-filter: blur(6px);
 color: #333;
-padding: 20px 15px;
+padding: 15px 10px; /* Era 20px 15px */
 border-radius: 20px;
 width: 100%;
 box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+margin-bottom: 5px; /* Adicionado para reduzir espaço com próxima área caso visível */
 }
 
 #erroTema {
@@ -76,7 +78,7 @@ margin-bottom: 10px;
 
 .img-logo {
 display: block;
-margin: -10px auto 10px; 
+margin: -10px auto 5px; /* Era 10px bottom */
 width: 60%;
 max-width: 200px;
 aspect-ratio: 1 / 1;
@@ -92,13 +94,14 @@ margin: -10px 5px;
 }
 
 .seletor-tema {
-width: 100%; padding: 12px; margin: 10px 0;
+width: 100%; padding: 12px; margin: 8px 0; /* Era 10px */
 border-radius: 12px; border: 2px solid #9d5fe9;
 background: white; font-weight: bold; color: #4a148c;
 }
 
 .btn-aurora {
-width: 100%; padding: 12px; margin: 6px 0; border: none;
+width: 100%; padding: 12px; margin: 4px 0; /* Era 6px */
+border: none;
 border-radius: 16px; font-weight: bold; cursor: pointer;
 color: white; font-size: 16px; transition: transform 0.2s ease;
 }
@@ -109,6 +112,20 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
 .rosa { background: #16efbd; color: #1a1a1a; }
 .azul-info { background: #4caedf; cursor: default; color: white; } 
 .verde { background: #74e95a; color: #1a1a1a; } 
+
+/* NOVA COR: Botão de aguardar/alerta */
+.amarelo-alerta { 
+    background: #ffc107; 
+    color: #333; 
+    cursor: default; 
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
 
     /* --- Área de Jogo --- */
     #jogoArea {
@@ -123,8 +140,8 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
         justify-content: center; 
         align-items: center;
         gap: 10px;
-        margin: 10px auto 20px; 
-        padding: 15px; 
+        margin: 5px auto 15px; /* Era 10px auto 20px */
+        padding: 10px; /* Era 15px */
         background: rgba(255,255,255,0.6);
         border-radius: 20px; 
         width: 100%;
@@ -195,7 +212,7 @@ color: white; font-size: 16px; transition: transform 0.2s ease;
     }
 
 #status {
-margin: 15px auto;
+margin: 10px auto; /* Era 15px */
 font-size: 13px;
 color: #555; 
 background: rgba(255,255,255,0.8);
@@ -213,7 +230,7 @@ color: #333;
 padding: 15px;
 border-radius: 15px;
 text-align: left;
-margin: 15px 0;
+margin: 10px 0; /* Era 15px 0 */
 width: 100%;
 font-size: 14px;
 line-height: 1.5;
@@ -378,10 +395,12 @@ function sortear() {
   shuffleAudio.currentTime = 0;
   shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
 
-  document.getElementById('status').innerText = "No duelo contra conluio das narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada."; 
+  document.getElementById('status').innerText = "No combate ao conluio de narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada."; 
 
+  // --- ALTERAÇÃO AQUI ---
+  // Texto alterado e classe de cor alterada para 'amarelo-alerta'
   const areaBotao = document.getElementById('areaBotaoAcao');
-  areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
+  areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">Aguarde um instante...</button>`;
 
   const aiBox = document.getElementById('aiBox');
   if(aiBox.style.display === 'block') {
@@ -426,7 +445,7 @@ async function gerarConfrontoIA() {
   const statusEl = document.getElementById('status');
   const tema = document.getElementById('seletorTema').value || "Atualidade";
 
-  statusEl.innerText = `Aguarde um instante... os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
+  statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado usando apenas os codinomes, nunca nomes próprios.`;
   try {
@@ -508,7 +527,7 @@ function shareOnWhatsApp() {
   if (texto.length > 2000) texto = texto.substring(0, 2000) + "...";
   
   const title = "Agenda dos 300 - O Duelo de Colunistas";
-  const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300 — O Duelo de Colunistas\n⚡ Powered by Geraldo A. Seabra";
+  const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
       
       
   const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
@@ -530,13 +549,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
