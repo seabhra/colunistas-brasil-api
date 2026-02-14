@@ -482,7 +482,7 @@ async function gerarConfrontoIA() {
   // Tenta tocar a música quando a análise começa
   memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
 
-  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Use um tom jornalístico, analítico e sofisticado usando apenas os codinomes, nunca nomes próprios.`;
+  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
   
   try {
       const res = await fetch('/api/chat', {
@@ -617,6 +617,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
