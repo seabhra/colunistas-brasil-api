@@ -138,7 +138,7 @@ background: white; font-weight: bold; color: #4a148c;
     border-radius: 16px;
     margin-top: 10px;
     display: inline-block;
-    padding: 15px 16px; /* aumenta a altura aqui */
+    padding: 14px 16px; /* aumenta a altura aqui */
     width: 234px;
 }
 
@@ -549,11 +549,12 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-     aiBox.style.display = 'block';
-     statusEl.innerText = "Fim de combate sob moderação de IA.";
-     statusEl.style.color = "#00cc66";
-     statusEl.style.fontWeight = "bold";
-     statusEl.style.fontSize = "14px"; // ajuste o valor como quiser
+aiBox.style.display = 'block';
+aiBox.style.margin = "4px 0"; // margem superior e inferior reduzida
+statusEl.innerText = "Fim de combate sob moderação de IA.";
+statusEl.style.color = "#00cc66";
+statusEl.style.fontWeight = "bold";
+statusEl.style.fontSize = "14px";
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
@@ -628,6 +629,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
