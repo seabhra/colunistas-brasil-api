@@ -552,7 +552,8 @@ async function gerarConfrontoIA() {
       `;
 
 aiBox.style.display = 'block';
-aiBox.style.margin = "0 0"; // margem superior e inferior reduzida
+aiBox.style.marginTop = "5px";    // margem superior reduzida
+aiBox.style.marginBottom = "5px"; // margem inferior maior
 statusEl.innerText = "Fim de combate sob moderação de IA.";
 statusEl.style.color = "#00cc66";
 statusEl.style.fontWeight = "bold";
@@ -631,6 +632,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
