@@ -136,7 +136,7 @@ background: white; font-weight: bold; color: #4a148c;
 .btn-appinventor {
     background: #9c27b0;
     border-radius: 16px;
-    margin-top: 10px;
+    margin-top: 5px 5px;
     display: inline-block;
     padding: 14px 16px; /* aumenta a altura aqui */
     width: 234px;
@@ -550,7 +550,7 @@ async function gerarConfrontoIA() {
       `;
 
 aiBox.style.display = 'block';
-aiBox.style.margin = "4px 0"; // margem superior e inferior reduzida
+aiBox.style.margin = "0 0"; // margem superior e inferior reduzida
 statusEl.innerText = "Fim de combate sob moderação de IA.";
 statusEl.style.color = "#00cc66";
 statusEl.style.fontWeight = "bold";
@@ -629,6 +629,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
