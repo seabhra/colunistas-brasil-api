@@ -159,6 +159,7 @@ margin: -10px 5px;
 .btn-appinventor:hover {
     transform: scale(1.1);
 }
+
  
     /* --- Área de Jogo --- */
     #jogoArea {
@@ -559,28 +560,11 @@ async function gerarConfrontoIA() {
         </div>
 
           <!-- ÁREA DOS BOTÕES: Audio e Zap lado a lado -->
-  aiBox.innerHTML = `
-  <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-    Agenda dos 300 Colunistas
-  </h2>
-  
-  <div id="conteudoIA" style="margin-bottom: 15px;">
-    <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
-        ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
-    </h3>
-    <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
-        <strong>Em pauta:</strong> ${tema}
-    </p>
-    <hr style="border:0; border-top:1px solid #eee;">
-    <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
-  </div>
-
-  <!-- ÁREA DOS BOTÕES CORRIGIDA -->
-  <div style="display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 20px; width: 100%; margin: 20px 0;">
+  <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 15px 0;">
     
-      <!-- BOTÃO AUDIO (Estilo fosco/escuro para contraste) -->
+      <!-- BOTÃO AUDIO (Adicionado aqui) -->
       <button id="btnAppInventor" onclick="toggleMusicAppInventor()" 
-          style=" background: #9c27b0;
+        style=" background: #9c27b0;
     position: absolute;
     top: -15px;
     right: -10px;
@@ -594,28 +578,28 @@ async function gerarConfrontoIA() {
     justify-content: center;
     align-items: center; 
     transform: scale(1.1);">
-    ${memoriesAudio && !memoriesAudio.paused ? '🔇' : '🔊'}
+      ${memoriesAudio && !memoriesAudio.paused ? '🔊' : '🔇'}
       </button>
 
-      <!-- BOTÃO ZAP -->
-      <img src="imagens_app/zap.png"
-           class="btn-zap-redondo"
-           onclick="shareOnWhatsApp()"
-           alt="Compartilhar"
-           style="width: 60px; height: 60px; cursor: pointer; display: block;">
+       <!-- BOTÃO ZAP (Já existente) -->
 
-  </div>
+        <img src="imagens_app/zap.png"
+             class="btn-zap-redondo"
+             onclick="shareOnWhatsApp()"
+             alt="Compartilhar">
 
-  <div id="ad-container">
-    <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-  </div>
-`;
+             </div>
+
+        <div id="ad-container">
+          <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-3940256099942544"
+               data-ad-slot="6300978111"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      `;
 
 aiBox.style.display = 'block';
 aiBox.style.marginTop = "5px";    // margem superior reduzida
@@ -659,17 +643,13 @@ function pararMusicaERecarregar() {
 // Função específica para ser chamada pelo App Inventor
 // Pode ser chamada via WebViewString ou pelo botão na tela
 function toggleMusicAppInventor() {
-    // Verifica se o elemento de áudio existe
-    if (!memoriesAudio) return; 
-
-    const btn = document.getElementById('btnAppInventor');
-    
     if (memoriesAudio.paused) {
         memoriesAudio.play();
-        if(btn) btn.innerText = "🔊";
+        document.getElementById('btnAppInventor').innerText = "🔊";
     } else {
         memoriesAudio.pause();
-        if(btn) btn.innerText = "🔇";
+        // Opcional: resetar o tempo ou manter pausado
+        document.getElementById('btnAppInventor').innerText = "🔇";
     }
 }
 
@@ -702,9 +682,6 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
-
-
-
 
 
 
