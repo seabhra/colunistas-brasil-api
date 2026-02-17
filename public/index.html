@@ -539,10 +539,7 @@ async function gerarConfrontoIA() {
 
       // HTML CORRIGIDO: Botões MOVIDOS PARA O TOPO (antes do conteúdo)
       aiBox.innerHTML = `
-        <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-          Agenda dos 300 Colunistas
-        </h2>
-
+        
         <!-- ÁREA DOS BOTÕES AGORA NO TOPO -->
         <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 0 0 15px 0; position: relative;">
             
@@ -558,7 +555,9 @@ async function gerarConfrontoIA() {
                 🔊
             </button>
         </div>
-        
+        <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
+          Agenda dos 300 Colunistas
+        </h2>
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
@@ -666,4 +665,5 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
