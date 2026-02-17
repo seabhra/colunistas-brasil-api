@@ -137,30 +137,32 @@ margin: -10px 5px;
     100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
 }
 
-.btn-appinventor {
-    background: #9c27b0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    transition: transform 0.2s;
+/* CSS UNIFICADO PARA BOTÕES REDONDOS */
+.btn-circular-action {
+    width: 45px; 
+    height: 45px;
+    border-radius: 50%; 
+    cursor: pointer; 
+    transition: transform 0.2s, opacity 0.2s;
     border: none;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 20px; /* Tamanho do ícone/emoji */
+    background-color: transparent; /* Para o Zap herdar a cor da imagem */
+}
+
+.btn-circular-action:active { 
+    transform: scale(0.9); 
+}
+
+/* Estilo específico para o fundo do botão de áudio */
+.btn-audio-bg {
+    background: #9c27b0; /* Roxo */
     color: white;
 }
-.btn-appinventor:active { transform: scale(0.95); }
 
-.btn-zap-redondo { 
-    width: 45px; 
-    height: 45px; 
-    cursor: pointer; 
-    transition: transform 0.2s;
-}
-.btn-zap-redondo:active { transform: scale(0.95); }
 
 #jogoArea {
     display: none;
@@ -487,7 +489,6 @@ function sortear() {
           areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">Analisando...</button>`;
           
           // 3. CORREÇÃO CRÍTICA: Inicia música AQUI
-          // Isso acontece logo após a interação do usuário, garantindo permissão do navegador.
           window.memoriesAudio.play().then(() => {
               console.log("Música iniciada automaticamente");
           }).catch(e => console.log("Autoplay bloqueado", e));
@@ -526,14 +527,19 @@ async function gerarConfrontoIA() {
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
       // Gera HTML
+      // ALTERAÇÃO AQUI: Botões com classe unificada .btn-circular-action
       aiBox.innerHTML = `
         <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 0 0 15px 0;">
-            <img src="imagens_app/zap.png" id="btnZap" class="btn-zap-redondo" onclick="shareOnWhatsApp()" alt="Compartilhar">
-            <button id="btnAppInventor" class="btn-appinventor" onclick="window.toggleMusicAppInventor()">
+            
+            <!-- BOTÃO ZAP -->
+            <img src="imagens_app/zap.png" id="btnZap" class="btn-circular-action" onclick="shareOnWhatsApp()" alt="Compartilhar">
+
+            <!-- BOTÃO AUDIO (Agora é um button estilizado igual ao zap) -->
+            <button id="btnAppInventor" class="btn-circular-action btn-audio-bg" onclick="window.toggleMusicAppInventor()">
                 🔊
             </button>
         </div>
-        <h2 style="color:#4a148c; margin-top:0; font-size:18px;">Agenda dos 300</h2>
+        <h2 style="color:#4a148c; margin-top:0; font-size:18px;">Agenda dos 300 Colunistas</h2>
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
@@ -548,11 +554,11 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-      // 4. Sincroniza ícone ao exibir (Se a música está tocando, mostra som, senão mudo)
+      // Sincroniza ícone
       atualizarIconeAudio();
 
       aiBox.style.display = 'block';
-      statusEl.innerText = "Combate finalizado.";
+      statusEl.innerText = "Fim de conbate moderado por IA.";
       
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
