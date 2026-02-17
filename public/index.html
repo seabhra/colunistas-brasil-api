@@ -139,32 +139,29 @@ margin: -10px 5px;
     100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
 }
 
-/* Botão App Inventor */
+/* Botão App Inventor (Estilo Circular) */
 .btn-appinventor {
     background: #9c27b0;
-    position: absolute;
-    top: -15px;
-    right: 20px;
     width: 45px;
     height: 45px;
     border-radius: 50%;
     cursor: pointer;
     z-index: 10;
     transition: transform 0.2s;
+    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 18px;
 }
-.btn-appinventor:hover {
-    transform: scale(1.1);
-}
+.btn-appinventor:hover { transform: scale(1.1); }
 
  
 /* botão redondo zap */
 .btn-zap-redondo { 
-position: absolute; top: -15px; right: -10px; 
-width: 45px; height: 45px; 
-cursor: pointer; z-index: 10; 
+width: 45px; 
+height: 45px; 
+cursor: pointer; 
 transition: transform 0.2s;
 }
 .btn-zap-redondo:hover { transform: scale(1.1); }
@@ -345,8 +342,7 @@ border: 1px solid #ddd;
     </div>
     <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
-    <!-- Botão opcional para App Inventor controlar o áudio manualmente -->
-    <button id="btnAppInventor" class="btn-aurora btn-appinventor" onclick="toggleMusicAppInventor()" style="display:none;">🔊 Parar Música</button>
+    <!-- Botão do App Inventor removido daqui para evitar duplicidade -->
 
     <div id="aiBox">
         <div id="ad-container">
@@ -464,9 +460,6 @@ function sortear() {
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
 
-  // Esconde o botão do App Inventor durante o sorteio
-  document.getElementById('btnAppInventor').style.display = 'none';
-
   const aiBox = document.getElementById('aiBox');
   if(aiBox.style.display === 'block') {
       aiBox.style.display = 'none';
@@ -544,9 +537,10 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
+      // HTML CORRIGIDO: Botões lado a lado e atualização de ícone via .textContent
       aiBox.innerHTML = `
         <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-          Agenda dos 300
+          Agenda dos 300 Colunistas
         </h2>
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
@@ -560,36 +554,21 @@ async function gerarConfrontoIA() {
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
 
-          <!-- ÁREA DOS BOTÕES: Audio e Zap lado a lado -->
-  <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 15px 0;">
-    
-      <!-- BOTÃO AUDIO (Adicionado aqui) -->
-      <button id="btnAppInventor" onclick="toggleMusicAppInventor()" 
-        style=" background: #9c27b0;
-    position: absolute;
-    top: -15px;
-    right: -10px;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    transition: transform 0.2s;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    transform: scale(1.1);">
-      ${memoriesAudio && !memoriesAudio.paused ? '🔊' : '🔇'}
-      </button>
+        <!-- ÁREA DOS BOTÕES CORRIGIDA: Flex container -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 15px 0; position: relative;">
+            
+            <!-- BOTÃO ZAP -->
+            <img src="imagens_app/zap.png"
+                 id="btnZap"
+                 class="btn-zap-redondo"
+                 onclick="shareOnWhatsApp()"
+                 alt="Compartilhar">
 
-       <!-- BOTÃO ZAP (Já existente) -->
-
-        <img src="imagens_app/zap.png"
-             class="btn-zap-redondo"
-             onclick="shareOnWhatsApp()"
-             alt="Compartilhar">
-
-             </div>
+            <!-- BOTÃO AUDIO -->
+            <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
+                🔊
+            </button>
+        </div>
 
         <div id="ad-container">
           <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
@@ -602,18 +581,21 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-aiBox.style.display = 'block';
-aiBox.style.marginTop = "5px";    // margem superior reduzida
-aiBox.style.marginBottom = "5px"; // margem inferior maior
-statusEl.innerText = "Fim de combate sob moderação de IA.";
-statusEl.style.color = "#00cc66";
-statusEl.style.fontWeight = "bold";
-statusEl.style.fontSize = "14px";
+      // Define o ícone inicial correto baseado no estado do áudio
+      const btnAudio = document.getElementById('btnAppInventor');
+      if(btnAudio) {
+          btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+      }
+
+      aiBox.style.display = 'block';
+      aiBox.style.marginTop = "5px";    
+      aiBox.style.marginBottom = "5px"; 
+      statusEl.innerText = "Fim de combate sob moderação de IA.";
+      statusEl.style.color = "#00cc66";
+      statusEl.style.fontWeight = "bold";
+      statusEl.style.fontSize = "14px";
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
-
-      // Exibe o botão do App Inventor para controle manual da música
-      document.getElementById('btnAppInventor').style.display = 'block';
 
       // Botão Verde: Chama função que PARA a música e recarrega
       document.getElementById('areaBotaoAcao').innerHTML = `
@@ -644,13 +626,14 @@ function pararMusicaERecarregar() {
 // Função específica para ser chamada pelo App Inventor
 // Pode ser chamada via WebViewString ou pelo botão na tela
 function toggleMusicAppInventor() {
+    const btn = document.getElementById('btnAppInventor');
+    
     if (memoriesAudio.paused) {
         memoriesAudio.play();
-        document.getElementById('btnAppInventor').innerText = "🔊";
+        if(btn) btn.textContent = "🔊"; // Usar textContent para garantir troca visual
     } else {
         memoriesAudio.pause();
-        // Opcional: resetar o tempo ou manter pausado
-        document.getElementById('btnAppInventor').innerText = "🔇";
+        if(btn) btn.textContent = "🔇"; // Usar textContent
     }
 }
 
@@ -683,26 +666,3 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
