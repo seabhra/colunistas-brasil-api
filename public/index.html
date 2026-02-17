@@ -559,33 +559,50 @@ async function gerarConfrontoIA() {
         </div>
 
           <!-- ÁREA DOS BOTÕES: Audio e Zap lado a lado -->
-  <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 15px 0;">
+  aiBox.innerHTML = `
+  <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
+    Agenda dos 300 Colunistas
+  </h2>
+  
+  <div id="conteudoIA" style="margin-bottom: 15px;">
+    <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
+        ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
+    </h3>
+    <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
+        <strong>Em pauta:</strong> ${tema}
+    </p>
+    <hr style="border:0; border-top:1px solid #eee;">
+    <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
+  </div>
+
+  <!-- ÁREA DOS BOTÕES CORRIGIDA -->
+  <div style="display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 20px; width: 100%; margin: 20px 0;">
     
-      <!-- BOTÃO AUDIO (Adicionado aqui) -->
+      <!-- BOTÃO AUDIO (Estilo fosco/escuro para contraste) -->
       <button id="btnAppInventor" onclick="toggleMusicAppInventor()" 
-              style="background-color: #333; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-          ${memoriesAudio && !memoriesAudio.paused ? '🔊' : '🔇'}
+              style="background-color: #444; color: #fff; border: 2px solid #333; border-radius: 50%; width: 60px; height: 60px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;">
+          ${memoriesAudio && !memoriesAudio.paused ? '🔇' : '🔊'}
       </button>
 
-       <!-- BOTÃO ZAP (Já existente) -->
-       
-        <img src="imagens_app/zap.png"
-             class="btn-zap-redondo"
-             onclick="shareOnWhatsApp()"
-             alt="Compartilhar">
+      <!-- BOTÃO ZAP -->
+      <img src="imagens_app/zap.png"
+           class="btn-zap-redondo"
+           onclick="shareOnWhatsApp()"
+           alt="Compartilhar"
+           style="width: 60px; height: 60px; cursor: pointer; display: block;">
 
-             </div>
+  </div>
 
-        <div id="ad-container">
-          <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
-          <ins class="adsbygoogle"
-               style="display:block"
-               data-ad-client="ca-pub-3940256099942544"
-               data-ad-slot="6300978111"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
-        </div>
-      `;
+  <div id="ad-container">
+    <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3940256099942544"
+         data-ad-slot="6300978111"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
+`;
 
 aiBox.style.display = 'block';
 aiBox.style.marginTop = "5px";    // margem superior reduzida
@@ -629,13 +646,17 @@ function pararMusicaERecarregar() {
 // Função específica para ser chamada pelo App Inventor
 // Pode ser chamada via WebViewString ou pelo botão na tela
 function toggleMusicAppInventor() {
+    // Verifica se o elemento de áudio existe
+    if (!memoriesAudio) return; 
+
+    const btn = document.getElementById('btnAppInventor');
+    
     if (memoriesAudio.paused) {
         memoriesAudio.play();
-        document.getElementById('btnAppInventor').innerText = "🔊";
+        if(btn) btn.innerText = "🔊";
     } else {
         memoriesAudio.pause();
-        // Opcional: resetar o tempo ou manter pausado
-        document.getElementById('btnAppInventor').innerText = "🔇";
+        if(btn) btn.innerText = "🔇";
     }
 }
 
@@ -668,6 +689,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
