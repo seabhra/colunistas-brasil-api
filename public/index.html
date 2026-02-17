@@ -360,7 +360,7 @@ border: 1px solid #ddd;
 
 <script>
 // ---------------- ÁUDIO ----------------
-// Definidos globalmente para serem acessíveis pelo App Inventor e funções internas
+// Definidos globalmente
 window.shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
@@ -371,52 +371,43 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
-// ---------------- FUNÇÕES GLOBAIS DE CONTROLE (Acessíveis via window) ----------------
+// ---------------- FUNÇÕES GLOBAIS DE CONTROLE ----------------
 
-// Para o App Inventor chamar ou para usar nos botões
-window.pararAudios = function() {
-    console.log("Comando PARAR recebido");
-    if (window.memoriesAudio) {
-        window.memoriesAudio.pause();
-        window.memoriesAudio.currentTime = 0;
-    }
-    if (window.shuffleAudio) {
-        window.shuffleAudio.pause();
-        window.shuffleAudio.currentTime = 0;
-    }
-    // Atualiza ícone se o botão existir
+// Função auxiliar para atualizar o ícone do botão em tempo real
+function atualizarIconeAudio() {
     const btn = document.getElementById('btnAppInventor');
-    if(btn) btn.textContent = "🔇";
+    if (btn) {
+        btn.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
+    }
+}
+
+window.pararAudios = function() {
+    window.memoriesAudio.pause();
+    window.memoriesAudio.currentTime = 0;
+    window.shuffleAudio.pause();
+    window.shuffleAudio.currentTime = 0;
+    atualizarIconeAudio();
 };
 
-// Alterna Play/Pause (Usada no botão da tela)
 window.toggleMusicAppInventor = function() {
-    const btn = document.getElementById('btnAppInventor');
-    
     if (window.memoriesAudio.paused) {
         window.memoriesAudio.play();
-        if(btn) btn.textContent = "🔊";
     } else {
         window.memoriesAudio.pause();
-        if(btn) btn.textContent = "🔇";
     }
+    atualizarIconeAudio();
 };
 
-// Para a música e recarrega
 window.pararMusicaERecarregar = function() {
     window.pararAudios();
     location.reload();
 };
 
 // ---------------- INTEGRAÇÃO APP INVENTOR ----------------
-// Método 1: Verificação ativa (Polling) - Mais seguro para WebViewString
 let lastWebViewString = "";
 setInterval(function() {
-    // Verifica se o objeto AppInventor existe e tem a string
     if (window.AppInventor && typeof window.AppInventor.getWebViewString === "function") {
         const currentString = window.AppInventor.getWebViewString();
-        
-        // Só age se a string mudou E for igual a "PARAR"
         if (currentString !== lastWebViewString) {
             lastWebViewString = currentString;
             if (currentString === "PARAR") {
@@ -424,26 +415,21 @@ setInterval(function() {
             }
         }
     }
-}, 200); // Checa a cada 200ms
+}, 200);
 
 // ---------------- TEMAS ----------------
 let listaTemas = [];
-// Carregar temas do JSON
 fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/heads/main/public/temas_colunitas.json")
 .then(res => res.json())
 .then(data => {
   const datalist = document.getElementById("temasColunistas");
   datalist.innerHTML = "";
-  
   const listaTemas = Array.isArray(data) ? data : (data.temas || []);
-  
   listaTemas.forEach(tema => {
       const option = document.createElement("option");
       option.value = tema;
       datalist.appendChild(option);
   });
-  
-  console.log(`Carregados ${listaTemas.length} temas.`);
 }).catch(err => console.log("Erro ao carregar temas:", err));
 
 // ---------------- DADOS ----------------
@@ -454,15 +440,13 @@ let colunista2 = {};
 async function carregarColunistas() {
     try {
         const resposta = await fetch('colunistas-brasil.json');
-        if (!resposta.ok) throw new Error("Arquivo colunistas-brasil.json não encontrado");
+        if (!resposta.ok) throw new Error("Arquivo não encontrado");
         const dados = await resposta.json();
         listaTodosColunistas = dados.colunistas || [];
-        console.log(`Carregados ${listaTodosColunistas.length} colunistas.`);
     } catch (erro) {
-        console.error("Erro ao carregar colunistas-brasil.json:", erro);
+        console.error("Erro ao carregar colunistas:", erro);
     }
 }
-
 carregarColunistas();
 
 function iniciarDuelo() {
@@ -473,7 +457,6 @@ function iniciarDuelo() {
       return;
   }
   erroEl.style.display = 'none';
-  
   document.getElementById('menuInicial').style.display = 'none';
   document.getElementById('jogoArea').style.display = 'flex';
   document.getElementById('containerFilosofos').style.display = 'flex';
@@ -481,27 +464,26 @@ function iniciarDuelo() {
 
 function sortear() {
   if (listaTodosColunistas.length < 2) {
-      alert("Lista de colunistas insuficiente para um duelo.");
+      alert("Lista insuficiente.");
       return;
   }
 
-  // Garante que a música de fundo está parada antes de começar o sorteio
-  memoriesAudio.pause();
-  memoriesAudio.currentTime = 0;
+  // Garante que está tudo parado antes de começar
+  window.memoriesAudio.pause();
+  window.memoriesAudio.currentTime = 0;
+  window.shuffleAudio.pause();
+  window.shuffleAudio.currentTime = 0;
 
-  shuffleAudio.currentTime = 0;
-  shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
+  // 1. Toca o som da roleta (Interação do usuário validada aqui)
+  window.shuffleAudio.play().catch(e => console.log("Erro shuffle"));
 
-  document.getElementById('status').innerText = "No combate ao conluio de narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada."; 
+  document.getElementById('status').innerText = "Analisando dados..."; 
 
-  // ETAPA 1: Roleta Girando - Botão AZUL
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
 
   const aiBox = document.getElementById('aiBox');
-  if(aiBox.style.display === 'block') {
-      aiBox.style.display = 'none';
-  }
+  if(aiBox.style.display === 'block') aiBox.style.display = 'none';
 
   let temp1, temp2; 
   let ciclos = 0;
@@ -509,10 +491,7 @@ function sortear() {
   const intervalo = setInterval(() => {
       let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
       let idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
-      
-      while(idx1 === idx2) {
-          idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
-      }
+      while(idx1 === idx2) idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
 
       temp1 = listaTodosColunistas[idx1]; 
       temp2 = listaTodosColunistas[idx2]; 
@@ -521,36 +500,39 @@ function sortear() {
       document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunista2.png";
       
       const veiculo1 = temp1.Veículo ? `<span class="text-veiculo">${temp1.Veículo}</span>` : '';
-      const veiculo2 = temp2.Veículo ? `<span class="text-veiculo">${temp2.Veículo}</span>` : '';
+      const veiculo2 = temp2.Veículo ? `<span class="text-veiculo">${temp2.Veículo}</span>'`;
 
       document.getElementById('nomeLunar').innerHTML = `${temp1.codinome}${veiculo1}`;
       document.getElementById('nomeSolar').innerHTML = `${temp2.codinome}${veiculo2}`;
 
       if (ciclos++ > 100) {
           clearInterval(intervalo);
-          shuffleAudio.pause();
+          window.shuffleAudio.pause();
           colunista1 = temp1;
           colunista2 = temp2;
           
-          // ETAPA 2: Roleta Parou - Botão AMARELO
           areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">Aguarde um instante...</button>`;
+          
+          // 2. CORREÇÃO: Inicia a música AQUI, logo após a roleta parar.
+          // Como isso acontece logo após o clique do usuário ("sortear"), o navegador permite.
+          window.memoriesAudio.play().then(() => {
+              console.log("Música iniciada com sucesso");
+              atualizarIconeAudio(); // Garante que o ícone (se já existir) atualize
+          }).catch(e => console.log("Autoplay bloqueado", e));
           
           gerarConfrontoIA();
       }
   }, 80);
 }
 
-// ---------------- API CHAT (VERCEL) ----------------
+// ---------------- API CHAT ----------------
 async function gerarConfrontoIA() {
   const statusEl = document.getElementById('status');
   const tema = document.getElementById('seletorTema').value || "Atualidade";
 
-  statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
+  statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo...`;
 
-  // --- INÍCIO DA MÚSICA DE FUNDO ---
-  memoriesAudio.play().catch(e => console.log("Autoplay bloqueado."));
-
-  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
+  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}.`;
   
   try {
       const res = await fetch('/api/chat', {
@@ -562,10 +544,7 @@ async function gerarConfrontoIA() {
           })
       });
 
-      if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`Erro do servidor (${res.status}): ${errorText}`);
-      }
+      if (!res.ok) throw new Error(`Erro: ${res.status}`);
       
       const data = await res.json();
       const respostaTexto = data.choices[0].message.content;
@@ -574,75 +553,44 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // HTML: Botões no topo
+      // Gera o HTML
       aiBox.innerHTML = `
-        
-        <!-- ÁREA DOS BOTÕES AGORA NO TOPO -->
-        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 0 0 15px 0; position: relative;">
-            
-            <!-- BOTÃO ZAP -->
-            <img src="imagens_app/zap.png"
-                 id="btnZap"
-                 class="btn-zap-redondo"
-                 onclick="shareOnWhatsApp()"
-                 alt="Compartilhar">
-
-            <!-- BOTÃO AUDIO -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 0 0 15px 0;">
+            <img src="imagens_app/zap.png" id="btnZap" class="btn-zap-redondo" onclick="shareOnWhatsApp()" alt="Compartilhar">
             <button id="btnAppInventor" class="btn-appinventor" onclick="window.toggleMusicAppInventor()">
                 🔊
             </button>
         </div>
-        <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-          Agenda dos 300 Colunistas
-        </h2>
+        <h2 style="color:#4a148c; margin-top:0; font-size:18px;">Agenda dos 300 Colunistas</h2>
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
           </h3>
-          <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
-              <strong>Em pauta:</strong> ${tema}
-          </p>
+          <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px"><strong>Em pauta:</strong> ${tema}</p>
           <hr style="border:0; border-top:1px solid #eee;">
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
-
         <div id="ad-container">
           <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
-          <ins class="adsbygoogle"
-               style="display:block"
-               data-ad-client="ca-pub-3940256099942544"
-               data-ad-slot="6300978111"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111" data-ad-format="auto"></ins>
         </div>
       `;
 
-      // Define o ícone inicial correto
-      const btnAudio = document.getElementById('btnAppInventor');
-      if(btnAudio) {
-          btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
-      }
+      // IMPORTANTE: Atualiza o ícone do botão recém-criado para refletir o estado atual (Tocando)
+      atualizarIconeAudio();
 
       aiBox.style.display = 'block';
-      aiBox.style.marginTop = "5px";    
-      aiBox.style.marginBottom = "5px"; 
-      statusEl.innerText = "Fim de combate sob moderação de IA.";
-      statusEl.style.color = "#00cc66";
-      statusEl.style.fontWeight = "bold";
-      statusEl.style.fontSize = "14px";
-
+      statusEl.innerText = "Fim de combate.";
+      
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
-      // Botão Verde
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="window.pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
+        <button onclick="window.pararMusicaERecarregar()" class="btn-aurora verde">♻️ Nova Pauta</button>
       `;
 
   } catch (e) {
       console.error(e);
       statusEl.innerText = "Erro: " + e.message;
-      statusEl.style.color = "red";
-      
       document.getElementById('areaBotaoAcao').innerHTML = `
         <button onclick="window.pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
       `;
@@ -655,12 +603,7 @@ function shareOnWhatsApp() {
   if (!box) return;
   let texto = box.innerText;
   if (texto.length > 2000) texto = texto.substring(0, 2000) + "...";
-  
-  const title = "Agenda dos 300 - O Duelo de Colunistas";
-  const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
-      
-  const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
-
+  const message = `✨ Agenda dos 300\n\n${texto}\n\n📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra`;
   if (window.AppInventor) {
       window.AppInventor.setWebViewString(message);
   } else {
@@ -670,9 +613,7 @@ function shareOnWhatsApp() {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW OK'))
-      .catch(err => console.log('SW Fail', err));
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Fail', err));
   });
 }
 </script> 
