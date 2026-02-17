@@ -93,9 +93,15 @@ margin: -10px 5px;
 }
 
 .seletor-tema {
-width: 100%; padding: 12px; margin: 8px 0; 
-border-radius: 12px; border: 2px solid #9d5fe9;
-background: white; font-weight: bold; color: #4a148c;
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom:10px;
+    border-radius: 12px;
+    border: 2px solid #9d5fe9;
+    background: white;
+    font-weight: bold;
+    color: #4a148c;
 }
 
 .btn-aurora {
@@ -136,15 +142,24 @@ background: white; font-weight: bold; color: #4a148c;
 /* Botão App Inventor */
 .btn-appinventor {
     background: #9c27b0;
-    border-radius: 16px;
-    margin-top: -10px;     /* reduz em cima */
-    margin-bottom: 10px;  /* 5px embaixo */
-    display: inline-block;
-    padding: 13px 16px;
-    width: 232px;
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-
+.btn-appinventor:hover {
+    transform: scale(1.1);
+}
+ 
     /* --- Área de Jogo --- */
     #jogoArea {
         display: none;
@@ -262,6 +277,7 @@ position: relative;
 border: 1px solid #eee;
 }
 
+/* botão redondo zap */
 .btn-zap-redondo { 
 position: absolute; top: -15px; right: -10px; 
 width: 45px; height: 45px; 
@@ -269,6 +285,8 @@ cursor: pointer; z-index: 10;
 transition: transform 0.2s;
 }
 .btn-zap-redondo:hover { transform: scale(1.1); }
+
+/* área do anúncio admob */
 
 #ad-container {
 margin-top: 20px;
@@ -604,7 +622,7 @@ function toggleMusicAppInventor() {
     } else {
         memoriesAudio.pause();
         // Opcional: resetar o tempo ou manter pausado
-        document.getElementById('btnAppInventor').innerText = "🔊 Retomar Música";
+        document.getElementById('btnAppInventor').innerText = "🔇 Retomar Música";
     }
 }
 
@@ -634,12 +652,10 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW Fail', err));
   });
 }
-</script>
-
-
-    
+</script> 
 </body>
 </html>
+
 
 
 
