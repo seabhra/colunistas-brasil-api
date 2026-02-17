@@ -558,6 +558,17 @@ async function gerarConfrontoIA() {
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
 
+          <!-- ÁREA DOS BOTÕES: Audio e Zap lado a lado -->
+  <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 15px 0;">
+    
+      <!-- BOTÃO AUDIO (Adicionado aqui) -->
+      <button id="btnAppInventor" onclick="toggleMusicAppInventor()" 
+              style="background-color: #333; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+          ${memoriesAudio && !memoriesAudio.paused ? '🔊' : '🔇'}
+      </button>
+
+       <!-- BOTÃO ZAP (Já existente) -->
+       
         <img src="imagens_app/zap.png"
              class="btn-zap-redondo"
              onclick="shareOnWhatsApp()"
@@ -618,11 +629,11 @@ function pararMusicaERecarregar() {
 function toggleMusicAppInventor() {
     if (memoriesAudio.paused) {
         memoriesAudio.play();
-        document.getElementById('btnAppInventor').innerText = "🔊 Pausar Música";
+        document.getElementById('btnAppInventor').innerText = "🔊";
     } else {
         memoriesAudio.pause();
         // Opcional: resetar o tempo ou manter pausado
-        document.getElementById('btnAppInventor').innerText = "🔇 Retomar Música";
+        document.getElementById('btnAppInventor').innerText = "🔇";
     }
 }
 
