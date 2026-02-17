@@ -153,6 +153,7 @@ margin: -10px 5px;
     justify-content: center;
     align-items: center;
     font-size: 18px;
+    color: white;
 }
 .btn-appinventor:hover { transform: scale(1.1); }
 
@@ -342,8 +343,6 @@ border: 1px solid #ddd;
     </div>
     <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
-    <!-- Botão do App Inventor removido daqui para evitar duplicidade -->
-
     <div id="aiBox">
         <div id="ad-container">
             <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
@@ -361,34 +360,73 @@ border: 1px solid #ddd;
 
 <script>
 // ---------------- ÁUDIO ----------------
-const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
+// Definidos globalmente para serem acessíveis pelo App Inventor e funções internas
+window.shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
-const memoriesAudio = new Audio('audio_app/darren_curtis.mp3');     
+window.memoriesAudio = new Audio('audio_app/darren_curtis.mp3');     
 memoriesAudio.loop = true;
 memoriesAudio.preload = 'auto';
 
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
+// ---------------- FUNÇÕES GLOBAIS DE CONTROLE (Acessíveis via window) ----------------
 
-    // ---------------- INTEGRAÇÃO APP INVENTOR ----------------
-// Este "ouvinte" detecta quando o App Inventor altera o WebViewString
-// Configure seu bloco no App Inventor: WebViewString -> "PARAR"
-document.addEventListener('DOMContentLoaded', function() {
-    // Verifica se o objeto AppInventor existe (rodando dentro do app)
-    if (window.AppInventor) {
-        window.AppInventor.setWebViewString = function(newString) {
-            console.log("Recebido do App Inventor: " + newString);
-            if (newString === "PARAR") {
-                pararAudios();
-            }
-        };
+// Para o App Inventor chamar ou para usar nos botões
+window.pararAudios = function() {
+    console.log("Comando PARAR recebido");
+    if (window.memoriesAudio) {
+        window.memoriesAudio.pause();
+        window.memoriesAudio.currentTime = 0;
     }
-});
+    if (window.shuffleAudio) {
+        window.shuffleAudio.pause();
+        window.shuffleAudio.currentTime = 0;
+    }
+    // Atualiza ícone se o botão existir
+    const btn = document.getElementById('btnAppInventor');
+    if(btn) btn.textContent = "🔇";
+};
+
+// Alterna Play/Pause (Usada no botão da tela)
+window.toggleMusicAppInventor = function() {
+    const btn = document.getElementById('btnAppInventor');
+    
+    if (window.memoriesAudio.paused) {
+        window.memoriesAudio.play();
+        if(btn) btn.textContent = "🔊";
+    } else {
+        window.memoriesAudio.pause();
+        if(btn) btn.textContent = "🔇";
+    }
+};
+
+// Para a música e recarrega
+window.pararMusicaERecarregar = function() {
+    window.pararAudios();
+    location.reload();
+};
+
+// ---------------- INTEGRAÇÃO APP INVENTOR ----------------
+// Método 1: Verificação ativa (Polling) - Mais seguro para WebViewString
+let lastWebViewString = "";
+setInterval(function() {
+    // Verifica se o objeto AppInventor existe e tem a string
+    if (window.AppInventor && typeof window.AppInventor.getWebViewString === "function") {
+        const currentString = window.AppInventor.getWebViewString();
+        
+        // Só age se a string mudou E for igual a "PARAR"
+        if (currentString !== lastWebViewString) {
+            lastWebViewString = currentString;
+            if (currentString === "PARAR") {
+                window.pararAudios();
+            }
+        }
+    }
+}, 200); // Checa a cada 200ms
 
 // ---------------- TEMAS ----------------
-
 let listaTemas = [];
 // Carregar temas do JSON
 fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/heads/main/public/temas_colunitas.json")
@@ -510,8 +548,7 @@ async function gerarConfrontoIA() {
   statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
   // --- INÍCIO DA MÚSICA DE FUNDO ---
-  // Tenta tocar a música quando a análise começa
-  memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
+  memoriesAudio.play().catch(e => console.log("Autoplay bloqueado."));
 
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
   
@@ -537,7 +574,7 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // HTML CORRIGIDO: Botões MOVIDOS PARA O TOPO (antes do conteúdo)
+      // HTML: Botões no topo
       aiBox.innerHTML = `
         
         <!-- ÁREA DOS BOTÕES AGORA NO TOPO -->
@@ -551,7 +588,7 @@ async function gerarConfrontoIA() {
                  alt="Compartilhar">
 
             <!-- BOTÃO AUDIO -->
-            <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
+            <button id="btnAppInventor" class="btn-appinventor" onclick="window.toggleMusicAppInventor()">
                 🔊
             </button>
         </div>
@@ -580,7 +617,7 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-      // Define o ícone inicial correto baseado no estado do áudio
+      // Define o ícone inicial correto
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
           btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
@@ -596,9 +633,9 @@ async function gerarConfrontoIA() {
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
-      // Botão Verde: Chama função que PARA a música e recarrega
+      // Botão Verde
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
+        <button onclick="window.pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
       `;
 
   } catch (e) {
@@ -606,34 +643,10 @@ async function gerarConfrontoIA() {
       statusEl.innerText = "Erro: " + e.message;
       statusEl.style.color = "red";
       
-      // Em caso de erro, também oferece botão para parar música e tentar de novo
       document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
+        <button onclick="window.pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
       `;
   }
-}
-
-// ---------------- FUNÇÕES DE CONTROLE DE ÁUDIO ----------------
-
-// Função para parar a música e recarregar (usada pelo botão HTML)
-function pararMusicaERecarregar() {
-    memoriesAudio.pause();
-    memoriesAudio.currentTime = 0;
-    location.reload();
-}
-
-// Função específica para ser chamada pelo App Inventor
-// Pode ser chamada via WebViewString ou pelo botão na tela
-function toggleMusicAppInventor() {
-    const btn = document.getElementById('btnAppInventor');
-    
-    if (memoriesAudio.paused) {
-        memoriesAudio.play();
-        if(btn) btn.textContent = "🔊"; // Usar textContent para garantir troca visual
-    } else {
-        memoriesAudio.pause();
-        if(btn) btn.textContent = "🔇"; // Usar textContent
-    }
 }
 
 // ---------------- WHATSAPP ----------------
@@ -665,5 +678,3 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
-
-
