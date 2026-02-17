@@ -142,8 +142,8 @@ margin: -10px 5px;
 /* Botão App Inventor (Estilo Circular) */
 .btn-appinventor {
     background: #9c27b0;
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     z-index: 10;
@@ -537,25 +537,14 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // HTML CORRIGIDO: Botões lado a lado e atualização de ícone via .textContent
+      // HTML CORRIGIDO: Botões MOVIDOS PARA O TOPO (antes do conteúdo)
       aiBox.innerHTML = `
         <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
           Agenda dos 300 Colunistas
         </h2>
-        
-        <div id="conteudoIA" style="margin-bottom: 15px;">
-          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
-              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
-          </h3>
-          <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
-              <strong>Em pauta:</strong> ${tema}
-          </p>
-          <hr style="border:0; border-top:1px solid #eee;">
-          <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
-        </div>
 
-        <!-- ÁREA DOS BOTÕES CORRIGIDA: Flex container -->
-        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 15px 0; position: relative;">
+        <!-- ÁREA DOS BOTÕES AGORA NO TOPO -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 0 0 15px 0; position: relative;">
             
             <!-- BOTÃO ZAP -->
             <img src="imagens_app/zap.png"
@@ -568,6 +557,17 @@ async function gerarConfrontoIA() {
             <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
                 🔊
             </button>
+        </div>
+        
+        <div id="conteudoIA" style="margin-bottom: 15px;">
+          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
+              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
+          </h3>
+          <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
+              <strong>Em pauta:</strong> ${tema}
+          </p>
+          <hr style="border:0; border-top:1px solid #eee;">
+          <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
 
         <div id="ad-container">
@@ -666,3 +666,4 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
