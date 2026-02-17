@@ -142,8 +142,8 @@ margin: -10px 5px;
 /* Botão App Inventor (Estilo Circular) */
 .btn-appinventor {
     background: #9c27b0;
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     z-index: 10;
@@ -153,14 +153,15 @@ margin: -10px 5px;
     justify-content: center;
     align-items: center;
     font-size: 18px;
+    color: white;
 }
 .btn-appinventor:hover { transform: scale(1.1); }
 
  
 /* botão redondo zap */
 .btn-zap-redondo { 
-width: 45px; 
-height: 45px; 
+width: 40px; 
+height: 40px; 
 cursor: pointer; 
 transition: transform 0.2s;
 }
@@ -342,8 +343,6 @@ border: 1px solid #ddd;
     </div>
     <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
-    <!-- Botão do App Inventor removido daqui para evitar duplicidade -->
-
     <div id="aiBox">
         <div id="ad-container">
             <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
@@ -371,17 +370,18 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
-
-    // ---------------- INTEGRAÇÃO APP INVENTOR ----------------
-// Este "ouvinte" detecta quando o App Inventor altera o WebViewString
-// Configure seu bloco no App Inventor: WebViewString -> "PARAR"
+// ---------------- INTEGRAÇÃO APP INVENTOR ----------------
+// Detecta mudanças na WebViewString vindas do App Inventor
 document.addEventListener('DOMContentLoaded', function() {
-    // Verifica se o objeto AppInventor existe (rodando dentro do app)
     if (window.AppInventor) {
         window.AppInventor.setWebViewString = function(newString) {
             console.log("Recebido do App Inventor: " + newString);
             if (newString === "PARAR") {
-                pararAudios();
+                memoriesAudio.pause();
+                memoriesAudio.currentTime = 0;
+                // Atualiza ícone se existir
+                const btn = document.getElementById('btnAppInventor');
+                if(btn) btn.textContent = "🔇";
             }
         };
     }
@@ -510,7 +510,6 @@ async function gerarConfrontoIA() {
   statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
   // --- INÍCIO DA MÚSICA DE FUNDO ---
-  // Tenta tocar a música quando a análise começa
   memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
 
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
@@ -537,9 +536,29 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // HTML CORRIGIDO: Botões lado a lado e atualização de ícone via .textContent
+      // HTML: Título e Botões na mesma linha (Flexbox)
       aiBox.innerHTML = `
-       
+        
+        <!-- TÍTULO E BOTÕES LADO A LADO -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:18px; flex-grow: 1;">
+              Agenda dos 300 Colunistas
+            </h2>
+            
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- BOTÃO ZAP -->
+                <img src="imagens_app/zap.png"
+                     id="btnZap"
+                     class="btn-zap-redondo"
+                     onclick="shareOnWhatsApp()"
+                     alt="Compartilhar">
+
+                <!-- BOTÃO AUDIO -->
+                <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
+                    🔊
+                </button>
+            </div>
+        </div>
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
@@ -550,25 +569,6 @@ async function gerarConfrontoIA() {
           </p>
           <hr style="border:0; border-top:1px solid #eee;">
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
-        </div>
-
-        <!-- ÁREA DOS BOTÕES CORRIGIDA: Flex container -->
-        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin: 15px 0; position: relative;">
-            
-            <!-- BOTÃO ZAP -->
-            <img src="imagens_app/zap.png"
-                 id="btnZap"
-                 class="btn-zap-redondo"
-                 onclick="shareOnWhatsApp()"
-                 alt="Compartilhar">
-
-            <!-- BOTÃO AUDIO -->
-            <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
-                🔊
-            </button>
-             <h2 class="ai-title" style="color:#4a148c; margin-top:0; font-size:18px;">
-          Agenda dos 300 Colunistas
-        </h2>
         </div>
 
         <div id="ad-container">
@@ -587,6 +587,22 @@ async function gerarConfrontoIA() {
       if(btnAudio) {
           btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
       }
+      
+      // Garante sincronia caso o áudio carregue depois
+      memoriesAudio.onloadeddata = function() {
+          const btn = document.getElementById('btnAppInventor');
+          if(btn) btn.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+      };
+      
+      memoriesAudio.onplay = function() {
+           const btn = document.getElementById('btnAppInventor');
+           if(btn) btn.textContent = "🔊";
+      };
+      
+      memoriesAudio.onpause = function() {
+           const btn = document.getElementById('btnAppInventor');
+           if(btn) btn.textContent = "🔇";
+      };
 
       aiBox.style.display = 'block';
       aiBox.style.marginTop = "5px";    
@@ -608,7 +624,6 @@ async function gerarConfrontoIA() {
       statusEl.innerText = "Erro: " + e.message;
       statusEl.style.color = "red";
       
-      // Em caso de erro, também oferece botão para parar música e tentar de novo
       document.getElementById('areaBotaoAcao').innerHTML = `
         <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
       `;
@@ -624,17 +639,20 @@ function pararMusicaERecarregar() {
     location.reload();
 }
 
-// Função específica para ser chamada pelo App Inventor
-// Pode ser chamada via WebViewString ou pelo botão na tela
+// Função específica para ser chamada pelo App Inventor ou Botão na tela
 function toggleMusicAppInventor() {
     const btn = document.getElementById('btnAppInventor');
     
     if (memoriesAudio.paused) {
         memoriesAudio.play();
-        if(btn) btn.textContent = "🔊"; // Usar textContent para garantir troca visual
+        if(btn) btn.textContent = "🔊"; 
+        // Envia estado para App Inventor se necessário (opcional)
+        if (window.AppInventor) window.AppInventor.setWebViewString("TOCAR");
     } else {
         memoriesAudio.pause();
-        if(btn) btn.textContent = "🔇"; // Usar textContent
+        if(btn) btn.textContent = "🔇";
+        // Envia comando PARAR para o App Inventor
+        if (window.AppInventor) window.AppInventor.setWebViewString("PARAR");
     }
 }
 
