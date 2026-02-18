@@ -628,13 +628,13 @@ async function gerarConfrontoIA() {
       // Define o ícone inicial correto baseado no estado do áudio
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
-          btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+          btnAudio.textContent = memoriesAudio.paused ? "🔊" : "🔇";
       }
       
       // Garante sincronia caso o áudio carregue depois
       memoriesAudio.onloadeddata = function() {
           const btn = document.getElementById('btnAppInventor');
-          if(btn) btn.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+          if(btn) btn.textContent = memoriesAudio.paused ? "🔊" : "🔇";
       };
       
       memoriesAudio.onplay = function() {
@@ -681,7 +681,7 @@ function pararMusicaERecarregar() {
     memoriesAudio.pause();
     memoriesAudio.currentTime = 0;
     musicaPendente = false;
-    location.reload();
+ 
 }
 
 // Função específica para ser chamada pelo App Inventor ou Botão na tela
@@ -730,6 +730,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
