@@ -364,78 +364,88 @@ border: 1px solid #ddd;
 </div> 
 
 <script>
-// ---------------- INTEGRAÇÃO APP INVENTOR ----------------
+// ---------------- INTEGRAÇÃO APP INVENTOR (POLLING / SONDAGEM) ----------------
+
+// Esta variável evita conflitos quando o usuário clica no botão
+// Se o usuário clicou, ignoramos o comando do App Inventor por um breve momento
+let lastInteractionTime = 0; 
 
 window.addEventListener('load', function () {
     const loader = document.getElementById('pageLoader');
     if (loader) loader.style.display = 'none';
 
-    // Inicia o "polling" (verificação) da string do App Inventor
-    if (window.AppInventor && window.AppInventor.getWebViewString) {
-        window.AppInventor.getWebViewString();
-    }
+    // Inicia o Polling (Verificação constante)
+    startPolling();
 });
 
-// Função separada para enviar comandos CURTOS para o App Inventor
-function sendCommandToAppInventor(cmd) {
-    if (window.AppInventor && window.AppInventor.setWebViewString) {
-        try {
-            window.AppInventor.setWebViewString(cmd);
-        } catch (e) {
-            console.error("Erro ao enviar comando para AI:", e);
-        }
+// Função de Sondagem: Pergunta ao App Inventor o que fazer a cada 200ms
+function startPolling() {
+    if (window.AppInventor && window.AppInventor.getWebViewString) {
+        
+        // 1. Pergunta o status
+        window.AppInventor.getWebViewString();
+
+        // 2. Repete o processo
+        setTimeout(startPolling, 200);
+    } else {
+        // Se não estiver no App Inventor, tenta novamente em 1s
+        setTimeout(startPolling, 1000);
     }
 }
 
-// --- FUNÇÃO PRINCIPAL DE RECEBIMENTO (SEM TIMEOUTS) ---
+// Esta função é chamada automaticamente pelo WebView quando a String muda
 function onAppInventorStringReceived(str) {
-    // Normaliza a string para evitar erros de espaço
+    // Se o usuário interagiu nos últimos 500ms, ignora o comando do app
+    // (Isso evita que o app "lute" contra o dedo do usuário)
+    const now = Date.now();
+    if (now - lastInteractionTime < 500) {
+        console.log("Ignorando comando do App (usuário interagiu recentemente)");
+        return;
+    }
+
     const command = str.trim().toUpperCase();
     
-    console.log("WEBVIEW RECEBEU:", command, "| Estado Áudio:", window.memoriesAudio.paused);
-
-    // LÓGICA DIRETA E IMEDIATA (SEM TRUQUES)
+    // --- FILTRO DE COMANDOS ---
     
-    if (command === "TOCAR") {
-        // O App Inventor quer que o HTML PARE o som (para assumir o controle ou silenciar)
-        try {
+    // Comando: APP QUER PARAR O SOM DO HTML
+    if (command === "MUTE_HTML" || command === "TOCAR") { 
+        // Nota: "TOCAR" no App Inventor muitas vezes significa "Tocar som nativo", logo o HTML deve mutar
+        if (!window.memoriesAudio.paused) {
             window.memoriesAudio.pause();
             window.memoriesAudio.currentTime = 0;
-            window.musicaPendente = false;
-            
-            // Atualiza visual IMEDIATAMENTE
-            const btn = document.getElementById('btnAppInventor');
-            if (btn) btn.textContent = "🔊";
-            
-            console.log("COMANDO EXECUTADO: Pausar HTML");
-        } catch (e) {
-            console.error("Erro ao pausar via AI:", e);
+            updateAudioIcon(false);
         }
     }
     
-    if (command === "PARAR") {
-        // O App Inventor quer que o HTML TOQUE o som
-        try {
-            // Tenta tocar. Se falhar (autoplay), define pendente.
-            const promise = window.memoriesAudio.play();
-            
-            if (promise !== undefined) {
-                promise.then(_ => {
-                    window.musicaPendente = false;
-                    const btn = document.getElementById('btnAppInventor');
-                    if (btn) btn.textContent = "🔇"; // Tocando
-                })
-                .catch(error => {
-                    window.musicaPendente = true;
-                    console.log("Autoplay bloqueado, áudio pendente.");
-                    const btn = document.getElementById('btnAppInventor');
-                    if (btn) btn.textContent = "🔇"; // Mudo
-                });
-            }
-            console.log("COMANDO EXECUTADO: Tocar HTML");
-        } catch (e) {
-            console.error("Erro ao tocar via AI:", e);
+    // Comando: APP QUER O HTML TOCAR O SOM
+    if (command === "UNMUTE_HTML" || command === "PARAR") {
+        if (window.memoriesAudio.paused) {
+            window.memoriesAudio.play().catch(e => console.log("Autoplay bloqueado"));
+            updateAudioIcon(true);
         }
+    }
+
+    // Comando: O USUÁRIO CLICOU NO ZAP NO APP INVENTOR
+    if (command === "SHARE_ZAP") {
+        // Dispara a função de compartilhar do HTML
+        executeWhatsAppShare(); 
+    }
+}
+
+// Função auxiliar para atualizar o ícone
+function updateAudioIcon(isPlaying) {
+    const btn = document.getElementById('btnAppInventor');
+    if (btn) {
+        // Se estiver tocando (true), mostra ícone de som. Se parado (false), mostra mudo.
+        btn.textContent = isPlaying ? "🔊" : "🔇";
+    }
+}
+
+// --- ENVIO DE COMANDOS DO HTML PARA O APP ---
+
+function sendCommandToApp(cmd) {
+    if (window.AppInventor && window.AppInventor.setWebViewString) {
+        window.AppInventor.setWebViewString(cmd);
     }
 }
 
@@ -452,23 +462,19 @@ window.memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 window.musicaPendente = false;
 
-// Função segura para toque iniciado pelo USUÁRIO (clique na tela)
 function tentarTocarMusica() {
     const p = window.memoriesAudio.play();
     if (p !== undefined) {
         p.then(function () {
             window.musicaPendente = false;
-            const btn = document.getElementById('btnAppInventor');
-            if (btn) btn.textContent = "🔊";
+            updateAudioIcon(true);
         }).catch(function () {
             window.musicaPendente = true;
-            const btn = document.getElementById('btnAppInventor');
-            if (btn) btn.textContent = "🔇";
+            updateAudioIcon(false);
         });
     }
 }
 
-// Listeners de clique na tela para desbloquear áudio
 document.addEventListener('touchstart', function () {
     if (window.musicaPendente) tentarTocarMusica();
 }, { passive: true });
@@ -626,13 +632,14 @@ async function gerarConfrontoIA() {
             </h2>
             
             <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+                <!-- BOTÃO ZAP -->
                 <img src="imagens_app/zap.png"
                      id="btnZap"
                      class="btn-zap-redondo"
-                     onclick="shareOnWhatsApp(event)"
+                     onclick="triggerShare(event)"
                      alt="Compartilhar">
 
-                <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor(event)">
+                <button id="btnAppInventor" class="btn-appinventor" onclick="triggerAudioToggle(event)">
                     🔊
                 </button>
             </div>
@@ -705,35 +712,36 @@ async function gerarConfrontoIA() {
   }
 }
 
-// ---------------- FUNÇÕES DE CONTROLE DE ÁUDIO ----------------
+// ---------------- CONTROLES DO HTML (TRIGGERS) ----------------
 
-function pararMusicaERecarregar() {
-    window.memoriesAudio.pause();
-    window.memoriesAudio.currentTime = 0;
-    window.musicaPendente = false;
-    location.reload();
-}
-
-function toggleMusicAppInventor(e) {
+// Função chamada quando o usuário clica no botão de Áudio NO HTML
+function triggerAudioToggle(e) {
     if(e) e.preventDefault();
-    
+    lastInteractionTime = Date.now(); // Marca interação para bloquear comandos do App por 500ms
+
     const btn = document.getElementById('btnAppInventor');
     
     if (window.memoriesAudio.paused) {
         window.memoriesAudio.play();
-        if(btn) btn.textContent = "🔇";
-        sendCommandToAppInventor("PARAR");
+        if(btn) btn.textContent = "🔊";
+        // Avisa o App Inventor para mutar o som nativo dele
+        sendCommandToApp("HTML_TOUCANDO"); 
     } else {
         window.memoriesAudio.pause();
-        if(btn) btn.textContent = "🔊";
-        sendCommandToAppInventor("TOCAR");
+        if(btn) btn.textContent = "🔇";
+        // Avisa o App Inventor que ele pode tocar
+        sendCommandToApp("HTML_PAUSADO");
     }
 }
 
-// ---------------- WHATSAPP ----------------
-function shareOnWhatsApp(e) {
+// Função chamada quando o usuário clica no ZAP NO HTML
+function triggerShare(e) {
     if(e) e.preventDefault();
+    lastInteractionTime = Date.now();
+    executeWhatsAppShare();
+}
 
+function executeWhatsAppShare() {
     const box = document.getElementById('conteudoIA');
     if (!box) return;
     let texto = box.innerText;
@@ -741,14 +749,23 @@ function shareOnWhatsApp(e) {
     
     const title = "Agenda dos 300 - O Duelo de Colunistas";
     const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
-        
     const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
 
+    // Se estiver no App Inventor, envia o texto prontinho
     if (window.AppInventor) {
-        window.AppInventor.setWebViewString(message);
+        window.AppInventor.setWebViewString("SHARE:" + message);
     } else {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
     }
+}
+
+// ---------------- RECARREGAR ----------------
+
+function pararMusicaERecarregar() {
+    window.memoriesAudio.pause();
+    window.memoriesAudio.currentTime = 0;
+    window.musicaPendente = false;
+    location.reload();
 }
 
 if ('serviceWorker' in navigator) {
