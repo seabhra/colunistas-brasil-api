@@ -22,13 +22,14 @@ crossorigin="anonymous"></script>
 <style>
 * { box-sizing: border-box; }
 
-/* CORREÇÃO: Permite scroll e previne encolhimento */
-html {
+/* CORREÇÃO: Previne encolhimento quando teclado abre */
+html, body {
   height: 100%;
   overflow-x: hidden;
+  position: fixed;
+  width: 100%;
 }
 
-/* CORREÇÃO: Altura dinâmica da viewport */
 body {
 margin: 0;
 padding: 10px;
@@ -38,23 +39,14 @@ color: white;
 text-align: center;
 display: flex;
 justify-content: center; 
-
-/* CORREÇÃO: Alinha ao topo para permitir scroll */
-align-items: flex-start;
-min-height: 100vh;
+align-items: center; 
+/* Usa variável CSS para altura dinâmica (corrige encolhimento) */
 min-height: calc(var(--vh, 1vh) * 100);
-overflow-x: hidden;
-overflow-y: auto;
 }
 
 #pageLoader {
-position: fixed; 
-inset: 0; 
-background: #fdfcfd; 
-z-index: 9999; 
-display: flex; 
-align-items: center; 
-justify-content: center;
+position: fixed; inset: 0; background: #fdfcfd; 
+z-index: 9999; display: flex; align-items: center; justify-content: center;
 }
 
 .loader-circle {
@@ -70,8 +62,6 @@ max-width: 360px;
 display: flex;
 flex-direction: column;
 align-items: center;
-/* CORREÇÃO: Margem para não colar no topo */
-margin: 0 auto;
 }
 
 /* Layout abertura agrupado */
@@ -174,8 +164,6 @@ margin: -10px 5px;
     align-items: center;
     font-size: 18px;
     color: white;
-    /* CORREÇÃO: Previne que o botão dispare eventos do pai */
-    pointer-events: auto;
 }
 .btn-appinventor:hover { transform: scale(1.1); }
 
@@ -298,7 +286,7 @@ color: #333;
 padding: 15px;
 border-radius: 15px;
 text-align: left;
-margin: 10px auto; 
+margin: 10px 0; 
 width: 100%;
 font-size: 14px;
 line-height: 1.5;
@@ -407,12 +395,6 @@ function initApp() {
     setViewportHeight();
     window.addEventListener('resize', setViewportHeight);
     
-    // CORREÇÃO: Previne comportamento padrão de zoom no iOS quando input é focado
-    document.getElementById('seletorTema').addEventListener('focus', function() {
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-    });
-    
     // Event listeners para sincronizar estado do áudio
     memoriesAudio.onplay = function() {
         const btn = document.getElementById('btnAppInventor');
@@ -498,7 +480,7 @@ function iniciarDuelo() {
 
 function sortear() {
   if (listaTodosColunistas.length < 2) {
-      alert("Lista de colunistas insuficiente para um duelo.");
+      alert("Lista de colunistas insuficientes para um duelo.");
       return;
   }
 
@@ -690,9 +672,6 @@ async function gerarConfrontoIA() {
       if (window.AppInventor) {
           window.AppInventor.setWebViewString("TOCAR");
       }
-      
-      // CORREÇÃO: Scroll suave para o topo quando a análise aparece
-      window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch (e) {
       console.error(e);
