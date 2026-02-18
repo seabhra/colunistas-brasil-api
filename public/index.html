@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
@@ -20,7 +20,7 @@ crossorigin="anonymous"></script>
 <title>Agenda dos 300 - Duelo de Colunistas</title>
 
 <style>
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
 margin: 0;
@@ -34,6 +34,7 @@ display: flex;
 justify-content: center; 
 align-items: center; 
 min-height: 100vh;
+user-select: none; /* Previne seleção de texto em apps */
 }
 
 #pageLoader {
@@ -158,6 +159,7 @@ margin: -10px 5px;
     font-size: 18px;
     color: white;
     flex-shrink: 0; 
+    outline: none;
 }
 
 /* Botão zap (Estilo Circular) */
@@ -173,7 +175,8 @@ margin: -10px 5px;
     object-fit: contain; 
     border-radius: 50%; 
     background-color: #25D366; 
-    padding: 2px; 
+    padding: 2px;
+    outline: none;
 }
 
 /* --- FIM DAS CORREÇÕES --- */
@@ -353,7 +356,7 @@ border: 1px solid #ddd;
     <div id="areaBotaoAcao">
         <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">♟️Jogar Agenda Setting Real</button>
     </div>
-    <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+    <div id="status"> Está preparado? Nesta redação virtual, 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
     <div id="aiBox">
         <div id="ad-container">
@@ -373,8 +376,7 @@ border: 1px solid #ddd;
 <script>
 // ---------------- ÁUDIO APP INVENTOR---------------
 
-
-// Unificado com load geral (evita sobrescrever onload do body)
+// Unificado com load geral
 window.addEventListener('load', function () {
     const loader = document.getElementById('pageLoader');
     if (loader) loader.style.display = 'none';
@@ -384,19 +386,35 @@ window.addEventListener('load', function () {
     }
 });
 
+// Função separada para comandos curtos do App Inventor
+function sendCommandToAppInventor(cmd) {
+    if (window.AppInventor && window.AppInventor.setWebViewString) {
+        try {
+            window.AppInventor.setWebViewString(cmd);
+            console.log("Comando enviado para App Inventor:", cmd);
+        } catch (e) {
+            console.error("Erro ao enviar comando:", e);
+        }
+    }
+}
+
 function onAppInventorStringReceived(str) {
-    // CORREÇÃO AQUI: Usar window.memoriesAudio
-    if (str === "TOCAR") {
+    // Normaliza string para evitar problemas de espaços ou caixa alta
+    const command = str.trim().toUpperCase();
+    console.log("Recebido do App Inventor:", command);
+
+    if (command === "TOCAR") {
+        // O App Inventor pediu para parar o áudio interno do HTML
         window.memoriesAudio.pause();
         window.memoriesAudio.currentTime = 0;
         window.musicaPendente = false;
         const btn = document.getElementById('btnAppInventor');
-        if (btn) btn.textContent = "🔊";
+        if (btn) btn.textContent = "🔊"; // Ícone de som desligado/mudo
     }
-    if (str === "PARAR") {
+    if (command === "PARAR") {
+        // O App Inventor pediu para tocar o áudio interno do HTML
         tentarTocarMusica();
     }
-    console.log("Recebido do App Inventor:", str);
 }
 
 
@@ -404,7 +422,7 @@ function onAppInventorStringReceived(str) {
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
-// CORREÇÃO AQUI: Definir diretamente no window
+// Definição Global para App Inventor
 window.memoriesAudio = new Audio('audio_app/darren_curtis.mp3');
 window.memoriesAudio.loop = true;
 window.memoriesAudio.preload = 'auto';
@@ -415,17 +433,16 @@ window.musicaPendente = false;
 
 function tentarTocarMusica() {
     setTimeout(function () {
-        // CORREÇÃO AQUI: Usar window.memoriesAudio
         const p = window.memoriesAudio.play();
         if (p !== undefined) {
             p.then(function () {
                 window.musicaPendente = false;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔊";
+                if (btn) btn.textContent = "🔊"; // Tocando (ícone de som ligado)
             }).catch(function () {
                 window.musicaPendente = true;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔇";
+                if (btn) btn.textContent = "🔇"; // Mudo/Bloqueado
             });
         }
     }, 0);
@@ -501,7 +518,6 @@ function sortear() {
       return;
   }
 
-  // CORREÇÃO AQUI: Usar window.memoriesAudio
   window.memoriesAudio.pause();
   window.memoriesAudio.currentTime = 0;
 
@@ -510,7 +526,6 @@ function sortear() {
 
   document.getElementById('status').innerText = "No combate ao conluio de narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada."; 
 
-  // ETAPA 1: Roleta Girando - Botão AZUL
   const areaBotao = document.getElementById('areaBotaoAcao');
   areaBotao.innerHTML = `<button class="btn-aurora azul-info">⚔️ Colunistas em combate...</button>`;
 
@@ -548,7 +563,6 @@ function sortear() {
           colunista1 = temp1;
           colunista2 = temp2;
           
-          // ETAPA 2: Roleta Parou - Botão AMARELO
           areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">⏳Aguarde um instante...</button>`;
           
           gerarConfrontoIA();
@@ -563,8 +577,6 @@ async function gerarConfrontoIA() {
 
   statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
-  // --- INÍCIO DA MÚSICA DE FUNDO ---
-  // CORREÇÃO AQUI: Usar window.memoriesAudio
   window.memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
 
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
@@ -591,12 +603,10 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // HTML: Título e Botões na mesma linha (Flexbox)
+      // HTML Injetado
       aiBox.innerHTML = `
-        
-        <!-- TÍTULO E BOTÕES LADO A LADO -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:18px; flex-grow: 1; padding-right: 10px;">
+            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:16px; flex-grow: 1; padding-right: 10px;">
               Agenda dos 300 Colunistas
             </h2>
             
@@ -605,18 +615,18 @@ async function gerarConfrontoIA() {
                 <img src="imagens_app/zap.png"
                      id="btnZap"
                      class="btn-zap-redondo"
-                     onclick="shareOnWhatsApp()"
+                     onclick="shareOnWhatsApp(event)"
                      alt="Compartilhar">
 
                 <!-- BOTÃO AUDIO -->
-                <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
+                <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor(event)">
                     🔊
                 </button>
             </div>
         </div>
         
         <div id="conteudoIA" style="margin-bottom: 15px;">
-          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
+          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:15px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
           </h3>
           <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
@@ -637,14 +647,13 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-      // Define o ícone inicial correto baseado no estado do áudio
+      // Sincronização inicial do botão de áudio
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
-          // CORREÇÃO AQUI: Usar window.memoriesAudio
           btnAudio.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
       }
       
-      // Garante sincronia caso o áudio carregue depois
+      // Event Listeners para sincronizar ícone
       window.memoriesAudio.onloadeddata = function() {
           const btn = document.getElementById('btnAppInventor');
           if(btn) btn.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
@@ -670,7 +679,6 @@ async function gerarConfrontoIA() {
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
-      // Botão Verde: Chama função que PARA a música e recarrega
       document.getElementById('areaBotaoAcao').innerHTML = `
         <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
       `;
@@ -688,52 +696,58 @@ async function gerarConfrontoIA() {
 
 // ---------------- FUNÇÕES DE CONTROLE DE ÁUDIO ----------------
 
-
-// Função para parar a música e recarregar (usada pelo botão HTML)
 function pararMusicaERecarregar() {
-    // CORREÇÃO AQUI: Usar window.memoriesAudio
     window.memoriesAudio.pause();
     window.memoriesAudio.currentTime = 0;
     window.musicaPendente = false;
     location.reload();
- 
 }
 
-// Função específica para ser chamada pelo App Inventor ou Botão na tela
-function toggleMusicAppInventor() {
+// Função específica com prevenção de clique duplo
+function toggleMusicAppInventor(e) {
+    if(e) e.preventDefault(); // Previne comportamento padrão no app
+    
     const btn = document.getElementById('btnAppInventor');
     
-    // CORREÇÃO AQUI: Usar window.memoriesAudio
     if (window.memoriesAudio.paused) {
+        // Tenta tocar áudio web
         window.memoriesAudio.play();
-        if(btn) btn.textContent = "🔇"; 
-        // Envia estado para App Inventor se necessário (opcional)
-        if (window.AppInventor) window.AppInventor.setWebViewString("PARAR");
+        if(btn) btn.textContent = "🔇"; // Muda para 'Som Ligado' visualmente
+        
+        // Avisa o App Inventor para parar qualquer som nativo (comando curto)
+        sendCommandToAppInventor("PARAR");
+        
     } else {
+        // Pausa áudio web
         window.memoriesAudio.pause();
-        if(btn) btn.textContent = "🔊";
-        // Envia comando PARAR para o App Inventor
-        if (window.AppInventor) window.AppInventor.setWebViewString("TOCAR");
+        if(btn) btn.textContent = "🔊"; // Muda para 'Som Desligado' visualmente
+        
+        // Avisa o App Inventor que o som web parou (comando curto)
+        sendCommandToAppInventor("TOCAR");
     }
 }
 
 // ---------------- WHATSAPP ----------------
-function shareOnWhatsApp() {
-  const box = document.getElementById('conteudoIA');
-  if (!box) return;
-  let texto = box.innerText;
-  if (texto.length > 2000) texto = texto.substring(0, 2000) + "...";
-  
-  const title = "Agenda dos 300 - O Duelo de Colunistas";
-  const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
-      
-  const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
+function shareOnWhatsApp(e) {
+    if(e) e.preventDefault(); // Previne comportamento padrão no app
 
-  if (window.AppInventor) {
-      window.AppInventor.setWebViewString(message);
-  } else {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
-  }
+    const box = document.getElementById('conteudoIA');
+    if (!box) return;
+    let texto = box.innerText;
+    if (texto.length > 2000) texto = texto.substring(0, 2000) + "...";
+    
+    const title = "Agenda dos 300 - O Duelo de Colunistas";
+    const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
+        
+    const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
+
+    if (window.AppInventor) {
+        // Envia apenas o texto longo (sem prefixo de comando) para não conflitar com o áudio
+        // O App Inventor deve ter um bloco If/Else para verificar se é o link do zap ou comando simples
+        window.AppInventor.setWebViewString(message);
+    } else {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+    }
 }
 
 if ('serviceWorker' in navigator) {
