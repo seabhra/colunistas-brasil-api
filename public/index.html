@@ -392,9 +392,9 @@ window.addEventListener('load', function () {
 
 function onAppInventorStringReceived(str) {
     if (str === "TOCAR") {
-        memoriesAudio.pause();
-        memoriesAudio.currentTime = 0;
-        musicaPendente = false;
+        window.memoriesAudio.pause();
+          window.memoriesAudio.currentTime = 0;
+        window.musicaPendente = false;
         const btn = document.getElementById('btnAppInventor');
         if (btn) btn.textContent = "🔊";
     }
@@ -410,11 +410,11 @@ const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
 const memoriesAudio = new Audio('audio_app/darren_curtis.mp3');
-memoriesAudio.loop = true;
-memoriesAudio.preload = 'auto';
-memoriesAudio.volume = 0.5;
+window.memoriesAudio.loop = true;
+window.memoriesAudio.preload = 'auto';
+window.memoriesAudio.volume = 0.5;
+    
 shuffleAudio.volume = 0.5;
-
 let musicaPendente = false;
 
 function tentarTocarMusica() {
@@ -424,11 +424,11 @@ function tentarTocarMusica() {
             p.then(function () {
                 musicaPendente = false;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔇";
+                if (btn) btn.textContent = "🔊";
             }).catch(function () {
                 musicaPendente = true;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔊";
+                if (btn) btn.textContent = "🔇";
             });
         }
     }, 0);
@@ -505,8 +505,8 @@ function sortear() {
   }
 
   // Garante que a música de fundo está parada antes de começar o sorteio
-  memoriesAudio.pause();
-  memoriesAudio.currentTime = 0;
+  window.memoriesAudio.pause();
+  window.memoriesAudio.currentTime = 0;
 
   shuffleAudio.currentTime = 0;
   shuffleAudio.play().catch(e => console.log("Interagir primeiro"));
@@ -600,7 +600,7 @@ async function gerarConfrontoIA() {
         <!-- TÍTULO E BOTÕES LADO A LADO -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:18px; flex-grow: 1; padding-right: 10px;">
-              Agenda dos 300
+              Agenda dos 300 Colunistas
             </h2>
             
             <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
@@ -643,21 +643,21 @@ async function gerarConfrontoIA() {
       // Define o ícone inicial correto baseado no estado do áudio
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
-          btnAudio.textContent = memoriesAudio.paused ? "🔊" : "🔇";
+          btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
       }
       
       // Garante sincronia caso o áudio carregue depois
-      memoriesAudio.onloadeddata = function() {
+      window.memoriesAudio.onloadeddata = function() {
           const btn = document.getElementById('btnAppInventor');
-          if(btn) btn.textContent = memoriesAudio.paused ? "🔊" : "🔇";
+          if(btn) btn.textContent = memoriesAudio.paused ? "🔇" : "🔊";
       };
       
-      memoriesAudio.onplay = function() {
+      window.memoriesAudio.onplay = function() {
            const btn = document.getElementById('btnAppInventor');
            if(btn) btn.textContent = "🔊";
       };
       
-      memoriesAudio.onpause = function() {
+      window.memoriesAudio.onpause = function() {
            const btn = document.getElementById('btnAppInventor');
            if(btn) btn.textContent = "🔇";
       };
@@ -693,8 +693,8 @@ async function gerarConfrontoIA() {
 
 // Função para parar a música e recarregar (usada pelo botão HTML)
 function pararMusicaERecarregar() {
-    memoriesAudio.pause();
-    memoriesAudio.currentTime = 0;
+    window.memoriesAudio.pause();
+    window.memoriesAudio.currentTime = 0;
     musicaPendente = false;
     location.reload();
  
@@ -704,13 +704,13 @@ function pararMusicaERecarregar() {
 function toggleMusicAppInventor() {
     const btn = document.getElementById('btnAppInventor');
     
-    if (memoriesAudio.paused) {
-        memoriesAudio.play();
+    if (window.memoriesAudio.paused) {
+        window.memoriesAudio.play();
         if(btn) btn.textContent = "🔇"; 
         // Envia estado para App Inventor se necessário (opcional)
         if (window.AppInventor) window.AppInventor.setWebViewString("PARAR");
     } else {
-        memoriesAudio.pause();
+        window.memoriesAudio.pause();
         if(btn) btn.textContent = "🔊";
         // Envia comando PARAR para o App Inventor
         if (window.AppInventor) window.AppInventor.setWebViewString("TOCAR");
@@ -746,4 +746,5 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
