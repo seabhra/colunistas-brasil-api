@@ -22,14 +22,13 @@ crossorigin="anonymous"></script>
 <style>
 * { box-sizing: border-box; }
 
-/* CORREÇÃO: Previne encolhimento quando teclado abre */
-html, body {
+/* CORREÇÃO: Permite scroll e previne encolhimento */
+html {
   height: 100%;
   overflow-x: hidden;
-  position: fixed;
-  width: 100%;
 }
 
+/* CORREÇÃO: Altura dinâmica da viewport */
 body {
 margin: 0;
 padding: 10px;
@@ -39,14 +38,23 @@ color: white;
 text-align: center;
 display: flex;
 justify-content: center; 
-align-items: center; 
-/* Usa variável CSS para altura dinâmica (corrige encolhimento) */
+
+/* CORREÇÃO: Alinha ao topo para permitir scroll */
+align-items: flex-start;
+min-height: 100vh;
 min-height: calc(var(--vh, 1vh) * 100);
+overflow-x: hidden;
+overflow-y: auto;
 }
 
 #pageLoader {
-position: fixed; inset: 0; background: #fdfcfd; 
-z-index: 9999; display: flex; align-items: center; justify-content: center;
+position: fixed; 
+inset: 0; 
+background: #fdfcfd; 
+z-index: 9999; 
+display: flex; 
+align-items: center; 
+justify-content: center;
 }
 
 .loader-circle {
@@ -62,6 +70,8 @@ max-width: 360px;
 display: flex;
 flex-direction: column;
 align-items: center;
+/* CORREÇÃO: Margem para não colar no topo */
+margin: 0 auto;
 }
 
 /* Layout abertura agrupado */
@@ -164,6 +174,8 @@ margin: -10px 5px;
     align-items: center;
     font-size: 18px;
     color: white;
+    /* CORREÇÃO: Previne que o botão dispare eventos do pai */
+    pointer-events: auto;
 }
 .btn-appinventor:hover { transform: scale(1.1); }
 
@@ -286,7 +298,7 @@ color: #333;
 padding: 15px;
 border-radius: 15px;
 text-align: left;
-margin: 10px 0; 
+margin: 10px auto; 
 width: 100%;
 font-size: 14px;
 line-height: 1.5;
@@ -351,7 +363,7 @@ border: 1px solid #ddd;
     <div id="areaBotaoAcao">
         <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting Real</button>
     </div>
-    <div id="status"> Está preparado? Nesta redação virtual, 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+    <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
     <div id="aiBox">
         <div id="ad-container">
@@ -394,6 +406,12 @@ function initApp() {
     // CORREÇÃO: Define altura da viewport
     setViewportHeight();
     window.addEventListener('resize', setViewportHeight);
+    
+    // CORREÇÃO: Previne comportamento padrão de zoom no iOS quando input é focado
+    document.getElementById('seletorTema').addEventListener('focus', function() {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+    });
     
     // Event listeners para sincronizar estado do áudio
     memoriesAudio.onplay = function() {
@@ -672,6 +690,9 @@ async function gerarConfrontoIA() {
       if (window.AppInventor) {
           window.AppInventor.setWebViewString("TOCAR");
       }
+      
+      // CORREÇÃO: Scroll suave para o topo quando a análise aparece
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch (e) {
       console.error(e);
