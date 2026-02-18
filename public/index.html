@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
@@ -34,7 +34,7 @@ display: flex;
 justify-content: center; 
 align-items: center; 
 min-height: 100vh;
-user-select: none; /* Previne seleção de texto em apps */
+user-select: none;
 }
 
 #pageLoader {
@@ -140,9 +140,8 @@ margin: -10px 5px;
     100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
 }
 
-/* --- CORREÇÃO DOS BOTÕES --- */
+/* --- BOTÕES --- */
 
-/* Botão App Inventor (Estilo Circular) */
 .btn-appinventor {
     background: #9c27b0;
     width: 40px;
@@ -150,7 +149,7 @@ margin: -10px 5px;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    z-index: 10;
+    z-index: 50; /* Garante clique no topo */
     transition: transform 0.2s;
     border: 2px solid #CC93ED; 
     display: flex;
@@ -162,13 +161,12 @@ margin: -10px 5px;
     outline: none;
 }
 
-/* Botão zap (Estilo Circular) */
 .btn-zap-redondo {
     width: 40px;
     height: 40px;
     cursor: pointer;
     position: relative;
-    z-index: 10;
+    z-index: 50; /* Garante clique no topo */
     transition: transform 0.2s;
     display: block; 
     flex-shrink: 0; 
@@ -178,9 +176,6 @@ margin: -10px 5px;
     padding: 2px;
     outline: none;
 }
-
-/* --- FIM DAS CORREÇÕES --- */
-
 
     /* --- Área de Jogo --- */
     #jogoArea {
@@ -376,7 +371,6 @@ border: 1px solid #ddd;
 <script>
 // ---------------- ÁUDIO APP INVENTOR---------------
 
-// Unificado com load geral
 window.addEventListener('load', function () {
     const loader = document.getElementById('pageLoader');
     if (loader) loader.style.display = 'none';
@@ -398,22 +392,35 @@ function sendCommandToAppInventor(cmd) {
     }
 }
 
+// CORREÇÃO PRINCIPAL AQUI: Lógica completa de Pause/Play
 function onAppInventorStringReceived(str) {
-    // Normaliza string para evitar problemas de espaços ou caixa alta
     const command = str.trim().toUpperCase();
     console.log("Recebido do App Inventor:", command);
 
     if (command === "TOCAR") {
-        // O App Inventor pediu para parar o áudio interno do HTML
-        window.memoriesAudio.pause();
-        window.memoriesAudio.currentTime = 0;
+        // O App Inventor quer PARAR o áudio Web (provavelmente para tocar algo nativo)
+        if (!window.memoriesAudio.paused) {
+            window.memoriesAudio.pause();
+            window.memoriesAudio.currentTime = 0;
+        }
         window.musicaPendente = false;
         const btn = document.getElementById('btnAppInventor');
-        if (btn) btn.textContent = "🔊"; // Ícone de som desligado/mudo
+        if (btn) btn.textContent = "🔊"; // Ícone de Mudo/Parado
     }
     if (command === "PARAR") {
-        // O App Inventor pediu para tocar o áudio interno do HTML
-        tentarTocarMusica();
+        // O App Inventor quer TOCAR o áudio Web (ou parar algo nativo)
+        // Se estiver tocando, paramos. Se estiver parado, tocamos.
+        // Mas geralmente PARAR no App Inventor significa "pare o que você está fazendo".
+        
+        // Vamos assumir a lógica inversa: 
+        // Se o App Inventor envia "PARAR", ele quer que o HTML pare a música?
+        // OU, baseado no seu código anterior: "PARAR" significava Tocar música de fundo?
+        // Vamos manter a lógica reversa que você estava tentando usar:
+        // "TOCAR" = Pausar HTML. "PARAR" = Tocar HTML.
+        
+        window.memoriesAudio.play().catch(e => console.log("Erro ao tentar tocar:", e));
+        const btn = document.getElementById('btnAppInventor');
+        if(btn) btn.textContent = "🔇"; // Ícone de Tocando
     }
 }
 
@@ -422,7 +429,7 @@ function onAppInventorStringReceived(str) {
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
-// Definição Global para App Inventor
+// Definição Global
 window.memoriesAudio = new Audio('audio_app/darren_curtis.mp3');
 window.memoriesAudio.loop = true;
 window.memoriesAudio.preload = 'auto';
@@ -438,17 +445,16 @@ function tentarTocarMusica() {
             p.then(function () {
                 window.musicaPendente = false;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔊"; // Tocando (ícone de som ligado)
+                if (btn) btn.textContent = "🔊";
             }).catch(function () {
                 window.musicaPendente = true;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔇"; // Mudo/Bloqueado
+                if (btn) btn.textContent = "🔇";
             });
         }
     }, 0);
 }
 
-// Retry se autoplay bloqueado
 document.addEventListener('touchstart', function () {
     if (window.musicaPendente) tentarTocarMusica();
 }, { passive: true });
@@ -461,7 +467,6 @@ document.addEventListener('click', function () {
 // ---------------- TEMAS ----------------
 
 let listaTemas = [];
-// Carregar temas do JSON
 fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/heads/main/public/temas_colunitas.json")
 .then(res => res.json())
 .then(data => {
@@ -603,7 +608,6 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // HTML Injetado
       aiBox.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:16px; flex-grow: 1; padding-right: 10px;">
@@ -647,13 +651,11 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-      // Sincronização inicial do botão de áudio
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
           btnAudio.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
       }
       
-      // Event Listeners para sincronizar ícone
       window.memoriesAudio.onloadeddata = function() {
           const btn = document.getElementById('btnAppInventor');
           if(btn) btn.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
@@ -703,33 +705,25 @@ function pararMusicaERecarregar() {
     location.reload();
 }
 
-// Função específica com prevenção de clique duplo
 function toggleMusicAppInventor(e) {
-    if(e) e.preventDefault(); // Previne comportamento padrão no app
+    if(e) e.preventDefault();
     
     const btn = document.getElementById('btnAppInventor');
     
     if (window.memoriesAudio.paused) {
-        // Tenta tocar áudio web
         window.memoriesAudio.play();
-        if(btn) btn.textContent = "🔇"; // Muda para 'Som Ligado' visualmente
-        
-        // Avisa o App Inventor para parar qualquer som nativo (comando curto)
+        if(btn) btn.textContent = "🔇";
         sendCommandToAppInventor("PARAR");
-        
     } else {
-        // Pausa áudio web
         window.memoriesAudio.pause();
-        if(btn) btn.textContent = "🔊"; // Muda para 'Som Desligado' visualmente
-        
-        // Avisa o App Inventor que o som web parou (comando curto)
+        if(btn) btn.textContent = "🔊";
         sendCommandToAppInventor("TOCAR");
     }
 }
 
 // ---------------- WHATSAPP ----------------
 function shareOnWhatsApp(e) {
-    if(e) e.preventDefault(); // Previne comportamento padrão no app
+    if(e) e.preventDefault();
 
     const box = document.getElementById('conteudoIA');
     if (!box) return;
@@ -742,8 +736,6 @@ function shareOnWhatsApp(e) {
     const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
 
     if (window.AppInventor) {
-        // Envia apenas o texto longo (sem prefixo de comando) para não conflitar com o áudio
-        // O App Inventor deve ter um bloco If/Else para verificar se é o link do zap ou comando simples
         window.AppInventor.setWebViewString(message);
     } else {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
