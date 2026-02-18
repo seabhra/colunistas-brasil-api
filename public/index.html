@@ -675,10 +675,12 @@ async function gerarConfrontoIA() {
 
 // ---------------- FUNÇÕES DE CONTROLE DE ÁUDIO ----------------
 
+
 // Função para parar a música e recarregar (usada pelo botão HTML)
 function pararMusicaERecarregar() {
     memoriesAudio.pause();
     memoriesAudio.currentTime = 0;
+    musicaPendente = false;
     location.reload();
 }
 
@@ -728,4 +730,5 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
