@@ -161,15 +161,15 @@ body {
     cursor: pointer;
     z-index: 10;
     transition: transform 0.2s;
-    border: 2px solid #DDB8FC; /* borda fina lilas */
+    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
     color: white;
+    /* CORREÇÃO 2: posição relativa para garantir que o clique não vaze para o botão zap */
     position: relative;
 }
-
 .btn-appinventor:hover { transform: scale(1.1); }
 
 /* botão redondo zap */
@@ -274,7 +274,7 @@ body {
 
 #status {
   margin-top: 5px;
-  margin-bottom: -20px;
+  margin-bottom: 5px;
   font-size: 13px;
   color: #555; 
   background: rgba(255,255,255,0.8);
@@ -292,10 +292,7 @@ body {
   padding: 15px;
   border-radius: 15px;
   text-align: left;
-  margin-top: 25px;
-  margin-bottom: 5px;
-  margin-left: 0;
-  margin-right: 0;
+  margin: 10px 0; 
   width: 100%;
   font-size: 14px;
   line-height: 1.5;
@@ -303,7 +300,6 @@ body {
   position: relative;
   border: 1px solid #eee;
 }
-
 
 /* área do anúncio admob */
 #ad-container {
@@ -387,59 +383,61 @@ memoriesAudio.preload = 'auto';
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 
-// CORREÇÃO 1: Flag para controlar o áudio pendente no App Inventor
-// O autoplay é bloqueado até interação do usuário. Usamos flag para tocar depois.
+// CORREÇÃO 1: Flag de retry para quando o autoplay for bloqueado
 let musicaPendente = false;
 
-// ---------------- INTEGRAÇÃO APP INVENTOR ----------------
+// setTimeout(0) retira a chamada play() do contexto async/fetch.
+// O WebViewer do App Inventor só permite play() iniciado fora de Promises.
+function tentarTocarMusica() {
+    setTimeout(function() {
+        var p = memoriesAudio.play();
+        if (p !== undefined) {
+            p.then(function() {
+                musicaPendente = false;
+                var btn = document.getElementById('btnAppInventor');
+                if (btn) btn.textContent = "🔊";
+            }).catch(function(e) {
+                console.log("Play bloqueado, aguardando toque:", e);
+                musicaPendente = true;
+                var btn = document.getElementById('btnAppInventor');
+                if (btn) btn.textContent = "🔇";
+            });
+        }
+    }, 0);
+}
+
+// Integração App Inventor: "TOCAR" executa play() de forma síncrona
+// dentro do contexto do evento nativo do App Inventor (contorna bloqueio de autoplay).
 document.addEventListener('DOMContentLoaded', function() {
     if (window.AppInventor) {
         window.AppInventor.setWebViewString = function(newString) {
-            console.log("Recebido do App Inventor: " + newString);
+            console.log("AppInventor msg: " + newString);
             if (newString === "PARAR") {
                 memoriesAudio.pause();
                 memoriesAudio.currentTime = 0;
                 musicaPendente = false;
-                const btn = document.getElementById('btnAppInventor');
-                if(btn) btn.textContent = "🔇";
+                var btn = document.getElementById('btnAppInventor');
+                if (btn) btn.textContent = "🔇";
             }
-            // CORREÇÃO 1: App Inventor pode enviar "TOCAR" para forçar início do áudio
-            if (newString === "TOCAR") {
-                tentarTocarMusica();
+            // "TOCAR": play direto sem setTimeout — contexto App Inventor é síncrono
+            if (newString === "TOCAR" || newString === "MUSICA_PRONTA") {
+                musicaPendente = false;
+                memoriesAudio.play().then(function() {
+                    var btn = document.getElementById('btnAppInventor');
+                    if (btn) btn.textContent = "🔊";
+                }).catch(function(e) { console.log("AppInventor play erro:", e); });
             }
         };
     }
 });
 
-// CORREÇÃO 1: Função centralizada para tocar música com fallback de interação
-function tentarTocarMusica() {
-    const promessa = memoriesAudio.play();
-    if (promessa !== undefined) {
-        promessa.then(() => {
-            musicaPendente = false;
-            const btn = document.getElementById('btnAppInventor');
-            if(btn) btn.textContent = "🔊";
-        }).catch(e => {
-            console.log("Autoplay bloqueado, aguardando interação do usuário:", e);
-            // Marca como pendente: será tocado na próxima interação
-            musicaPendente = true;
-            const btn = document.getElementById('btnAppInventor');
-            if(btn) btn.textContent = "🔇";
-        });
-    }
-}
-
-// CORREÇÃO 1: Toca música pendente na próxima interação do usuário (toque/clique)
+// Retry na próxima interação do usuário se play estava pendente
 document.addEventListener('touchstart', function() {
-    if (musicaPendente) {
-        tentarTocarMusica();
-    }
+    if (musicaPendente) { tentarTocarMusica(); }
 }, { passive: true });
 
 document.addEventListener('click', function() {
-    if (musicaPendente) {
-        tentarTocarMusica();
-    }
+    if (musicaPendente) { tentarTocarMusica(); }
 });
 
 // ---------------- TEMAS ----------------
@@ -553,9 +551,6 @@ async function gerarConfrontoIA() {
 
   statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
-  // CORREÇÃO 1: Usa a função centralizada com fallback para App Inventor
-  tentarTocarMusica();
-
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
 
   try {
@@ -580,33 +575,43 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
-      // CORREÇÃO 2: Botões ZAP e ÁUDIO separados com onclick explícito e sem sobreposição
+      // CORREÇÃO 2: Botões ZAP e ÁUDIO em células separadas com largura fixa.
+      // App Inventor não processa stopPropagation nem hit-testing em flex pequeno.
+      // Solução: cada botão fica em sua própria célula de tabela com onclick direto.
       aiBox.innerHTML = `
-        <!-- TÍTULO E BOTÕES LADO A LADO -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:16px; flex-grow: 1;">
-              Agenda dos 300 Colunistas
-            </h2>
-
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <!-- BOTÃO ZAP: onclick isolado, sem interferência -->
+        <!-- TÍTULO E BOTÕES: tabela garante separação de área de clique no App Inventor -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:15px; border-collapse:collapse;">
+          <tr>
+            <td style="text-align:left; vertical-align:middle;">
+              <h2 style="color:#4a148c; margin:0; font-size:16px;">Agenda dos 300 Colunistas</h2>
+            </td>
+            <!-- CÉLULA ZAP: área de toque exclusiva 50x50 -->
+            <td style="width:50px; text-align:center; vertical-align:middle; padding:0;">
+              <div onclick="shareOnWhatsApp()"
+                   style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
                 <img src="imagens_app/zap.png"
                      id="btnZap"
-                     class="btn-zap-redondo"
-                     onclick="shareOnWhatsApp(); event.stopPropagation();"
-                     alt="Compartilhar WhatsApp">
-
-                <!-- BOTÃO AUDIO: onclick isolado, sem interferência -->
+                     style="width:40px; height:40px; display:block; pointer-events:none;"
+                     alt="WhatsApp">
+              </div>
+            </td>
+            <!-- CÉLULA ÁUDIO: área de toque exclusiva 50x50 -->
+            <td style="width:50px; text-align:center; vertical-align:middle; padding:0;">
+              <div onclick="toggleMusicAppInventor()"
+                   style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
                 <button id="btnAppInventor"
-                        class="btn-appinventor"
-                        onclick="toggleMusicAppInventor(); event.stopPropagation();">
+                        style="width:40px; height:40px; border-radius:50%; background:#9c27b0; border:none;
+                               font-size:18px; color:white; pointer-events:none; display:flex;
+                               align-items:center; justify-content:center;">
                     🔊
                 </button>
-            </div>
-        </div>
+              </div>
+            </td>
+          </tr>
+        </table>
 
         <div id="conteudoIA" style="margin-bottom: 15px;">
-          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:15px;">
+          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
           </h3>
           <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
@@ -650,7 +655,12 @@ async function gerarConfrontoIA() {
 
       aiBox.style.display = 'block';
       aiBox.style.marginTop = "5px";
-      aiBox.style.marginBottom = "-15px";
+      aiBox.style.marginBottom = "5px";
+
+      // CORREÇÃO 1: Toca música após análise concluída.
+      // tentarTocarMusica() usa setTimeout(0) para sair do contexto async.
+      // Se ainda bloquear (App Inventor), musicaPendente=true dispara no próximo toque.
+      tentarTocarMusica();
 
       statusEl.innerText = "Fim de combate sob moderação de IA.";
       statusEl.style.color = "#00cc66";
@@ -727,15 +737,3 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
