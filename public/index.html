@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
@@ -109,7 +109,7 @@ body {
     width: 100%;
     padding: 12px;
     margin-top: 8px;
-    margin-bottom:10px;
+    margin-bottom: 10px;
     border-radius: 12px;
     border: 2px solid #9d5fe9;
     background: white;
@@ -159,13 +159,11 @@ body {
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
-  
-  /* CORREÇÃO 2: posição relativa para garantir que o clique não vaze para o botão zap */
-   position: relative !important;
+    /* CORREÇÃO 2: posição relativa para garantir que o clique não vaze para o botão zap */
+    position: relative !important;
     z-index: 1;
-    
     transition: transform 0.2s;
-   border: 2px solid #CC93ED; /* borda fina lilas */
+    border: 2px solid #CC93ED; /* borda fina lilás */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,7 +178,6 @@ body {
   height: 45px;
   cursor: pointer;
   transition: transform 0.2s;
-  
   /* CORREÇÃO 2: posição relativa para isolar área de clique */
   position: relative !important;
   z-index: 10;
@@ -317,7 +314,7 @@ body {
 </style>
 </head>
 
-<body onload="document.getElementById('pageLoader').style.display='none';">
+<body>
 <div id="pageLoader"><div class="loader-circle"></div></div>
 
 <div class="app-container">
@@ -379,27 +376,7 @@ body {
 <script>
 // ---------------- ÁUDIO ----------------
 
-window.onload = function() {
-    if (window.AppInventor) {
-        window.AppInventor.getWebViewString();
-    }
-};
-
-function onAppInventorStringReceived(str) {
-    if (str === "PARAR") {
-        memoriesAudio.pause();
-        memoriesAudio.currentTime = 0;
-        musicaPendente = false;
-
-        const btn = document.getElementById('btnAppInventor');
-        if (btn) btn.textContent = "🔇";
-    }
-
-    if (str === "TOCAR") {
-        tentarTocarMusica();
-    }
-}
-  
+// CORREÇÃO: Variáveis de áudio declaradas antes de qualquer uso
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
@@ -431,6 +408,18 @@ function tentarTocarMusica() {
         }
     }, 0);
 }
+
+// ---------------- INICIALIZAÇÃO ----------------
+// CORREÇÃO: Unificado window.onload para não sobrescrever handler do body
+window.onload = function() {
+    // Esconde loader
+    document.getElementById('pageLoader').style.display = 'none';
+    
+    // Integração App Inventor
+    if (window.AppInventor) {
+        window.AppInventor.getWebViewString();
+    }
+};
 
 // Integração App Inventor: "TOCAR" executa play() de forma síncrona
 // dentro do contexto do evento nativo do App Inventor (contorna bloqueio de autoplay).
@@ -530,7 +519,7 @@ function sortear() {
   document.getElementById('status').innerText = "No combate ao conluio de narrativas institucionalizadas, colunistas, influencers e ativistas mais incisivos da atualidade preparam seus argumentos. A luta é contra a desinformação e o discurso raso direcionado. Na arena da imprensa sem viés de censura, Agenda dos 300 analisa os dados para impedir que a paixão cegue a razão informada.";
 
   const areaBotao = document.getElementById('areaBotaoAcao');
-  areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
+  areaBotao.innerHTML = '<button class="btn-aurora azul-info">Colunistas em combate...</button>';
 
   const aiBox = document.getElementById('aiBox');
   if(aiBox.style.display === 'block') {
@@ -540,7 +529,7 @@ function sortear() {
   let temp1, temp2;
   let ciclos = 0;
 
-  const intervalo = setInterval(() => {
+  const intervalo = setInterval(function() {
       let idx1 = Math.floor(Math.random() * listaTodosColunistas.length);
       let idx2 = Math.floor(Math.random() * listaTodosColunistas.length);
       while(idx1 === idx2) {
@@ -552,11 +541,11 @@ function sortear() {
       document.getElementById('fotoLunar').src = temp1.imagem || "imagens_app/colunista1.png";
       document.getElementById('fotoSolar').src = temp2.imagem || "imagens_app/colunista2.png";
 
-      const veiculo1 = temp1.Veículo ? `<span class="text-veiculo">${temp1.Veículo}</span>` : '';
-      const veiculo2 = temp2.Veículo ? `<span class="text-veiculo">${temp2.Veículo}</span>` : '';
+      const veiculo1 = temp1.Veículo ? '<span class="text-veiculo">' + temp1.Veículo + '</span>' : '';
+      const veiculo2 = temp2.Veículo ? '<span class="text-veiculo">' + temp2.Veículo + '</span>' : '';
 
-      document.getElementById('nomeLunar').innerHTML = `${temp1.codinome}${veiculo1}`;
-      document.getElementById('nomeSolar').innerHTML = `${temp2.codinome}${veiculo2}`;
+      document.getElementById('nomeLunar').innerHTML = temp1.codinome + veiculo1;
+      document.getElementById('nomeSolar').innerHTML = temp2.codinome + veiculo2;
 
       if (ciclos++ > 100) {
           clearInterval(intervalo);
@@ -564,7 +553,7 @@ function sortear() {
           colunista1 = temp1;
           colunista2 = temp2;
 
-          areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">Aguarde um instante...</button>`;
+          areaBotao.innerHTML = '<button class="btn-aurora amarelo-alerta">Aguarde um instante...</button>';
           gerarConfrontoIA();
       }
   }, 80);
@@ -575,9 +564,9 @@ async function gerarConfrontoIA() {
   const statusEl = document.getElementById('status');
   const tema = document.getElementById('seletorTema').value || "Atualidade";
 
-  statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
+  statusEl.innerText = "Os colunistas " + colunista1.codinome + " vs " + colunista2.codinome + " travam um duelo moderado por IA em nome da metaverdade sem viés institucional.";
 
-  const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
+  const promptTexto = "Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre " + colunista1.codinome + " (" + colunista1.viés_politico + ", veículo: " + colunista1.Veículo + ") e " + colunista2.codinome + " (" + colunista2.viés_politico + ", veículo: " + colunista2.Veículo + ") sobre o tema: " + tema + ". Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.";
 
   try {
       const res = await fetch('/api/chat', {
@@ -591,72 +580,54 @@ async function gerarConfrontoIA() {
 
       if (!res.ok) {
           const errorText = await res.text();
-          throw new Error(`Erro do servidor (${res.status}): ${errorText}`);
+          throw new Error("Erro do servidor (" + res.status + "): " + errorText);
       }
 
       const data = await res.json();
       const respostaTexto = data.choices[0].message.content;
       const aiBox = document.getElementById('aiBox');
 
-      const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
-      const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
+      const veiculo1Display = colunista1.Veículo ? " - " + colunista1.Veículo : '';
+      const veiculo2Display = colunista2.Veículo ? " - " + colunista2.Veículo : '';
 
       // CORREÇÃO 2: Botões ZAP e ÁUDIO em células separadas com largura fixa.
       // App Inventor não processa stopPropagation nem hit-testing em flex pequeno.
       // Solução: cada botão fica em sua própria célula de tabela com onclick direto.
-      aiBox.innerHTML = `
-        <!-- TÍTULO E BOTÕES: tabela garante separação de área de clique no App Inventor -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:15px; border-collapse:collapse;">
-          <tr>
-            <td style="text-align:left; vertical-align:middle;">
-              <h2 style="color:#4a148c; margin:0; font-size:16px;">Agenda dos 300 Colunistas</h2>
-            </td>
-            <!-- CÉLULA ZAP: área de toque exclusiva 50x50 -->
-            <td style="width:50px; text-align:center; vertical-align:middle; padding:0;">
-              <div onclick="shareOnWhatsApp()"
-                   style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-                <img src="imagens_app/zap.png"
-                     id="btnZap"
-                     style="width:40px; height:40px; display:block; pointer-events:none;"
-                     alt="WhatsApp">
-              </div>
-            </td>
-            <!-- CÉLULA ÁUDIO: área de toque exclusiva 50x50 -->
-            <td style="width:50px; text-align:center; vertical-align:middle; padding:0;">
-              <div onclick="toggleMusicAppInventor()"
-                   style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-                <button id="btnAppInventor"
-                        style="width:40px; height:40px; border-radius:50%; background:#9c27b0; border:none;
-                               font-size:18px; color:white; pointer-events:none; display:flex;
-                               align-items:center; justify-content:center;">
-                    🔊
-                </button>
-              </div>
-            </td>
-          </tr>
-        </table>
-
-        <div id="conteudoIA" style="margin-bottom: 15px;">
-          <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">
-              ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
-          </h3>
-          <p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">
-              <strong>Em pauta:</strong> ${tema}
-          </p>
-          <hr style="border:0; border-top:1px solid #eee;">
-          <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
-        </div>
-
-        <div id="ad-container">
-          <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
-          <ins class="adsbygoogle"
-               style="display:block"
-               data-ad-client="ca-pub-3940256099942544"
-               data-ad-slot="6300978111"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
-        </div>
-      `;
+      aiBox.innerHTML = 
+        '<!-- TÍTULO E BOTÕES: tabela garante separação de área de clique no App Inventor -->' +
+        '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:15px; border-collapse:collapse;">' +
+          '<tr>' +
+            '<td style="text-align:left; vertical-align:middle;">' +
+              '<h2 style="color:#4a148c; margin:0; font-size:16px;">Agenda dos 300 Colunistas</h2>' +
+            '</td>' +
+            '<!-- CÉLULA ZAP: área de toque exclusiva 50x50 -->' +
+            '<td style="width:50px; text-align:center; vertical-align:middle; padding:0;">' +
+              '<div onclick="shareOnWhatsApp()" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer;">' +
+                '<img src="imagens_app/zap.png" id="btnZap" style="width:40px; height:40px; display:block; pointer-events:none;" alt="WhatsApp">' +
+              '</div>' +
+            '</td>' +
+            '<!-- CÉLULA ÁUDIO: área de toque exclusiva 50x50 -->' +
+            '<td style="width:50px; text-align:center; vertical-align:middle; padding:0;">' +
+              '<div onclick="toggleMusicAppInventor()" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; cursor:pointer;">' +
+                '<button id="btnAppInventor" style="width:40px; height:40px; border-radius:50%; background:#9c27b0; border:none; font-size:18px; color:white; pointer-events:none; display:flex; align-items:center; justify-content:center;">🔊</button>' +
+              '</div>' +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+        '<div id="conteudoIA" style="margin-bottom: 15px;">' +
+          '<h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:16px;">' +
+            '⚔️ ' + colunista1.codinome + ' (' + colunista1.viés_politico + veiculo1Display + ') vs ' + colunista2.codinome + ' (' + colunista2.viés_politico + veiculo2Display + ')' +
+          '</h3>' +
+          '<p style="font-size:12px; color:#666; text-align:center; margin-bottom:10px">' +
+            '<strong>Em pauta:</strong> ' + tema +
+          '</p>' +
+          '<hr style="border:0; border-top:1px solid #eee;">' +
+          '<p style="font-size:14px; text-align:justify; color:#333;">' + respostaTexto.replace(/\n/g, '<br>') + '</p>' +
+        '</div>' +
+        '<div id="ad-container">' +
+          '<span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>' +
+          '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
+        '</div>';
 
       // Sincroniza ícone com estado real do áudio
       const btnAudio = document.getElementById('btnAppInventor');
@@ -695,18 +666,14 @@ async function gerarConfrontoIA() {
 
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
 
-      document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
-      `;
+      document.getElementById('areaBotaoAcao').innerHTML = '<button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>';
 
   } catch (e) {
       console.error(e);
       statusEl.innerText = "Erro: " + e.message;
       statusEl.style.color = "red";
 
-      document.getElementById('areaBotaoAcao').innerHTML = `
-        <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
-      `;
+      document.getElementById('areaBotaoAcao').innerHTML = '<button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>';
   }
 }
 
@@ -743,26 +710,23 @@ function shareOnWhatsApp() {
 
   const title = "Agenda dos 300 - O Duelo de Colunistas";
   const WHATSAPP_FOOTER = "\n\n 📰 Agenda dos 300\n⚡ Powered by Geraldo A. Seabra";
-  const message = `✨ ${title}\n\n${texto}${WHATSAPP_FOOTER}`;
+  const message = "✨ " + title + "\n\n" + texto + WHATSAPP_FOOTER;
 
   if (window.AppInventor) {
       window.AppInventor.setWebViewString(message);
   } else {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+      window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(message), '_blank');
   }
 }
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
+  window.addEventListener('load', function() {
       navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW OK'))
-      .catch(err => console.log('SW Fail', err));
+      .then(function() { console.log('SW OK'); })
+      .catch(function(err) { console.log('SW Fail', err); });
   });
 }
 </script>
 
 </body>
 </html>
-
-
-
