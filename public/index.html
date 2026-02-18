@@ -159,16 +159,18 @@ body {
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 10;
+  
+  /* CORREÇÃO 2: posição relativa para garantir que o clique não vaze para o botão zap */
+   position: relative !important;
+    z-index: 1;
+    
     transition: transform 0.2s;
    border: 2px solid #CC93ED; /* borda fina lilas */
-       display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
-    color: white;
-    /* CORREÇÃO 2: posição relativa para garantir que o clique não vaze para o botão zap */
-    position: relative;
+    color: white;    
 }
 .btn-appinventor:hover { transform: scale(1.1); }
 
@@ -178,8 +180,9 @@ body {
   height: 45px;
   cursor: pointer;
   transition: transform 0.2s;
+  
   /* CORREÇÃO 2: posição relativa para isolar área de clique */
-  position: relative;
+  position: relative !important;
   z-index: 10;
   display: block;
 }
@@ -298,6 +301,7 @@ body {
   line-height: 1.5;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   position: relative;
+  overflow: visible;
   border: 1px solid #eee;
 }
 
@@ -374,6 +378,28 @@ body {
 
 <script>
 // ---------------- ÁUDIO ----------------
+
+window.onload = function() {
+    if (window.AppInventor) {
+        window.AppInventor.getWebViewString();
+    }
+};
+
+function onAppInventorStringReceived(str) {
+    if (str === "PARAR") {
+        memoriesAudio.pause();
+        memoriesAudio.currentTime = 0;
+        musicaPendente = false;
+
+        const btn = document.getElementById('btnAppInventor');
+        if (btn) btn.textContent = "🔇";
+    }
+
+    if (str === "TOCAR") {
+        tentarTocarMusica();
+    }
+}
+  
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
@@ -737,5 +763,6 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
+
 
 
