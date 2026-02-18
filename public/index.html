@@ -139,8 +139,9 @@ margin: -10px 5px;
     100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
 }
 
+/* --- CORREÇÃO DOS BOTÕES --- */
+
 /* Botão App Inventor (Estilo Circular) */
-   
 .btn-appinventor {
     background: #9c27b0;
     width: 40px;
@@ -150,24 +151,39 @@ margin: -10px 5px;
     position: relative;
     z-index: 10;
     transition: transform 0.2s;
-   border: 2px solid #CC93ED; /* borda fina lilas */
+    border: 2px solid #CC93ED; 
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
     color: white;
+    
+    /* CORREÇÃO: Impede que o botão encolha em telas pequenas */
+    flex-shrink: 0; 
 }
 
-    
 /* Botão zap (Estilo Circular) */
-     .btn-zap-redondo {
+.btn-zap-redondo {
     width: 40px;
     height: 40px;
     cursor: pointer;
     position: relative;
     z-index: 10;
     transition: transform 0.2s;
+    
+    /* CORREÇÕES: */
+    display: block; /* Remove comportamento inline extra */
+    flex-shrink: 0; /* Impede que a imagem encolha */
+    object-fit: contain; /* Mantém a proporção do ícone */
+    border-radius: 50%; /* Caso a imagem falhe, mantém o círculo */
+    
+    /* Opcional: Fundo verde caso a imagem não carregue */
+    background-color: #25D366; 
+    padding: 2px; /* Ajuste fino para o ícone não tocar a borda */
 }
+
+/* --- FIM DAS CORREÇÕES --- */
+
 
     /* --- Área de Jogo --- */
     #jogoArea {
@@ -578,15 +594,16 @@ async function gerarConfrontoIA() {
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
       // HTML: Título e Botões na mesma linha (Flexbox)
+      // Aumentei o gap de 10px para 15px para garantir separação
       aiBox.innerHTML = `
         
         <!-- TÍTULO E BOTÕES LADO A LADO -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:18px; flex-grow: 1;">
-              Agenda dos 300 Colunistas
+            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:18px; flex-grow: 1; padding-right: 10px;">
+              Agenda dos 300
             </h2>
             
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
                 <!-- BOTÃO ZAP -->
                 <img src="imagens_app/zap.png"
                      id="btnZap"
@@ -729,11 +746,3 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
-
-
-
-
-
-
-
-
