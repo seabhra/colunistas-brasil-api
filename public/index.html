@@ -377,16 +377,16 @@ window.addEventListener('load', function () {
 });
 
 function onAppInventorStringReceived(str) {
-    if (str === "PARAR") {
+    if (str === "TOCAR") {
         memoriesAudio.pause();
         memoriesAudio.currentTime = 0;
         musicaPendente = false;
 
         const btn = document.getElementById('btnAppInventor');
-        if (btn) btn.textContent = "🔇";
+        if (btn) btn.textContent = "  🔊";
     }
 
-    if (str === "TOCAR") {
+    if (str === "PARAR") {
         tentarTocarMusica();
     }
 }
@@ -690,14 +690,14 @@ function toggleMusicAppInventor() {
     
     if (memoriesAudio.paused) {
         memoriesAudio.play();
-        if(btn) btn.textContent = "🔊"; 
+        if(btn) btn.textContent = "🔇"; 
         // Envia estado para App Inventor se necessário (opcional)
-        if (window.AppInventor) window.AppInventor.setWebViewString("TOCAR");
+        if (window.AppInventor) window.AppInventor.setWebViewString("PARAR");
     } else {
         memoriesAudio.pause();
-        if(btn) btn.textContent = "🔇";
+        if(btn) btn.textContent = "🔊";
         // Envia comando PARAR para o App Inventor
-        if (window.AppInventor) window.AppInventor.setWebViewString("PARAR");
+        if (window.AppInventor) window.AppInventor.setWebViewString("TOCAR");
     }
 }
 
@@ -730,5 +730,6 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
