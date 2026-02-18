@@ -161,15 +161,15 @@ body {
     cursor: pointer;
     z-index: 10;
     transition: transform 0.2s;
-    border: none;
+    border: 1px solid #ffffff; /* borda fina branca */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
     color: white;
-    /* CORREÇÃO 2: posição relativa para garantir que o clique não vaze para o botão zap */
     position: relative;
 }
+
 .btn-appinventor:hover { transform: scale(1.1); }
 
 /* botão redondo zap */
@@ -723,5 +723,6 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
+
 
 
