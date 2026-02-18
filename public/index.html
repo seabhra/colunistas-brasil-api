@@ -140,8 +140,6 @@ margin: -10px 5px;
     100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
 }
 
-/* --- BOTÕES --- */
-
 .btn-appinventor {
     background: #9c27b0;
     width: 40px;
@@ -149,7 +147,7 @@ margin: -10px 5px;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    z-index: 50; /* Garante clique no topo */
+    z-index: 50;
     transition: transform 0.2s;
     border: 2px solid #CC93ED; 
     display: flex;
@@ -166,7 +164,7 @@ margin: -10px 5px;
     height: 40px;
     cursor: pointer;
     position: relative;
-    z-index: 50; /* Garante clique no topo */
+    z-index: 50;
     transition: transform 0.2s;
     display: block; 
     flex-shrink: 0; 
@@ -190,8 +188,8 @@ margin: -10px 5px;
     justify-content: center; 
     align-items: center;
     gap: 10px;
-    margin-top: 5px;     /* margem superior */
-    margin-bottom: 5px; /* margem inferior */
+    margin-top: 5px;
+    margin-bottom: 5px;
     margin-left: auto;
     margin-right: auto;
     padding: 10px; 
@@ -199,7 +197,6 @@ margin: -10px 5px;
     border-radius: 20px; 
     width: 100%;
 }
-
 
     .card-container { 
         width: 48%; 
@@ -266,8 +263,8 @@ margin: -10px 5px;
     }
 
 #status {
-margin-top: 5px;     /* margem superior */
-margin-bottom: 5px; /* margem inferior */
+margin-top: 5px;
+margin-bottom: 5px;
 font-size: 13px;
 color: #555; 
 background: rgba(255,255,255,0.8);
@@ -295,8 +292,6 @@ overflow: visible;
 border: 1px solid #eee;
 }
 
-
-/* área do anúncio admob */
 
 #ad-container {
 margin-top: 20px;
@@ -369,58 +364,78 @@ border: 1px solid #ddd;
 </div> 
 
 <script>
-// ---------------- ÁUDIO APP INVENTOR---------------
+// ---------------- INTEGRAÇÃO APP INVENTOR ----------------
 
 window.addEventListener('load', function () {
     const loader = document.getElementById('pageLoader');
     if (loader) loader.style.display = 'none';
 
+    // Inicia o "polling" (verificação) da string do App Inventor
     if (window.AppInventor && window.AppInventor.getWebViewString) {
         window.AppInventor.getWebViewString();
     }
 });
 
-// Função separada para comandos curtos do App Inventor
+// Função separada para enviar comandos CURTOS para o App Inventor
 function sendCommandToAppInventor(cmd) {
     if (window.AppInventor && window.AppInventor.setWebViewString) {
         try {
             window.AppInventor.setWebViewString(cmd);
-            console.log("Comando enviado para App Inventor:", cmd);
         } catch (e) {
-            console.error("Erro ao enviar comando:", e);
+            console.error("Erro ao enviar comando para AI:", e);
         }
     }
 }
 
-// CORREÇÃO PRINCIPAL AQUI: Lógica completa de Pause/Play
+// --- FUNÇÃO PRINCIPAL DE RECEBIMENTO (SEM TIMEOUTS) ---
 function onAppInventorStringReceived(str) {
+    // Normaliza a string para evitar erros de espaço
     const command = str.trim().toUpperCase();
-    console.log("Recebido do App Inventor:", command);
+    
+    console.log("WEBVIEW RECEBEU:", command, "| Estado Áudio:", window.memoriesAudio.paused);
 
+    // LÓGICA DIRETA E IMEDIATA (SEM TRUQUES)
+    
     if (command === "TOCAR") {
-        // O App Inventor quer PARAR o áudio Web (provavelmente para tocar algo nativo)
-        if (!window.memoriesAudio.paused) {
+        // O App Inventor quer que o HTML PARE o som (para assumir o controle ou silenciar)
+        try {
             window.memoriesAudio.pause();
             window.memoriesAudio.currentTime = 0;
+            window.musicaPendente = false;
+            
+            // Atualiza visual IMEDIATAMENTE
+            const btn = document.getElementById('btnAppInventor');
+            if (btn) btn.textContent = "🔊";
+            
+            console.log("COMANDO EXECUTADO: Pausar HTML");
+        } catch (e) {
+            console.error("Erro ao pausar via AI:", e);
         }
-        window.musicaPendente = false;
-        const btn = document.getElementById('btnAppInventor');
-        if (btn) btn.textContent = "🔊"; // Ícone de Mudo/Parado
     }
+    
     if (command === "PARAR") {
-        // O App Inventor quer TOCAR o áudio Web (ou parar algo nativo)
-        // Se estiver tocando, paramos. Se estiver parado, tocamos.
-        // Mas geralmente PARAR no App Inventor significa "pare o que você está fazendo".
-        
-        // Vamos assumir a lógica inversa: 
-        // Se o App Inventor envia "PARAR", ele quer que o HTML pare a música?
-        // OU, baseado no seu código anterior: "PARAR" significava Tocar música de fundo?
-        // Vamos manter a lógica reversa que você estava tentando usar:
-        // "TOCAR" = Pausar HTML. "PARAR" = Tocar HTML.
-        
-        window.memoriesAudio.play().catch(e => console.log("Erro ao tentar tocar:", e));
-        const btn = document.getElementById('btnAppInventor');
-        if(btn) btn.textContent = "🔇"; // Ícone de Tocando
+        // O App Inventor quer que o HTML TOQUE o som
+        try {
+            // Tenta tocar. Se falhar (autoplay), define pendente.
+            const promise = window.memoriesAudio.play();
+            
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    window.musicaPendente = false;
+                    const btn = document.getElementById('btnAppInventor');
+                    if (btn) btn.textContent = "🔇"; // Tocando
+                })
+                .catch(error => {
+                    window.musicaPendente = true;
+                    console.log("Autoplay bloqueado, áudio pendente.");
+                    const btn = document.getElementById('btnAppInventor');
+                    if (btn) btn.textContent = "🔇"; // Mudo
+                });
+            }
+            console.log("COMANDO EXECUTADO: Tocar HTML");
+        } catch (e) {
+            console.error("Erro ao tocar via AI:", e);
+        }
     }
 }
 
@@ -429,7 +444,6 @@ function onAppInventorStringReceived(str) {
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
-// Definição Global
 window.memoriesAudio = new Audio('audio_app/darren_curtis.mp3');
 window.memoriesAudio.loop = true;
 window.memoriesAudio.preload = 'auto';
@@ -438,23 +452,23 @@ window.memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
 window.musicaPendente = false;
 
+// Função segura para toque iniciado pelo USUÁRIO (clique na tela)
 function tentarTocarMusica() {
-    setTimeout(function () {
-        const p = window.memoriesAudio.play();
-        if (p !== undefined) {
-            p.then(function () {
-                window.musicaPendente = false;
-                const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔊";
-            }).catch(function () {
-                window.musicaPendente = true;
-                const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔇";
-            });
-        }
-    }, 0);
+    const p = window.memoriesAudio.play();
+    if (p !== undefined) {
+        p.then(function () {
+            window.musicaPendente = false;
+            const btn = document.getElementById('btnAppInventor');
+            if (btn) btn.textContent = "🔊";
+        }).catch(function () {
+            window.musicaPendente = true;
+            const btn = document.getElementById('btnAppInventor');
+            if (btn) btn.textContent = "🔇";
+        });
+    }
 }
 
+// Listeners de clique na tela para desbloquear áudio
 document.addEventListener('touchstart', function () {
     if (window.musicaPendente) tentarTocarMusica();
 }, { passive: true });
@@ -472,15 +486,12 @@ fetch("https://raw.githubusercontent.com/seabhra/colunistas-brasil-api/refs/head
 .then(data => {
   const datalist = document.getElementById("temasColunistas");
   datalist.innerHTML = "";
-  
   const listaTemas = Array.isArray(data) ? data : (data.temas || []);
-  
   listaTemas.forEach(tema => {
       const option = document.createElement("option");
       option.value = tema;
       datalist.appendChild(option);
   });
-  
   console.log(`Carregados ${listaTemas.length} temas.`);
 }).catch(err => console.log("Erro ao carregar temas:", err));
 
@@ -615,14 +626,12 @@ async function gerarConfrontoIA() {
             </h2>
             
             <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
-                <!-- BOTÃO ZAP -->
                 <img src="imagens_app/zap.png"
                      id="btnZap"
                      class="btn-zap-redondo"
                      onclick="shareOnWhatsApp(event)"
                      alt="Compartilhar">
 
-                <!-- BOTÃO AUDIO -->
                 <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor(event)">
                     🔊
                 </button>
