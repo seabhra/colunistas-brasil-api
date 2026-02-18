@@ -385,8 +385,9 @@ function onAppInventorStringReceived(str) {
     if (str === "PARAR") {
         tentarTocarMusica();
     }
+    console.log("Recebido do App Inventor:", str);
 }
-console.log("Recebido do App Inventor:", str);
+
 
 // ---------------- ÁUDIO INTEGRADO ---------------
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
@@ -728,6 +729,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
