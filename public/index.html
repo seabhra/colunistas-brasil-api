@@ -107,8 +107,8 @@ margin: -10px 5px;
 .btn-aurora {
     width: 100%;
     padding: 12px;
-     margin-top: -5px;     /* reduz em cima */
-    margin-bottom: -5px;  /* 5px embaixo */
+     margin-top: -5px;
+    margin-bottom: -5px;
     border: none;
     border-radius: 16px;
     font-weight: bold;
@@ -157,8 +157,6 @@ margin: -10px 5px;
     align-items: center;
     font-size: 18px;
     color: white;
-    
-    /* CORREÇÃO: Impede que o botão encolha em telas pequenas */
     flex-shrink: 0; 
 }
 
@@ -170,16 +168,12 @@ margin: -10px 5px;
     position: relative;
     z-index: 10;
     transition: transform 0.2s;
-    
-    /* CORREÇÕES: */
-    display: block; /* Remove comportamento inline extra */
-    flex-shrink: 0; /* Impede que a imagem encolha */
-    object-fit: contain; /* Mantém a proporção do ícone */
-    border-radius: 50%; /* Caso a imagem falhe, mantém o círculo */
-    
-    /* Opcional: Fundo verde caso a imagem não carregue */
+    display: block; 
+    flex-shrink: 0; 
+    object-fit: contain; 
+    border-radius: 50%; 
     background-color: #25D366; 
-    padding: 2px; /* Ajuste fino para o ícone não tocar a borda */
+    padding: 2px; 
 }
 
 /* --- FIM DAS CORREÇÕES --- */
@@ -391,9 +385,10 @@ window.addEventListener('load', function () {
 });
 
 function onAppInventorStringReceived(str) {
+    // CORREÇÃO AQUI: Usar window.memoriesAudio
     if (str === "TOCAR") {
         window.memoriesAudio.pause();
-          window.memoriesAudio.currentTime = 0;
+        window.memoriesAudio.currentTime = 0;
         window.musicaPendente = false;
         const btn = document.getElementById('btnAppInventor');
         if (btn) btn.textContent = "🔊";
@@ -409,24 +404,26 @@ function onAppInventorStringReceived(str) {
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
 
-const memoriesAudio = new Audio('audio_app/darren_curtis.mp3');
+// CORREÇÃO AQUI: Definir diretamente no window
+window.memoriesAudio = new Audio('audio_app/darren_curtis.mp3');
 window.memoriesAudio.loop = true;
 window.memoriesAudio.preload = 'auto';
 window.memoriesAudio.volume = 0.5;
-    
+
 shuffleAudio.volume = 0.5;
-let musicaPendente = false;
+window.musicaPendente = false;
 
 function tentarTocarMusica() {
     setTimeout(function () {
-        const p = memoriesAudio.play();
+        // CORREÇÃO AQUI: Usar window.memoriesAudio
+        const p = window.memoriesAudio.play();
         if (p !== undefined) {
             p.then(function () {
-                musicaPendente = false;
+                window.musicaPendente = false;
                 const btn = document.getElementById('btnAppInventor');
                 if (btn) btn.textContent = "🔊";
             }).catch(function () {
-                musicaPendente = true;
+                window.musicaPendente = true;
                 const btn = document.getElementById('btnAppInventor');
                 if (btn) btn.textContent = "🔇";
             });
@@ -436,11 +433,11 @@ function tentarTocarMusica() {
 
 // Retry se autoplay bloqueado
 document.addEventListener('touchstart', function () {
-    if (musicaPendente) tentarTocarMusica();
+    if (window.musicaPendente) tentarTocarMusica();
 }, { passive: true });
 
 document.addEventListener('click', function () {
-    if (musicaPendente) tentarTocarMusica();
+    if (window.musicaPendente) tentarTocarMusica();
 });
 
 
@@ -504,7 +501,7 @@ function sortear() {
       return;
   }
 
-  // Garante que a música de fundo está parada antes de começar o sorteio
+  // CORREÇÃO AQUI: Usar window.memoriesAudio
   window.memoriesAudio.pause();
   window.memoriesAudio.currentTime = 0;
 
@@ -567,7 +564,8 @@ async function gerarConfrontoIA() {
   statusEl.innerText = `Os colunistas ${colunista1.codinome} vs ${colunista2.codinome} travam um duelo moderado por IA em nome da metaverdade sem viés institucional.`;
 
   // --- INÍCIO DA MÚSICA DE FUNDO ---
-  memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
+  // CORREÇÃO AQUI: Usar window.memoriesAudio
+  window.memoriesAudio.play().catch(e => console.log("Autoplay de música bloqueado pelo navegador até interação do usuário."));
 
   const promptTexto = `Atue como um mediador de debate público. Promova um duelo de ideias racional e profundo entre ${colunista1.codinome} (${colunista1.viés_politico}, veículo: ${colunista1.Veículo}) e ${colunista2.codinome} (${colunista2.viés_politico}, veículo: ${colunista2.Veículo}) sobre o tema: ${tema}. Empregue um tom jornalístico e analítico a partir de textos publicados por cada um deles na mídia, usando apenas seus codinomes, nunca nomes próprios.`;
   
@@ -594,7 +592,6 @@ async function gerarConfrontoIA() {
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
       // HTML: Título e Botões na mesma linha (Flexbox)
-      // Aumentei o gap de 10px para 15px para garantir separação
       aiBox.innerHTML = `
         
         <!-- TÍTULO E BOTÕES LADO A LADO -->
@@ -643,13 +640,14 @@ async function gerarConfrontoIA() {
       // Define o ícone inicial correto baseado no estado do áudio
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
-          btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+          // CORREÇÃO AQUI: Usar window.memoriesAudio
+          btnAudio.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
       }
       
       // Garante sincronia caso o áudio carregue depois
       window.memoriesAudio.onloadeddata = function() {
           const btn = document.getElementById('btnAppInventor');
-          if(btn) btn.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+          if(btn) btn.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
       };
       
       window.memoriesAudio.onplay = function() {
@@ -693,9 +691,10 @@ async function gerarConfrontoIA() {
 
 // Função para parar a música e recarregar (usada pelo botão HTML)
 function pararMusicaERecarregar() {
+    // CORREÇÃO AQUI: Usar window.memoriesAudio
     window.memoriesAudio.pause();
     window.memoriesAudio.currentTime = 0;
-    musicaPendente = false;
+    window.musicaPendente = false;
     location.reload();
  
 }
@@ -704,6 +703,7 @@ function pararMusicaERecarregar() {
 function toggleMusicAppInventor() {
     const btn = document.getElementById('btnAppInventor');
     
+    // CORREÇÃO AQUI: Usar window.memoriesAudio
     if (window.memoriesAudio.paused) {
         window.memoriesAudio.play();
         if(btn) btn.textContent = "🔇"; 
@@ -746,5 +746,3 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
-
-
