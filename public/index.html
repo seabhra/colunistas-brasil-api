@@ -424,11 +424,11 @@ function tentarTocarMusica() {
             p.then(function () {
                 musicaPendente = false;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔊";
+                if (btn) btn.textContent = "🔇";
             }).catch(function () {
                 musicaPendente = true;
                 const btn = document.getElementById('btnAppInventor');
-                if (btn) btn.textContent = "🔇";
+                if (btn) btn.textContent = "🔊";
             });
         }
     }, 0);
@@ -746,3 +746,4 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
