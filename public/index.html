@@ -150,7 +150,7 @@ margin: -10px 5px;
     position: relative;
     z-index: 10;
     transition: transform 0.2s;
-    border: none;
+   border: 2px solid #CC93ED; /* borda fina lilas */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -341,7 +341,7 @@ border: 1px solid #ddd;
         </div>
 
     <div id="areaBotaoAcao">
-        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting Real</button>
+        <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">♟️Jogar Agenda Setting Real</button>
     </div>
     <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
@@ -499,7 +499,7 @@ function sortear() {
 
   // ETAPA 1: Roleta Girando - Botão AZUL
   const areaBotao = document.getElementById('areaBotaoAcao');
-  areaBotao.innerHTML = `<button class="btn-aurora azul-info">Colunistas em combate...</button>`;
+  areaBotao.innerHTML = `<button class="btn-aurora azul-info">⚔️ Colunistas em combate...</button>`;
 
   const aiBox = document.getElementById('aiBox');
   if(aiBox.style.display === 'block') {
@@ -536,7 +536,7 @@ function sortear() {
           colunista2 = temp2;
           
           // ETAPA 2: Roleta Parou - Botão AMARELO
-          areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">Aguarde um instante...</button>`;
+          areaBotao.innerHTML = `<button class="btn-aurora amarelo-alerta">⏳Aguarde um instante...</button>`;
           
           gerarConfrontoIA();
       }
@@ -729,6 +729,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
