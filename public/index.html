@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
@@ -22,6 +22,14 @@ crossorigin="anonymous"></script>
 <style>
 * { box-sizing: border-box; }
 
+/* CORREÇÃO: Previne encolhimento quando teclado abre */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  position: fixed;
+  width: 100%;
+}
+
 body {
 margin: 0;
 padding: 10px;
@@ -29,11 +37,11 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 background: #fdfcfd;
 color: white;
 text-align: center;
-overflow-x: hidden;
 display: flex;
 justify-content: center; 
 align-items: center; 
-min-height: 100vh;
+/* Usa variável CSS para altura dinâmica (corrige encolhimento) */
+min-height: calc(var(--vh, 1vh) * 100);
 }
 
 #pageLoader {
@@ -102,6 +110,8 @@ margin: -10px 5px;
     background: white;
     font-weight: bold;
     color: #4a148c;
+    /* CORREÇÃO: Previne zoom no iOS que causa encolhimento */
+    font-size: 16px;
 }
 
 .btn-aurora {
@@ -160,8 +170,8 @@ margin: -10px 5px;
  
 /* botão redondo zap */
 .btn-zap-redondo { 
-width: 40px; 
-height: 40px; 
+width: 45px; 
+height: 45px; 
 cursor: pointer; 
 transition: transform 0.2s;
 }
@@ -299,7 +309,7 @@ border: 1px solid #ddd;
 </style>
 </head>
 
-<body onload="document.getElementById('pageLoader').style.display='none';">
+<body onload="initApp();">
 <div id="pageLoader"><div class="loader-circle"></div></div>
 
 <div class="app-container">
@@ -341,7 +351,7 @@ border: 1px solid #ddd;
     <div id="areaBotaoAcao">
         <button id="btnSorteio" class="btn-aurora rosa" onclick="sortear()">🃏Jogar Agenda Setting Real</button>
     </div>
-    <div id="status"> Está preparado? Nesta redação virtual, os 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
+    <div id="status"> Está preparado? Nesta redação virtual, 300 maiores nomes do colunismo e da opinião pública se enfrentam sem filtro institucional. Em total anonimato, seus avatares — entre colunistas, influencers e ativistas — desmontam o viés passional das mídias tradicionais e das redes em busca da metaverdade numa agenda setting real. Fora dos altos muros das newsroons, o texto vira arma e a razão, escudo da sociedade. Escolha um tema — mas atenção: desse choque de narrativas sempre sobram farpas.</div>
 
     <div id="aiBox">
         <div id="ad-container">
@@ -359,6 +369,12 @@ border: 1px solid #ddd;
 </div> 
 
 <script>
+// ---------------- CORREÇÃO: Altura dinâmica da viewport (previne encolhimento) ----------------
+function setViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
 // ---------------- ÁUDIO ----------------
 const shuffleAudio = new Audio('audio_app/slots_machine.mp3');
 shuffleAudio.preload = 'auto';
@@ -369,6 +385,27 @@ memoriesAudio.preload = 'auto';
 
 memoriesAudio.volume = 0.5;
 shuffleAudio.volume = 0.5;
+
+// ---------------- INICIALIZAÇÃO DO APP ----------------
+function initApp() {
+    // Esconde loader
+    document.getElementById('pageLoader').style.display = 'none';
+    
+    // CORREÇÃO: Define altura da viewport
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    
+    // Event listeners para sincronizar estado do áudio
+    memoriesAudio.onplay = function() {
+        const btn = document.getElementById('btnAppInventor');
+        if(btn) btn.textContent = "🔊";
+    };
+    
+    memoriesAudio.onpause = function() {
+        const btn = document.getElementById('btnAppInventor');
+        if(btn) btn.textContent = "🔇";
+    };
+}
 
 // ---------------- INTEGRAÇÃO APP INVENTOR ----------------
 // Detecta mudanças na WebViewString vindas do App Inventor
@@ -550,11 +587,11 @@ async function gerarConfrontoIA() {
                 <img src="imagens_app/zap.png"
                      id="btnZap"
                      class="btn-zap-redondo"
-                     onclick="shareOnWhatsApp()"
+                     onclick="shareOnWhatsApp(event)"
                      alt="Compartilhar">
 
                 <!-- BOTÃO AUDIO -->
-                <button id="btnAppInventor" class="btn-appinventor" onclick="toggleMusicAppInventor()">
+                <button id="btnAppInventor" class="btn-appinventor" type="button">
                     🔊
                 </button>
             </div>
@@ -582,10 +619,17 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
-      // Define o ícone inicial correto baseado no estado do áudio
+      // CORREÇÃO: Define o ícone inicial correto baseado no estado do áudio
       const btnAudio = document.getElementById('btnAppInventor');
       if(btnAudio) {
           btnAudio.textContent = memoriesAudio.paused ? "🔇" : "🔊";
+          
+          // CORREÇÃO: Adiciona event listener com stopPropagation
+          btnAudio.addEventListener('click', function(event) {
+              event.stopPropagation();
+              event.preventDefault();
+              toggleMusicAppInventor();
+          });
       }
       
       // Garante sincronia caso o áudio carregue depois
@@ -618,6 +662,16 @@ async function gerarConfrontoIA() {
       document.getElementById('areaBotaoAcao').innerHTML = `
         <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Bora Pautar Nova Pauta</button>
       `;
+
+      // CORREÇÃO: GARANTE que o áudio continua tocando após a análise
+      if (memoriesAudio.paused) {
+          memoriesAudio.play().catch(e => console.log("Erro ao retomar áudio após análise"));
+      }
+      
+      // CORREÇÃO: Envia estado TOCAR para App Inventor após análise terminar
+      if (window.AppInventor) {
+          window.AppInventor.setWebViewString("TOCAR");
+      }
 
   } catch (e) {
       console.error(e);
@@ -657,7 +711,14 @@ function toggleMusicAppInventor() {
 }
 
 // ---------------- WHATSAPP ----------------
-function shareOnWhatsApp() {
+// CORREÇÃO: Adicionado parâmetro event para stopPropagation
+function shareOnWhatsApp(event) {
+  // CORREÇÃO: Previne event bubbling
+  if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+  }
+  
   const box = document.getElementById('conteudoIA');
   if (!box) return;
   let texto = box.innerText;
