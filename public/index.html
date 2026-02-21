@@ -86,11 +86,21 @@ object-fit: contain;
 }
 
 .img-versus-central {
-width: 40px;
-height: 40px;
-align-self: center;
-object-fit: contain;
-margin: -10px 5px; 
+    width: 40px;
+    height: 40px;
+    align-self: center;
+    object-fit: contain;
+    margin: -10px 5px; 
+    animation: girar 8s linear infinite;
+}
+
+@keyframes girar {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .seletor-tema {
@@ -769,6 +779,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
