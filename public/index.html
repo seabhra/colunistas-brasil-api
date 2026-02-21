@@ -625,26 +625,28 @@ async function gerarConfrontoIA() {
       const veiculo1Display = colunista1.Veículo ? ` - ${colunista1.Veículo}` : '';
       const veiculo2Display = colunista2.Veículo ? ` - ${colunista2.Veículo}` : '';
 
+      // ... dentro do bloco try da sua função de análise IA ...
+
       aiBox.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:16px; flex-grow: 1; padding-right: 10px;">
               Agenda dos 300 Colunistas
             </h2>
-            
-            <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+            <!-- Container flex para os botões -->
+            <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
                 <!-- BOTÃO ZAP -->
                 <img src="imagens_app/zap.png"
                      id="btnZap"
                      class="btn-zap-redondo"
                      onclick="triggerShare(event)"
                      alt="Compartilhar">
-
+                     
+                <!-- BOTÃO SOM APP INVENTOR -->
                 <button id="btnAppInventor" class="btn-appinventor" onclick="triggerAudioToggle(event)">
                     🔊
                 </button>
             </div>
-        </div>
-        
+        </div>        
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:15px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
@@ -655,7 +657,6 @@ async function gerarConfrontoIA() {
           <hr style="border:0; border-top:1px solid #eee;">
           <p style="font-size:14px; text-align:justify; color:#333;">${respostaTexto.replace(/\n/g, '<br>')}</p>
         </div>
-
         <div id="ad-container">
           <span style="font-size:10px;color:#999;text-align:center;display:block">Publicidade</span>
           <ins class="adsbygoogle"
@@ -667,26 +668,17 @@ async function gerarConfrontoIA() {
         </div>
       `;
 
+      // LÓGICA CORRIGIDA: Atualiza o ícone do botão logo após criar o elemento
       const btnAudio = document.getElementById('btnAppInventor');
-      if(btnAudio) {
-          btnAudio.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
+      if (btnAudio) {
+          // Verifica se o áudio global existe e atualiza o ícone visual
+          if (window.memoriesAudio && !window.memoriesAudio.paused) {
+              btnAudio.textContent = "🔊"; // Tocando
+          } else {
+              btnAudio.textContent = "🔇"; // Pausado/Mudo
+          }
       }
-      
-      window.memoriesAudio.onloadeddata = function() {
-          const btn = document.getElementById('btnAppInventor');
-          if(btn) btn.textContent = window.memoriesAudio.paused ? "🔇" : "🔊";
-      };
-      
-      window.memoriesAudio.onplay = function() {
-           const btn = document.getElementById('btnAppInventor');
-           if(btn) btn.textContent = "🔊";
-      };
-      
-      window.memoriesAudio.onpause = function() {
-           const btn = document.getElementById('btnAppInventor');
-           if(btn) btn.textContent = "🔇";
-      };
-
+            
       aiBox.style.display = 'block';
       aiBox.style.marginTop = "5px";    
       aiBox.style.marginBottom = "5px"; 
@@ -710,8 +702,6 @@ async function gerarConfrontoIA() {
         <button onclick="pararMusicaERecarregar()" class="btn-aurora verde">♻️ Tentar Novamente</button>
       `;
   }
-}
-
 // ---------------- CONTROLES DO HTML (TRIGGERS) ----------------
 
 // Função chamada quando o usuário clica no botão de Áudio NO HTML
@@ -778,5 +768,6 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
