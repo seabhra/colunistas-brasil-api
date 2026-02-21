@@ -152,12 +152,12 @@ object-fit: contain;
 
 .btn-appinventor {
     background: #9c27b0;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    z-index: 50;
+    z-index: 50;  /* mesmo nível */
     transition: transform 0.2s;
     border: 2px solid #CC93ED; 
     display: flex;
@@ -173,8 +173,9 @@ object-fit: contain;
     width: 40px;
     height: 40px;
     cursor: pointer;
-    position: relative;
-    z-index: 50;
+    pointer-events: auto; /* garante que só ele recebe o clique */
+    position: relative;   /* tira do fluxo absoluto se necessário */
+    z-index: 50; /* mesmo nível */
     transition: transform 0.2s;
     display: block; 
     flex-shrink: 0; 
@@ -643,7 +644,7 @@ async function gerarConfrontoIA() {
               Agenda dos 300 Colunistas
             </h2>
             <!-- Container flex para os botões -->
-            <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
                 <!-- BOTÃO ZAP -->
                 <img src="imagens_app/zap.png"
                      id="btnZap"
@@ -779,6 +780,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
