@@ -157,7 +157,7 @@ object-fit: contain;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    z-index: 50;  /* mesmo nível */
+    
     transition: transform 0.2s;
     border: 2px solid #CC93ED; 
     display: flex;
@@ -175,7 +175,7 @@ object-fit: contain;
     cursor: pointer;
     pointer-events: auto; /* garante que só ele recebe o clique */
     position: relative;   /* tira do fluxo absoluto se necessário */
-    z-index: 50; /* mesmo nível */
+   
     transition: transform 0.2s;
     display: block; 
     flex-shrink: 0; 
@@ -639,25 +639,36 @@ async function gerarConfrontoIA() {
       // ... dentro do bloco try da sua função de análise IA ...
 
       aiBox.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:16px; flex-grow: 1; padding-right: 10px;">
-              Agenda dos 300 Colunistas
-            </h2>
-            <!-- Container flex para os botões -->
-            <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
-                <!-- BOTÃO ZAP -->
-                <img src="imagens_app/zap.png"
-                     id="btnZap"
-                     class="btn-zap-redondo"
-                     onclick="triggerShare(event)"
-                     alt="Compartilhar">
-                     
-                <!-- BOTÃO SOM APP INVENTOR -->
-                <button id="btnAppInventor" class="btn-appinventor" onclick="triggerAudioToggle(event)">
-                    🔊
-                </button>
-            </div>
-        </div>        
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h2 class="ai-title" style="color:#4a148c; margin: 0; font-size:16px; flex-grow: 1; padding-right: 10px;">
+      Agenda dos 300 Colunistas
+    </h2>
+
+    <!-- Container flex para os botões -->
+    <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0; position: relative;">
+
+        <!-- BOTÃO ZAP -->
+        <div style="position: relative; z-index: 51; pointer-events: auto;">
+            <img src="imagens_app/zap.png"
+                 id="btnZap"
+                 class="btn-zap-redondo"
+                 onclick="triggerShare(event)"
+                 alt="Compartilhar">
+        </div>
+
+        <!-- BOTÃO SOM APP INVENTOR -->
+        <div style="position: relative; z-index: 50; pointer-events: auto;">
+            <button id="btnAppInventor" class="btn-appinventor" onclick="triggerAudioToggle(event)">
+                🔊
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+  <!-- Container conteudo IA -->
+             
         <div id="conteudoIA" style="margin-bottom: 15px;">
           <h3 style="color:#4a148c; text-align:center; margin: 10px 0; font-size:15px;">
               ⚔️ ${colunista1.codinome} (${colunista1.viés_politico}${veiculo1Display}) vs ${colunista2.codinome} (${colunista2.viés_politico}${veiculo2Display})
@@ -780,6 +791,7 @@ if ('serviceWorker' in navigator) {
 </script> 
 </body>
 </html>
+
 
 
 
