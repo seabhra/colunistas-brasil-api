@@ -1,6 +1,5 @@
 
-// pages/api/chat.js - VERSÃO 4 Anora Tarô com Cors
-
+// pages/api/chat.js - App Agenda 300
 
 export default async function handler(req, res) {
   // ==========================================
